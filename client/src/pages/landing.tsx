@@ -24,13 +24,21 @@ export default function Landing() {
             <p className="mt-6 max-w-2xl mx-auto text-xl text-gray-600">
               Create, customize, and manage QR codes with ease. Start free, upgrade for unlimited access and advanced features.
             </p>
-            <div className="mt-10 flex justify-center">
+            <div className="mt-10 flex justify-center gap-4">
               <Button 
                 onClick={handleGetStarted}
                 size="lg"
                 className="px-8 py-4 text-lg font-semibold"
               >
                 Start Free
+              </Button>
+              <Button 
+                variant="outline"
+                onClick={handleGetStarted}
+                size="lg"
+                className="px-8 py-4 text-lg font-semibold"
+              >
+                Login
               </Button>
             </div>
           </div>

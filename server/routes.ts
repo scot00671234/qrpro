@@ -6,6 +6,7 @@ import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./auth";
 import { insertQrCodeSchema, updateQrCodeSchema } from "@shared/schema";
 import { sendEmail } from "./emailService";
+import { randomBytes } from "crypto";
 
 // Only initialize Stripe if the key is available (for Railway deployment)
 let stripe: Stripe | null = null;
@@ -28,6 +29,76 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching user:", error);
       res.status(500).json({ message: "Failed to fetch user" });
+    }
+  });
+
+  // Forgot password endpoint
+  app.post('/api/forgot-password', async (req, res) => {
+    try {
+      const { email } = req.body;
+      
+      if (!email) {
+        return res.status(400).json({ message: "Email is required" });
+      }
+
+      const user = await storage.getUserByEmail(email);
+      
+      if (!user) {
+        // Don't reveal if email exists for security
+        return res.json({ message: "If an account exists, a password reset email has been sent." });
+      }
+
+      // Generate reset token
+      const resetToken = randomBytes(32).toString('hex');
+      const resetExpiry = new Date(Date.now() + 3600000); // 1 hour from now
+      
+      await storage.updatePasswordResetToken(user.id, resetToken, resetExpiry);
+
+      // Send reset email
+      const resetUrl = `${req.protocol}://${req.get('host')}/reset-password?token=${resetToken}`;
+      
+      await sendEmail(
+        user.email!,
+        'Password Reset Request - QR Pro',
+        `Click the link below to reset your password:\n\n${resetUrl}\n\nThis link will expire in 1 hour.\n\nIf you didn't request this, please ignore this email.`
+      );
+
+      res.json({ message: "If an account exists, a password reset email has been sent." });
+    } catch (error: any) {
+      console.error("Error in forgot password:", error);
+      res.status(500).json({ message: "Failed to process request" });
+    }
+  });
+
+  // Reset password endpoint
+  app.post('/api/reset-password', async (req, res) => {
+    try {
+      const { token, password } = req.body;
+      
+      if (!token || !password) {
+        return res.status(400).json({ message: "Token and password are required" });
+      }
+
+      if (password.length < 6) {
+        return res.status(400).json({ message: "Password must be at least 6 characters long" });
+      }
+
+      const user = await storage.getUserByResetToken(token);
+      
+      if (!user || !user.passwordResetExpiry || new Date() > user.passwordResetExpiry) {
+        return res.status(400).json({ message: "Invalid or expired reset token" });
+      }
+
+      // Hash the new password
+      const bcrypt = require('bcrypt');
+      const hashedPassword = await bcrypt.hash(password, 10);
+      
+      await storage.updatePassword(user.id, hashedPassword);
+
+      res.json({ message: "Password reset successfully" });
+    } catch (error: any) {
+      console.error("Error in reset password:", error);
+      res.status(500).json({ message: "Failed to reset password" });
     }
   });
 

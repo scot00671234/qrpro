@@ -11,6 +11,7 @@ import Dashboard from "@/pages/dashboard";
 import QrCodes from "@/pages/qr-codes";
 import Settings from "@/pages/settings";
 import Subscribe from "@/pages/subscribe";
+import ResetPassword from "@/pages/reset-password";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -33,6 +34,7 @@ function Router() {
           <Route path="/subscribe" component={Subscribe} />
         </>
       )}
+      <Route path="/reset-password" component={ResetPassword} />
       <Route component={NotFound} />
     </Switch>
   );

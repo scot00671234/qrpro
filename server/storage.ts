@@ -14,9 +14,12 @@ export interface IStorage {
   // User operations
   getUser(id: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
+  getUserByResetToken(token: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
   updateUserStripeInfo(userId: string, customerId: string, subscriptionId?: string): Promise<User>;
   updateUserSubscription(userId: string, status: string, endsAt?: Date): Promise<User>;
+  updatePasswordResetToken(userId: string, token: string, expiry: Date): Promise<void>;
+  updatePassword(userId: string, hashedPassword: string): Promise<void>;
   
   // QR Code operations
   createQrCode(qrCode: InsertQrCode): Promise<QrCode>;
@@ -37,6 +40,11 @@ export class DatabaseStorage implements IStorage {
 
   async getUserByEmail(email: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.email, email));
+    return user;
+  }
+
+  async getUserByResetToken(token: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.passwordResetToken, token));
     return user;
   }
 
@@ -145,6 +153,29 @@ export class DatabaseStorage implements IStorage {
       .from(qrCodes)
       .where(and(eq(qrCodes.userId, userId), eq(qrCodes.isActive, true)));
     return result.length;
+  }
+
+  async updatePasswordResetToken(userId: string, token: string, expiry: Date): Promise<void> {
+    await db
+      .update(users)
+      .set({ 
+        passwordResetToken: token, 
+        passwordResetExpiry: expiry,
+        updatedAt: new Date()
+      })
+      .where(eq(users.id, userId));
+  }
+
+  async updatePassword(userId: string, hashedPassword: string): Promise<void> {
+    await db
+      .update(users)
+      .set({ 
+        password: hashedPassword,
+        passwordResetToken: null,
+        passwordResetExpiry: null,
+        updatedAt: new Date()
+      })
+      .where(eq(users.id, userId));
   }
 }
 
