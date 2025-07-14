@@ -3,8 +3,10 @@ import { Strategy as LocalStrategy } from "passport-local";
 import session from "express-session";
 import connectPg from "connect-pg-simple";
 import bcrypt from "bcrypt";
+import crypto from "crypto";
 import type { Express, RequestHandler } from "express";
 import { storage } from "./storage";
+import { sendEmail, sendPasswordResetEmail, sendWelcomeEmail } from "./emailService";
 
 export function getSession() {
   const sessionTtl = 7 * 24 * 60 * 60 * 1000; // 1 week
@@ -40,19 +42,20 @@ export async function setupAuth(app: Express) {
     { usernameField: 'email' },
     async (email: string, password: string, done) => {
       try {
-        // For now, create a simple demo user system
-        // In production, you'd want proper user registration/login
         const user = await storage.getUserByEmail(email);
         
         if (!user) {
-          // Auto-create user for demo purposes
-          const newUser = await storage.upsertUser({
-            id: email,
-            email: email,
-            firstName: email.split('@')[0],
-            lastName: '',
-          });
-          return done(null, newUser);
+          return done(null, false, { message: 'User not found' });
+        }
+
+        if (!user.password) {
+          return done(null, false, { message: 'Account not properly configured' });
+        }
+        
+        const isValid = await bcrypt.compare(password, user.password);
+        
+        if (!isValid) {
+          return done(null, false, { message: 'Invalid password' });
         }
         
         return done(null, user);
