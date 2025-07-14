@@ -1,0 +1,102 @@
+# QR Pro - Railway Production Application
+
+## Overview
+
+QR Pro is a production-ready freemium QR code generator SaaS application designed for Railway deployment. Users get 1 free QR code, with a $15/month Pro subscription for unlimited QR codes and customization features (colors, sizes). The application includes authentication, PostgreSQL database, Stripe payment integration, and email services.
+
+## User Preferences
+
+Preferred communication style: Simple, everyday language.
+Target deployment: Railway production environment (Node.js 18).
+
+## System Architecture
+
+The application follows a modern full-stack architecture with clear separation between frontend and backend:
+
+### Frontend Architecture
+- **Framework**: React with TypeScript using Vite as the build tool
+- **UI Library**: Radix UI components with shadcn/ui styling system
+- **Styling**: Tailwind CSS with CSS variables for theming
+- **State Management**: TanStack Query (React Query) for server state management
+- **Routing**: Wouter for lightweight client-side routing
+- **Payment Integration**: Stripe for subscription management
+
+### Backend Architecture
+- **Runtime**: Node.js with Express.js framework
+- **Language**: TypeScript with ES modules
+- **Database**: PostgreSQL with Drizzle ORM
+- **Authentication**: Replit Auth with OpenID Connect
+- **Session Management**: Express sessions with PostgreSQL store
+
+## Key Components
+
+### Authentication System
+- **Provider**: Custom simplified authentication for Railway deployment
+- **Session Storage**: PostgreSQL-backed session store with connect-pg-simple
+- **Security**: HTTP-only cookies with secure settings for production
+- **User Management**: Email-based user creation with automatic account setup
+- **Login Method**: Simple email-based login with demo authentication for Railway
+
+### Database Schema
+- **Users Table**: Stores user profile, Stripe customer info, and subscription status
+- **QR Codes Table**: Stores QR code data with customization options
+- **Sessions Table**: Manages user authentication sessions
+
+### Subscription System
+- **Provider**: Stripe for payment processing
+- **Tiers**: Free (1 QR code limit) and Pro (unlimited)
+- **Features**: Subscription status tracking with automatic limit enforcement
+
+### QR Code Generation
+- **Backend Processing**: Server-side QR code generation using QRCode library
+- **Customization**: Color, size, and format options
+- **Analytics**: Scan count tracking
+- **Management**: CRUD operations with user ownership validation
+
+## Data Flow
+
+1. **Authentication**: Users log in through Replit Auth, creating/updating user records
+2. **QR Creation**: Frontend sends QR data to backend, which generates and stores the QR code
+3. **Subscription**: Stripe handles payment processing and webhook updates for subscription status
+4. **Access Control**: Backend enforces subscription limits before allowing QR code creation
+5. **Analytics**: QR code scans are tracked and stored for user analytics
+
+## External Dependencies
+
+### Core Dependencies
+- **@neondatabase/serverless**: PostgreSQL database connection
+- **drizzle-orm**: Type-safe database ORM
+- **stripe**: Payment processing
+- **nodemailer**: Email service integration
+- **qrcode**: QR code generation
+- **passport + openid-client**: Authentication with Replit
+
+### Frontend Dependencies
+- **@tanstack/react-query**: Server state management
+- **@radix-ui/***: Accessible UI components
+- **@stripe/stripe-js + @stripe/react-stripe-js**: Stripe integration
+- **wouter**: Lightweight routing
+- **tailwindcss**: Utility-first CSS framework
+
+## Deployment Strategy
+
+### Development
+- **Local Development**: Vite dev server with Express backend
+- **Hot Reload**: Vite HMR for frontend, tsx for backend auto-restart
+- **Database**: Neon PostgreSQL with connection pooling
+
+### Railway Production Deployment
+- **Platform**: Railway.app with Node.js 18 runtime
+- **Build Process**: Vite builds frontend to `dist/public`, esbuild bundles backend
+- **Static Serving**: Express serves built frontend files
+- **Environment**: Production PostgreSQL, Stripe integration, SMTP email
+- **Required Environment Variables**: 
+  - DATABASE_URL (auto-provided by Railway PostgreSQL)
+  - STRIPE_SECRET_KEY and VITE_STRIPE_PUBLIC_KEY
+  - SESSION_SECRET for secure sessions
+  - SMTP settings for email notifications
+
+### Configuration Management
+- **Environment Variables**: Database URL, Stripe keys, SMTP settings, session secrets
+- **Build Scripts**: Separate dev/build/start scripts for different environments
+- **Type Safety**: Full TypeScript coverage with strict configuration
