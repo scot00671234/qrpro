@@ -219,34 +219,70 @@ export async function registerRoutes(app: Express): Promise<Server> {
         await storage.updateUserStripeInfo(user.id, customerId);
       }
 
-      const subscription = await stripe.subscriptions.create({
+      // For Railway deployment, we need to create a price ID first or use an existing one
+      // Let's create a simple checkout session instead for better Railway compatibility
+      const session = await stripe.checkout.sessions.create({
         customer: customerId,
-        items: [{
-          price_data: {
-            currency: 'usd',
-            product: 'QR Pro Monthly Subscription',
-            unit_amount: 1500, // $15.00 in cents
-            recurring: {
-              interval: 'month',
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            price_data: {
+              currency: 'usd',
+              product_data: {
+                name: 'QR Pro Monthly Subscription',
+                description: 'Unlimited QR codes with full customization',
+              },
+              unit_amount: 1500, // $15.00 in cents
+              recurring: {
+                interval: 'month',
+              },
             },
+            quantity: 1,
           },
-        }],
-        payment_behavior: 'default_incomplete',
-        expand: ['latest_invoice.payment_intent'],
+        ],
+        mode: 'subscription',
+        success_url: `${req.protocol}://${req.get('host')}/dashboard?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${req.protocol}://${req.get('host')}/subscribe`,
+        metadata: {
+          userId: user.id,
+        },
       });
 
-      await storage.updateUserStripeInfo(user.id, customerId, subscription.id);
-
-      const invoice = subscription.latest_invoice as any;
-      const paymentIntent = invoice.payment_intent as any;
-
       res.json({
-        subscriptionId: subscription.id,
-        clientSecret: paymentIntent.client_secret,
+        sessionId: session.id,
+        url: session.url,
       });
     } catch (error: any) {
       console.error("Error creating subscription:", error);
       res.status(400).json({ message: error.message || "Failed to create subscription" });
+    }
+  });
+
+  // Handle successful subscription from Stripe checkout
+  app.post('/api/subscription-success', isAuthenticated, async (req: any, res) => {
+    if (!stripe) {
+      return res.status(503).json({ message: "Payment system not configured" });
+    }
+
+    try {
+      const { session_id } = req.body;
+      const user = req.user;
+
+      if (!session_id) {
+        return res.status(400).json({ message: "Session ID required" });
+      }
+
+      const session = await stripe.checkout.sessions.retrieve(session_id);
+      
+      if (session.payment_status === 'paid' && session.subscription) {
+        await storage.updateUserStripeInfo(user.id, session.customer as string, session.subscription as string);
+        await storage.updateUserSubscription(user.id, 'active');
+      }
+
+      res.json({ message: "Subscription activated successfully" });
+    } catch (error: any) {
+      console.error("Error processing subscription success:", error);
+      res.status(400).json({ message: error.message || "Failed to process subscription" });
     }
   });
 

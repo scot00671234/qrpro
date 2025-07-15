@@ -89,37 +89,65 @@ export default function Subscribe() {
     }
   }, [isAuthenticated, isLoading, toast]);
 
+  const handleSubscribe = async () => {
+    try {
+      const response = await apiRequest("POST", "/api/create-subscription");
+      const data = await response.json();
+      
+      if (data.url) {
+        // Redirect to Stripe Checkout
+        window.location.href = data.url;
+      } else if (data.message === "Already subscribed") {
+        toast({
+          title: "Already Subscribed",
+          description: "You already have an active Pro subscription!",
+        });
+      } else {
+        setSubscriptionError(data.message || "Failed to create subscription");
+      }
+    } catch (error: any) {
+      if (isUnauthorizedError(error)) {
+        toast({
+          title: "Unauthorized",
+          description: "You are logged out. Logging in again...",
+          variant: "destructive",
+        });
+        setTimeout(() => {
+          window.location.href = "/api/login";
+        }, 500);
+      } else {
+        setSubscriptionError("Failed to create subscription");
+      }
+    }
+  };
+
   useEffect(() => {
-    if (isAuthenticated) {
-      // Create subscription as soon as the page loads
-      apiRequest("POST", "/api/create-subscription")
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.clientSecret) {
-            setClientSecret(data.clientSecret);
-          } else if (data.message === "Already subscribed") {
-            toast({
-              title: "Already Subscribed",
-              description: "You already have an active Pro subscription!",
-            });
-          }
+    // Check for successful subscription from URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const sessionId = urlParams.get('session_id');
+    
+    if (sessionId) {
+      // Process successful subscription
+      apiRequest("POST", "/api/subscription-success", { session_id: sessionId })
+        .then(() => {
+          toast({
+            title: "Subscription Successful",
+            description: "Welcome to QR Pro! You now have access to all Pro features.",
+          });
+          window.location.href = "/dashboard";
         })
         .catch((error) => {
-          if (isUnauthorizedError(error)) {
-            toast({
-              title: "Unauthorized",
-              description: "You are logged out. Logging in again...",
-              variant: "destructive",
-            });
-            setTimeout(() => {
-              window.location.href = "/api/login";
-            }, 500);
-            return;
-          }
-          setSubscriptionError("Failed to create subscription. Please try again.");
+          console.error('Error processing subscription success:', error);
         });
     }
-  }, [isAuthenticated, toast]);
+  }, [toast]);
+
+  useEffect(() => {
+    if (isAuthenticated && user?.subscriptionStatus === 'active') {
+      // User is already subscribed, redirect to dashboard
+      window.location.href = "/dashboard";
+    }
+  }, [isAuthenticated, user]);
 
   if (isLoading || !isAuthenticated || !user) {
     return (
@@ -246,15 +274,19 @@ export default function Subscribe() {
                   <Alert variant="destructive">
                     <AlertDescription>{subscriptionError}</AlertDescription>
                   </Alert>
-                ) : !clientSecret ? (
-                  <div className="text-center py-8">
-                    <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4" />
-                    <p className="text-gray-600">Setting up your subscription...</p>
-                  </div>
                 ) : (
-                  <Elements stripe={stripePromise} options={{ clientSecret }}>
-                    <SubscribeForm />
-                  </Elements>
+                  <div className="text-center py-8">
+                    <Button 
+                      onClick={handleSubscribe}
+                      className="w-full"
+                      size="lg"
+                    >
+                      Subscribe to Pro - $15/month
+                    </Button>
+                    <p className="mt-4 text-sm text-gray-600">
+                      Click to continue with secure Stripe checkout
+                    </p>
+                  </div>
                 )}
               </CardContent>
             </Card>
