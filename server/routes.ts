@@ -106,9 +106,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Check if user has pro subscription for customization
-      if (user.subscriptionStatus === 'free' && (req.body.color || req.body.size)) {
+      if (user.subscriptionStatus === 'free' && req.body.size) {
         return res.status(403).json({ 
-          message: "Customization features require Pro subscription",
+          message: "Size customization requires Pro subscription",
           requiresUpgrade: true
         });
       }
@@ -162,7 +162,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const options = {
         width: qrCode.size || 200,
         color: {
-          dark: qrCode.color || '#000000',
+          dark: '#000000',
           light: '#FFFFFF',
         },
       };

@@ -25,7 +25,7 @@ export function QrGenerator({ isPro, qrCodeCount, onQrCodeCreated }: QrGenerator
   const queryClient = useQueryClient();
   const [name, setName] = useState("");
   const [content, setContent] = useState("");
-  const [color, setColor] = useState("#000000");
+
   const [size, setSize] = useState("200");
   const [qrImage, setQrImage] = useState<string | null>(null);
   const [generatedQrId, setGeneratedQrId] = useState<number | null>(null);
@@ -116,7 +116,6 @@ export function QrGenerator({ isPro, qrCodeCount, onQrCodeCreated }: QrGenerator
     const qrData = {
       name: name.trim(),
       content: content.trim(),
-      color: isPro ? color : "#000000",
       size: isPro ? parseInt(size) : 200,
     };
 
@@ -167,35 +166,6 @@ export function QrGenerator({ isPro, qrCodeCount, onQrCodeCreated }: QrGenerator
             
             {/* Pro Features */}
             <div className={`space-y-4 ${!isPro ? 'opacity-50' : ''}`}>
-              <div>
-                <Label htmlFor="color" className="flex items-center">
-                  Color 
-                  {!isPro && (
-                    <Badge variant="secondary" className="ml-2 text-xs">
-                      <Crown className="w-3 h-3 mr-1" />
-                      Pro Feature
-                    </Badge>
-                  )}
-                </Label>
-                <div className="flex items-center space-x-2">
-                  <Input
-                    id="color"
-                    type="color"
-                    value={color}
-                    onChange={(e) => setColor(e.target.value)}
-                    disabled={!isPro || !canCreateQr}
-                    className="w-16 h-10 p-1"
-                  />
-                  <Input
-                    value={color}
-                    onChange={(e) => setColor(e.target.value)}
-                    disabled={!isPro || !canCreateQr}
-                    placeholder="#000000"
-                    className="flex-1"
-                  />
-                </div>
-              </div>
-              
               <div>
                 <Label htmlFor="size" className="flex items-center">
                   Size 

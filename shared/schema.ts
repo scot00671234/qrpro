@@ -48,7 +48,6 @@ export const qrCodes = pgTable("qr_codes", {
   userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   name: varchar("name").notNull(),
   content: text("content").notNull(),
-  color: varchar("color").default("#000000"),
   size: integer("size").default(200),
   format: varchar("format").default("png"), // png, svg, pdf
   customization: jsonb("customization"), // for future customization options

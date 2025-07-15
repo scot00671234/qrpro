@@ -50,7 +50,7 @@ The application follows a modern full-stack architecture with clear separation b
 
 ### QR Code Generation
 - **Backend Processing**: Server-side QR code generation using QRCode library
-- **Customization**: Color, size, and format options
+- **Customization**: Size options (Pro feature) - color removed for scannability
 - **Analytics**: Scan count tracking
 - **Management**: CRUD operations with user ownership validation
 
@@ -103,6 +103,11 @@ The application follows a modern full-stack architecture with clear separation b
 - **Test Mode**: Use test keys (sk_test_... and pk_test_...) in Railway environment
 - **Test Cards**: Use 4242 4242 4242 4242 with any future expiry and CVC
 - **Live Mode**: Only switch to live keys (sk_live_... and pk_live_...) for production
+
+### Recent Changes
+- **July 15, 2025**: Removed color customization from QR code generation for better scannability
+- **July 15, 2025**: Fixed subscription system with Stripe Checkout Sessions for Railway deployment
+- **July 15, 2025**: Successfully tested subscription payment flow with test cards
 
 ### Configuration Management
 - **Environment Variables**: Database URL, Stripe keys, SMTP settings, session secrets
