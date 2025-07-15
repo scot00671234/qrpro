@@ -95,9 +95,14 @@ The application follows a modern full-stack architecture with clear separation b
 - **Environment**: Production PostgreSQL, Stripe integration, Gmail SMTP
 - **Required Environment Variables**: 
   - DATABASE_URL (auto-provided by Railway PostgreSQL)
-  - STRIPE_SECRET_KEY and VITE_STRIPE_PUBLIC_KEY
+  - STRIPE_SECRET_KEY and VITE_STRIPE_PUBLIC_KEY (use test keys for testing: sk_test_... and pk_test_...)
   - SESSION_SECRET for secure sessions
   - SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_SECURE for Gmail
+
+### Testing with Stripe
+- **Test Mode**: Use test keys (sk_test_... and pk_test_...) in Railway environment
+- **Test Cards**: Use 4242 4242 4242 4242 with any future expiry and CVC
+- **Live Mode**: Only switch to live keys (sk_live_... and pk_live_...) for production
 
 ### Configuration Management
 - **Environment Variables**: Database URL, Stripe keys, SMTP settings, session secrets
