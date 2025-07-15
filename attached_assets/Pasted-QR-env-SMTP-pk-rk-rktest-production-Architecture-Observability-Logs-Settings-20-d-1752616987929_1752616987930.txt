@@ -1,0 +1,187 @@
+QR - env: SMTP + pk, rk, rktest
+
+
+production
+Architecture
+Observability
+Logs
+Settings
+
+20 days or $3.88 left
+
+
+Share
+
+
+
+
+
+
+
+
+
+Activity
+
+
+qrpro
+Deployments
+Variables
+Metrics
+Settings
+qrpro-production.up.railway.app
+22.17.0node@22.17.0
+europe-west4-drams3a
+1 Replica
+
+
+
+
+History
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+qrpro
+/
+0033d43
+Jul 15, 2025, 11:57 PM
+Active
+
+qrpro-production.up.railway.app
+
+Details
+Build Logs
+Deploy Logs
+HTTP Logs
+
+Filter
+Filter logs using "", (), AND, OR, -
+
+
+
+You reached the start of the range → Jul 15, 2025, 11:57 PM
+
+Starting Container
+
+npm warn config production Use `--omit=dev` instead.
+
+ 
+
+> rest-express@1.0.0 start
+
+> NODE_ENV=production node dist/index.js
+
+ 
+
+9:58:40 PM [express] serving on port 5000
+
+10:00:54 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+
+10:00:58 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+
+    [Symbol(shapeMode)]: false,
+
+    [Symbol(kCapture)]: false
+
+  },
+
+  [Symbol(kType)]: 'error',
+
+  [Symbol(kError)]: Error: connect ECONNREFUSED fd12:1c36:4e57:0:1000:20:b774:891a:443
+
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16) {
+
+    errno: -111,
+
+    code: 'ECONNREFUSED',
+
+    syscall: 'connect',
+
+    address: 'fd12:1c36:4e57:0:1000:20:b774:891a',
+
+    port: 443
+
+  },
+
+  [Symbol(kMessage)]: 'connect ECONNREFUSED fd12:1c36:4e57:0:1000:20:b774:891a:443'
+
+}
+
+10:01:10 PM [express] POST /api/register 500 in 190ms :: {"message":"Failed to create account"}
+
+Registration error: ErrorEvent {
+
+  [Symbol(kTarget)]: WebSocket {
+
+    _events: [Object: null prototype] {
+
+      error: [Function],
+
+      message: [Function],
+
+      close: [Function],
+
+      open: [Function]
+
+    },
+
+    _eventsCount: 4,
+
+    _maxListeners: undefined,
+
+    _binaryType: 'arraybuffer',
+
+    _closeCode: 1006,
+
+    _closeFrameReceived: false,
+
+    _closeFrameSent: false,
+
+    _closeMessage: <Buffer >,
+
+    _closeTimer: null,
+
+    _errorEmitted: true,
+
+    _extensions: {},
+
+    _paused: false,
+
+    _protocol: '',
+
+    _readyState: 3,
+
+    _receiver: null,
+
+    _sender: null,
+
+    _socket: null,
+
+    _bufferedAmount: 0,
+
+    _isServer: false,
+
+    _redirects: 0,
+
+    _autoPong: true,
+
+    _url: 'wss://postgres.railway.internal/v2',
+
+    _req: null,
+
+
+qrpro | Railway
+KB

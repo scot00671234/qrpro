@@ -31,11 +31,12 @@ The application follows a modern full-stack architecture with clear separation b
 ## Key Components
 
 ### Authentication System
-- **Provider**: Custom simplified authentication for Railway deployment
+- **Provider**: Passport.js with Local Strategy for Railway deployment
 - **Session Storage**: PostgreSQL-backed session store with connect-pg-simple
 - **Security**: HTTP-only cookies with secure settings for production
-- **User Management**: Email-based user creation with automatic account setup
-- **Login Method**: Simple email-based login with demo authentication for Railway
+- **User Management**: Email-based user registration with bcrypt password hashing
+- **Login Method**: Email and password authentication with registration support
+- **Password Reset**: Secure token-based password reset with email confirmation
 
 ### Database Schema
 - **Users Table**: Stores user profile, Stripe customer info, and subscription status
@@ -64,12 +65,13 @@ The application follows a modern full-stack architecture with clear separation b
 ## External Dependencies
 
 ### Core Dependencies
-- **@neondatabase/serverless**: PostgreSQL database connection
-- **drizzle-orm**: Type-safe database ORM
+- **pg**: PostgreSQL database connection for Railway
+- **drizzle-orm**: Type-safe database ORM with node-postgres driver
 - **stripe**: Payment processing
 - **nodemailer**: Email service integration
 - **qrcode**: QR code generation
-- **passport + openid-client**: Authentication with Replit
+- **passport + passport-local**: Local authentication strategy
+- **bcrypt**: Password hashing for secure authentication
 
 ### Frontend Dependencies
 - **@tanstack/react-query**: Server state management
@@ -86,15 +88,16 @@ The application follows a modern full-stack architecture with clear separation b
 - **Database**: Neon PostgreSQL with connection pooling
 
 ### Railway Production Deployment
-- **Platform**: Railway.app with Node.js 18 runtime
+- **Platform**: Railway.app with Node.js 18+ runtime
 - **Build Process**: Vite builds frontend to `dist/public`, esbuild bundles backend
 - **Static Serving**: Express serves built frontend files
-- **Environment**: Production PostgreSQL, Stripe integration, SMTP email
+- **Database**: Railway PostgreSQL with SSL support
+- **Environment**: Production PostgreSQL, Stripe integration, Gmail SMTP
 - **Required Environment Variables**: 
   - DATABASE_URL (auto-provided by Railway PostgreSQL)
   - STRIPE_SECRET_KEY and VITE_STRIPE_PUBLIC_KEY
   - SESSION_SECRET for secure sessions
-  - SMTP settings for email notifications
+  - SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_SECURE for Gmail
 
 ### Configuration Management
 - **Environment Variables**: Database URL, Stripe keys, SMTP settings, session secrets
