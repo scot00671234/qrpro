@@ -7,6 +7,7 @@ import { setupAuth, isAuthenticated } from "./auth";
 import { insertQrCodeSchema, updateQrCodeSchema } from "@shared/schema";
 import { sendEmail } from "./emailService";
 import { randomBytes } from "crypto";
+import { runMigrations } from "./migrate";
 
 // Only initialize Stripe if the key is available (for Railway deployment)
 let stripe: Stripe | null = null;
@@ -15,6 +16,9 @@ if (process.env.STRIPE_SECRET_KEY) {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Run database migrations first
+  await runMigrations();
+  
   // Auth middleware
   await setupAuth(app);
 

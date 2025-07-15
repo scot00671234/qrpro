@@ -24,7 +24,7 @@ const getEmailConfig = (): EmailConfig => {
 
 const createTransporter = () => {
   const config = getEmailConfig();
-  return nodemailer.createTransporter(config);
+  return nodemailer.createTransport(config);
 };
 
 export const sendEmail = async (
