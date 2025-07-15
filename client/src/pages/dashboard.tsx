@@ -32,6 +32,34 @@ export default function Dashboard() {
     }
   }, [isAuthenticated, isLoading, toast]);
 
+  // Handle subscription success from Stripe checkout
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const sessionId = urlParams.get('session_id');
+    
+    if (sessionId && isAuthenticated) {
+      apiRequest("POST", "/api/subscription-success", { session_id: sessionId })
+        .then(() => {
+          toast({
+            title: "Subscription Successful!",
+            description: "Welcome to QR Pro! You now have access to unlimited QR codes.",
+          });
+          // Clear the session_id from URL
+          window.history.replaceState({}, '', '/dashboard');
+          // Refresh user data to get updated subscription status
+          queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+        })
+        .catch((error) => {
+          console.error('Error processing subscription success:', error);
+          toast({
+            title: "Subscription Processing",
+            description: "Your payment was successful, but there was an issue activating your subscription. Please contact support.",
+            variant: "destructive",
+          });
+        });
+    }
+  }, [isAuthenticated, toast, queryClient]);
+
   const { data: qrCodes = [], isLoading: qrCodesLoading } = useQuery({
     queryKey: ["/api/qr-codes"],
     enabled: isAuthenticated,

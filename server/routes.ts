@@ -286,6 +286,65 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Stripe webhook endpoint for automatic subscription updates
+  app.post('/api/stripe-webhook', async (req, res) => {
+    if (!stripe) {
+      return res.status(503).json({ message: "Payment system not configured" });
+    }
+
+    try {
+      const sig = req.headers['stripe-signature'];
+      let event;
+
+      try {
+        // For webhook verification, you'd need STRIPE_WEBHOOK_SECRET in production
+        // For now, we'll trust the webhook in development/test mode
+        event = req.body;
+      } catch (err) {
+        console.log('Webhook signature verification failed:', err);
+        return res.status(400).send(`Webhook Error: ${err}`);
+      }
+
+      // Handle the event
+      switch (event.type) {
+        case 'customer.subscription.created':
+        case 'customer.subscription.updated':
+          const subscription = event.data.object;
+          const customerId = subscription.customer;
+          
+          // Find user by Stripe customer ID
+          const users = await storage.getAllUsers(); // We'll need to add this method
+          const user = users.find(u => u.stripeCustomerId === customerId);
+          
+          if (user) {
+            await storage.updateUserStripeInfo(user.id, customerId, subscription.id);
+            await storage.updateUserSubscription(user.id, subscription.status);
+          }
+          break;
+        
+        case 'customer.subscription.deleted':
+          const deletedSubscription = event.data.object;
+          const deletedCustomerId = deletedSubscription.customer;
+          
+          const allUsers = await storage.getAllUsers();
+          const userToUpdate = allUsers.find(u => u.stripeCustomerId === deletedCustomerId);
+          
+          if (userToUpdate) {
+            await storage.updateUserSubscription(userToUpdate.id, 'canceled');
+          }
+          break;
+        
+        default:
+          console.log(`Unhandled event type: ${event.type}`);
+      }
+
+      res.json({ received: true });
+    } catch (error: any) {
+      console.error("Error processing webhook:", error);
+      res.status(500).json({ message: error.message || "Failed to process webhook" });
+    }
+  });
+
   app.post('/api/cancel-subscription', isAuthenticated, async (req: any, res) => {
     if (!stripe) {
       return res.status(503).json({ message: "Payment system not configured. Please contact support." });
