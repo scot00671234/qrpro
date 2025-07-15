@@ -1,0 +1,120 @@
+P Logs
+
+Filter
+Filter logs using "", (), AND, OR, -
+
+
+
+You reached the start of the range → Jul 16, 2025, 12:57 AM
+
+Starting Container
+
+npm warn config production Use `--omit=dev` instead.
+
+ 
+
+> rest-express@1.0.0 start
+
+> NODE_ENV=production node dist/index.js
+
+ 
+
+Running database migrations...
+
+Database migrations completed successfully
+
+10:58:14 PM [express] serving on port 5000
+
+10:58:23 PM [express] GET /api/auth/user 304 in 10ms :: {"id":"e4bf3a33-877c-4274-b1b8-e0143f63eaa1",…
+
+10:58:23 PM [express] GET /api/qr-codes 304 in 12ms :: []
+
+10:58:28 PM [express] POST /api/create-subscription 200 in 587ms :: {"sessionId":"cs_test_a1ZegxWUyog…
+
+10:59:03 PM [express] GET /api/auth/user 304 in 10ms :: {"id":"e4bf3a33-877c-4274-b1b8-e0143f63eaa1",…
+
+10:59:03 PM [express] GET /api/qr-codes 304 in 33ms :: []
+
+10:59:03 PM [express] POST /api/subscription-success 200 in 207ms :: {"message":"Subscription activat…
+
+10:59:03 PM [express] GET /api/auth/user 200 in 8ms :: {"id":"e4bf3a33-877c-4274-b1b8-e0143f63eaa1","…
+
+10:59:28 PM [express] POST /api/qr-codes 201 in 191ms :: {"id":2,"userId":"e4bf3a33-877c-4274-b1b8-e0…
+
+10:59:28 PM [express] GET /api/qr-codes 200 in 90ms :: [{"id":2,"userId":"e4bf3a33-877c-4274-b1b8-e01…
+
+10:59:28 PM [express] POST /api/qr-codes/2/generate 200 in 119ms :: {"dataUrl":"data:image/png;base64…
+
+11:00:11 PM [express] POST /api/qr-codes 201 in 190ms :: {"id":3,"userId":"e4bf3a33-877c-4274-b1b8-e0…
+
+11:00:11 PM [express] POST /api/qr-codes/3/generate 200 in 89ms :: {"dataUrl":"data:image/png;base64,…
+
+11:00:11 PM [express] GET /api/qr-codes 200 in 28ms :: [{"id":3,"userId":"e4bf3a33-877c-4274-b1b8-e01…
+
+11:00:35 PM [express] POST /api/qr-codes 201 in 192ms :: {"id":4,"userId":"e4bf3a33-877c-4274-b1b8-e0…
+
+11:00:35 PM [express] GET /api/qr-codes 200 in 16ms :: [{"id":4,"userId":"e4bf3a33-877c-4274-b1b8-e01…
+
+11:00:35 PM [express] POST /api/qr-codes/4/generate 200 in 118ms :: {"dataUrl":"data:image/png;base64…
+
+11:00:49 PM [express] POST /api/qr-codes 201 in 199ms :: {"id":5,"userId":"e4bf3a33-877c-4274-b1b8-e0…
+
+11:00:49 PM [express] GET /api/qr-codes 200 in 14ms :: [{"id":5,"userId":"e4bf3a33-877c-4274-b1b8-e01…
+
+11:00:49 PM [express] POST /api/qr-codes/5/generate 200 in 91ms :: {"dataUrl":"data:image/png;base64,…
+
+11:01:06 PM [express] POST /api/qr-codes/3/generate 200 in 558ms :: {"dataUrl":"data:image/png;base64…
+
+11:01:06 PM [express] POST /api/qr-codes/4/generate 200 in 561ms :: {"dataUrl":"data:image/png;base64…
+
+11:01:06 PM [express] POST /api/qr-codes/5/generate 200 in 566ms :: {"dataUrl":"data:image/png;base64…
+
+11:01:06 PM [express] POST /api/qr-codes/2/generate 200 in 570ms :: {"dataUrl":"data:image/png;base64…
+
+11:01:15 PM [express] DELETE /api/qr-codes/4 200 in 40ms :: {"message":"QR code deleted successfully"}
+
+11:01:15 PM [express] GET /api/qr-codes 200 in 13ms :: [{"id":5,"userId":"e4bf3a33-877c-4274-b1b8-e01…
+
+11:01:23 PM [express] DELETE /api/qr-codes/5 200 in 15ms :: {"message":"QR code deleted successfully"}
+
+11:01:23 PM [express] GET /api/qr-codes 200 in 14ms :: [{"id":3,"userId":"e4bf3a33-877c-4274-b1b8-e01…
+
+11:01:29 PM [express] DELETE /api/qr-codes/2 200 in 14ms :: {"message":"QR code deleted successfully"}
+
+11:01:29 PM [express] GET /api/qr-codes 200 in 10ms :: [{"id":3,"userId":"e4bf3a33-877c-4274-b1b8-e01…
+
+Error canceling subscription: RangeError: Invalid time value
+
+    at Date.toISOString (<anonymous>)
+
+    at PgTimestamp.mapToDriverValue (file:///app/node_modules/drizzle-orm/pg-core/columns/timestamp.js:34:18)
+
+    at file:///app/node_modules/drizzle-orm/sql/sql.js:131:73
+
+    at Array.map (<anonymous>)
+
+    at SQL.buildQueryFromSourceParams (file:///app/node_modules/drizzle-orm/sql/sql.js:73:32)
+
+    at file:///app/node_modules/drizzle-orm/sql/sql.js:95:21
+
+    at Array.map (<anonymous>)
+
+    at SQL.buildQueryFromSourceParams (file:///app/node_modules/drizzle-orm/sql/sql.js:73:32)
+
+    at file:///app/node_modules/drizzle-orm/sql/sql.js:95:21
+
+    at Array.map (<anonymous>)
+
+11:03:14 PM [express] POST /api/cancel-subscription 500 in 541ms :: {"message":"Invalid time value"}
+
+Error canceling subscription: RangeError: Invalid time value
+
+    at Date.toISOString (<anonymous>)
+
+    at PgTimestamp.mapToDriverValue (file:///app/node_modules/drizzle-orm/pg-core/columns/timestamp.js:34:18)
+
+    at file:///app/node_modules/drizzle-orm/sql/sql.js:131:73
+
+    at Array.map (<anonymous>)
+
+    at SQL.buildQueryFromSourceParams (file:///app/node_modules/drizzle-orm/sql/sql.js:73:32)

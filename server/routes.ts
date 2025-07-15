@@ -318,7 +318,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
           
           if (user) {
             await storage.updateUserStripeInfo(user.id, customerId, subscription.id);
-            await storage.updateUserSubscription(user.id, subscription.status);
+            
+            // Handle subscription end date safely
+            let endsAt: Date | undefined;
+            if (subscription.status === 'canceled' && subscription.current_period_end) {
+              endsAt = new Date(subscription.current_period_end * 1000);
+            }
+            
+            await storage.updateUserSubscription(user.id, subscription.status, endsAt);
           }
           break;
         
@@ -361,10 +368,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         cancel_at_period_end: true,
       });
 
+      // Convert Stripe timestamp to Date, with fallback to 30 days from now
+      let endsAt: Date;
+      if (subscription.current_period_end) {
+        endsAt = new Date(subscription.current_period_end * 1000);
+      } else {
+        // Fallback: 30 days from now
+        endsAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+      }
+
       await storage.updateUserSubscription(
         user.id, 
         'canceled', 
-        new Date((subscription as any).current_period_end * 1000)
+        endsAt
       );
 
       res.json({ message: "Subscription will be canceled at the end of the billing period" });

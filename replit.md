@@ -105,6 +105,7 @@ The application follows a modern full-stack architecture with clear separation b
 - **Live Mode**: Only switch to live keys (sk_live_... and pk_live_...) for production
 
 ### Recent Changes
+- **July 15, 2025**: Fixed subscription cancellation error with invalid date handling
 - **July 15, 2025**: Removed color customization from QR code generation for better scannability
 - **July 15, 2025**: Fixed subscription system with Stripe Checkout Sessions for Railway deployment
 - **July 15, 2025**: Successfully tested subscription payment flow with test cards
