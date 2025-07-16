@@ -67,10 +67,10 @@ export default function Landing() {
             <Card className="p-8">
               <CardContent className="p-0">
                 <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center mb-6">
-                  <Palette className="text-emerald-500 text-xl" />
+                  <QrCode className="text-emerald-500 text-xl" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Full Customization</h3>
-                <p className="text-gray-600">Customize colors, sizes, and styles to match your brand.</p>
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">Unlimited QR Generation</h3>
+                <p className="text-gray-600">Create unlimited QR codes with our Pro plan.</p>
               </CardContent>
             </Card>
             

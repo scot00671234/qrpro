@@ -70,22 +70,24 @@ export const sendWelcomeEmail = async (to: string, name: string): Promise<void> 
 };
 
 export const sendPasswordResetEmail = async (to: string, resetToken: string): Promise<void> => {
-  const resetUrl = `${process.env.BASE_URL || 'http://localhost:5000'}/reset-password?token=${resetToken}`;
+  // Use production domain for Railway deployment, fallback to localhost for development
+  const baseUrl = process.env.RAILWAY_STATIC_URL 
+    ? `https://${process.env.RAILWAY_STATIC_URL}` 
+    : process.env.BASE_URL || 'http://localhost:5000';
+  const resetUrl = `${baseUrl}/reset-password?token=${resetToken}`;
   
   const subject = 'Reset Your QR Pro Password';
-  const text = `
-    Hi,
-    
-    You requested a password reset for your QR Pro account.
-    
-    Click the link below to reset your password:
-    ${resetUrl}
-    
-    If you didn't request this, please ignore this email.
-    
-    Best regards,
-    The QR Pro Team
-  `;
+  const text = `Hi,
+
+You requested a password reset for your QR Pro account.
+
+Click the link below to reset your password:
+${resetUrl}
+
+If you didn't request this, please ignore this email.
+
+Best regards,
+The QR Pro Team`;
   
   await sendEmail(to, subject, text);
 };

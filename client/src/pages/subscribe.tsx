@@ -229,27 +229,19 @@ export default function Subscribe() {
                 <ul className="space-y-4">
                   <li className="flex items-center">
                     <Check className="text-green-500 mr-3 h-5 w-5" />
-                    Unlimited QR code generation
+                    Unlimited QR Codes
                   </li>
                   <li className="flex items-center">
                     <Check className="text-green-500 mr-3 h-5 w-5" />
-                    Full customization (colors, sizes, styles)
+                    Full Customization
                   </li>
                   <li className="flex items-center">
                     <Check className="text-green-500 mr-3 h-5 w-5" />
-                    Cloud storage for all QR codes
+                    Cloud Storage
                   </li>
                   <li className="flex items-center">
                     <Check className="text-green-500 mr-3 h-5 w-5" />
-                    Download in multiple formats
-                  </li>
-                  <li className="flex items-center">
-                    <Check className="text-green-500 mr-3 h-5 w-5" />
-                    Scan analytics and tracking
-                  </li>
-                  <li className="flex items-center">
-                    <Check className="text-green-500 mr-3 h-5 w-5" />
-                    Priority customer support
+                    Priority Support
                   </li>
                 </ul>
 

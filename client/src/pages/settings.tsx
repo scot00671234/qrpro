@@ -316,6 +316,18 @@ export default function Settings() {
             </CardContent>
           </Card>
 
+          {/* Customer Service */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Customer Service</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600">
+                Customer Service: clientservicesdigital@gmail.com
+              </p>
+            </CardContent>
+          </Card>
+
           {/* Danger Zone */}
           <Card className="border-red-200">
             <CardHeader>
