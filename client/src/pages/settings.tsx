@@ -121,31 +121,56 @@ export default function Settings() {
   }
 
   // Fetch detailed subscription information from Stripe
-  const { data: subscriptionData } = useQuery({
+  const { data: subscriptionData, isLoading: isLoadingSubscription, error: subscriptionError } = useQuery({
     queryKey: ['subscription-details'],
     queryFn: async () => {
-      const response = await apiRequest("GET", "/api/subscription-details");
-      return await response.json();
+      try {
+        const response = await apiRequest("GET", "/api/subscription-details");
+        if (!response.ok) {
+          throw new Error(`Failed to fetch subscription details: ${response.status}`);
+        }
+        return await response.json();
+      } catch (error) {
+        console.error("Subscription details fetch error:", error);
+        throw error;
+      }
     },
-    enabled: !!user,
+    enabled: !!user && (user.subscriptionStatus === 'active' || user.subscriptionStatus === 'canceled') && !!user.stripeSubscriptionId,
+    retry: 1,
+    staleTime: 30000, // Cache for 30 seconds
   });
 
   const isPro = user.subscriptionStatus === 'active';
   const isCanceled = user.subscriptionStatus === 'canceled';
   
-  // Use Stripe data for accurate billing information
+  // Use Stripe data for accurate billing information, fallback to local data
   const subscription = subscriptionData?.subscription;
   
-  // For active subscriptions, always show next billing date from Stripe
+  // For active subscriptions, always show next billing date from Stripe, fallback to local data
   // For canceled subscriptions, show when access ends
-  const nextPaymentDate = subscription?.current_period_end 
-    ? new Date(subscription.current_period_end * 1000) 
-    : (user.subscriptionEndsAt ? new Date(user.subscriptionEndsAt) : null);
+  let nextPaymentDate = null;
+  if (subscription?.current_period_end) {
+    nextPaymentDate = new Date(subscription.current_period_end * 1000);
+  } else if (user.subscriptionEndsAt) {
+    nextPaymentDate = new Date(user.subscriptionEndsAt);
+  }
   
   const isScheduledForCancellation = subscription?.cancel_at_period_end || false;
   
   // Determine if subscription is truly active (not canceled and not scheduled for cancellation)
   const isActiveSubscription = isPro && !isCanceled && !isScheduledForCancellation;
+  
+  // Debug logging
+  console.log("Subscription debug:", {
+    isPro,
+    isCanceled,
+    hasStripeSubscription: !!user.stripeSubscriptionId,
+    subscriptionData,
+    subscriptionError,
+    isLoadingSubscription,
+    nextPaymentDate,
+    isActiveSubscription
+  });
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -212,7 +237,11 @@ export default function Settings() {
                         {isActiveSubscription ? "Next Payment" : "Access Ends"}
                       </Label>
                       <p className="text-gray-900">
-                        {nextPaymentDate ? nextPaymentDate.toLocaleDateString() : "Loading..."}
+                        {isLoadingSubscription && isActiveSubscription && !nextPaymentDate
+                          ? "Loading..." 
+                          : nextPaymentDate 
+                            ? nextPaymentDate.toLocaleDateString() 
+                            : "Not available"}
                       </p>
                       {isActiveSubscription && nextPaymentDate && (
                         <p className="text-xs text-gray-500 mt-1">

@@ -393,7 +393,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Reactivate subscription endpoint
   // Get subscription details from Stripe
   app.get('/api/subscription-details', isAuthenticated, async (req: any, res) => {
+    console.log("Fetching subscription details for user:", req.user?.id);
+    
     if (!stripe) {
+      console.log("Stripe not configured");
       return res.status(503).json({ message: "Payment system not configured. Please contact support." });
     }
 
@@ -401,15 +404,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const user = req.user;
 
       if (!user || !user.stripeSubscriptionId) {
+        console.log("No user or subscription ID found:", { userId: user?.id, hasSubscription: !!user?.stripeSubscriptionId });
         return res.json({ subscription: null });
       }
 
+      console.log("Retrieving Stripe subscription:", user.stripeSubscriptionId);
       const subscription = await stripe.subscriptions.retrieve(user.stripeSubscriptionId);
+      console.log("Stripe subscription retrieved:", {
+        id: subscription.id,
+        status: subscription.status,
+        current_period_end: subscription.current_period_end
+      });
       
       // Also update our local database with accurate end date from Stripe
       if (subscription.current_period_end) {
         const stripeEndDate = new Date(subscription.current_period_end * 1000);
         await storage.updateUserSubscription(user.id, user.subscriptionStatus, stripeEndDate);
+        console.log("Updated local subscription end date:", stripeEndDate);
       }
       
       res.json({ 
