@@ -21,6 +21,7 @@ export interface IStorage {
   updateUserSubscription(userId: string, status: string, endsAt?: Date): Promise<User>;
   updatePasswordResetToken(userId: string, token: string, expiry: Date): Promise<void>;
   updatePassword(userId: string, hashedPassword: string): Promise<void>;
+  deleteUser(userId: string): Promise<void>;
   
   // QR Code operations
   createQrCode(qrCode: InsertQrCode): Promise<QrCode>;
@@ -181,6 +182,11 @@ export class DatabaseStorage implements IStorage {
         updatedAt: new Date()
       })
       .where(eq(users.id, userId));
+  }
+
+  async deleteUser(userId: string): Promise<void> {
+    // Hard delete user and cascade delete their QR codes
+    await db.delete(users).where(eq(users.id, userId));
   }
 }
 

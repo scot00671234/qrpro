@@ -391,6 +391,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Reactivate subscription endpoint
+  // Get subscription details from Stripe
+  app.get('/api/subscription-details', isAuthenticated, async (req: any, res) => {
+    if (!stripe) {
+      return res.status(503).json({ message: "Payment system not configured. Please contact support." });
+    }
+
+    try {
+      const user = req.user;
+
+      if (!user || !user.stripeSubscriptionId) {
+        return res.json({ subscription: null });
+      }
+
+      const subscription = await stripe.subscriptions.retrieve(user.stripeSubscriptionId);
+      
+      res.json({ 
+        subscription: {
+          id: subscription.id,
+          status: subscription.status,
+          current_period_end: subscription.current_period_end,
+          current_period_start: subscription.current_period_start,
+          cancel_at_period_end: subscription.cancel_at_period_end,
+          canceled_at: subscription.canceled_at,
+          amount: subscription.items.data[0]?.price?.unit_amount || 1500,
+          currency: subscription.items.data[0]?.price?.currency || 'usd'
+        }
+      });
+    } catch (error: any) {
+      console.error("Error fetching subscription details:", error);
+      res.status(500).json({ message: error.message || "Failed to fetch subscription details" });
+    }
+  });
+
   app.post('/api/reactivate-subscription', isAuthenticated, async (req: any, res) => {
     if (!stripe) {
       return res.status(503).json({ message: "Payment system not configured. Please contact support." });
@@ -415,15 +448,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         cancel_at_period_end: false,
       });
 
-      // Update user subscription status back to active
-      await storage.updateUserSubscription(user.id, 'active');
+      // Update user subscription status back to active with new end date
+      const newEndDate = new Date(updatedSubscription.current_period_end * 1000);
+      await storage.updateUserSubscription(user.id, 'active', newEndDate);
 
       res.json({ 
         message: "Subscription reactivated successfully",
         subscription: {
           id: updatedSubscription.id,
           status: updatedSubscription.status,
-          current_period_end: updatedSubscription.current_period_end
+          current_period_end: updatedSubscription.current_period_end,
+          cancel_at_period_end: updatedSubscription.cancel_at_period_end
         }
       });
     } catch (error: any) {
@@ -441,26 +476,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "User not found" });
       }
 
-      // Cancel subscription if active and Stripe is configured
+      // Cancel subscription immediately if active and Stripe is configured
       if (user.stripeSubscriptionId && stripe) {
-        await stripe.subscriptions.update(user.stripeSubscriptionId, {
-          cancel_at_period_end: true,
-        });
+        try {
+          await stripe.subscriptions.cancel(user.stripeSubscriptionId);
+        } catch (stripeError) {
+          console.error("Error canceling Stripe subscription:", stripeError);
+          // Continue with account deletion even if Stripe cancellation fails
+        }
       }
 
-      // Soft delete user account by updating subscription status
-      await storage.updateUserSubscription(userId, 'deleted');
-
-      // Send confirmation email
+      // Send confirmation email before deletion
       if (user.email) {
-        await sendEmail(
-          user.email,
-          'Account Deletion Confirmation',
-          `Your QR Pro account has been scheduled for deletion. Any active subscription will be canceled after the last payment.`
-        );
+        try {
+          await sendEmail(
+            user.email,
+            'Account Deletion Confirmation',
+            `Your QR Pro account has been deleted immediately. Any active subscription has been canceled and you will stop being charged after your last billing cycle.`
+          );
+        } catch (emailError) {
+          console.error("Error sending deletion email:", emailError);
+          // Continue with deletion even if email fails
+        }
       }
 
-      res.json({ message: "Account deletion scheduled" });
+      // Hard delete user account immediately (cascades to QR codes)
+      await storage.deleteUser(userId);
+
+      // Clear session
+      req.session.destroy((err: any) => {
+        if (err) {
+          console.error("Error destroying session:", err);
+        }
+      });
+
+      res.json({ message: "Account deleted successfully" });
     } catch (error: any) {
       console.error("Error deleting account:", error);
       res.status(500).json({ message: error.message || "Failed to delete account" });

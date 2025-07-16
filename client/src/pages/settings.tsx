@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { isUnauthorizedError } from "@/lib/authUtils";
-import { apiRequest } from "@/lib/queryClient";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 import { Navigation } from "@/components/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -84,6 +84,9 @@ export default function Settings() {
         title: "Success",
         description: "Subscription reactivated successfully!",
       });
+      // Invalidate queries to refresh data
+      queryClient.invalidateQueries({ queryKey: ['subscription-details'] });
+      queryClient.invalidateQueries({ queryKey: ['auth-user'] });
       // Refresh page to update user data
       window.location.reload();
     },
@@ -114,13 +117,13 @@ export default function Settings() {
     onSuccess: () => {
       toast({
         title: "Success",
-        description: "Account deletion scheduled. You will receive a confirmation email.",
+        description: "Account deleted successfully. You will stop being charged after your last billing cycle.",
       });
       setDeleteDialogOpen(false);
-      // Redirect to logout
+      // Redirect to logout immediately
       setTimeout(() => {
         window.location.href = "/api/logout";
-      }, 2000);
+      }, 1000);
     },
     onError: (error) => {
       if (isUnauthorizedError(error)) {
@@ -150,9 +153,26 @@ export default function Settings() {
     );
   }
 
+  // Fetch detailed subscription information from Stripe
+  const { data: subscriptionData } = useQuery({
+    queryKey: ['subscription-details'],
+    queryFn: async () => {
+      const response = await apiRequest("GET", "/api/subscription-details");
+      return await response.json();
+    },
+    enabled: !!user,
+  });
+
   const isPro = user.subscriptionStatus === 'active';
   const isCanceled = user.subscriptionStatus === 'canceled';
-  const nextPaymentDate = user.subscriptionEndsAt ? new Date(user.subscriptionEndsAt) : null;
+  
+  // Use Stripe data for accurate billing information
+  const subscription = subscriptionData?.subscription;
+  const nextPaymentDate = subscription?.current_period_end 
+    ? new Date(subscription.current_period_end * 1000) 
+    : (user.subscriptionEndsAt ? new Date(user.subscriptionEndsAt) : null);
+  
+  const isScheduledForCancellation = subscription?.cancel_at_period_end || false;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -195,13 +215,15 @@ export default function Settings() {
                           <Crown className="w-3 h-3 mr-1" />
                           Pro Plan
                         </Badge>
-                        {isCanceled && (
-                          <Badge variant="destructive">Canceled</Badge>
+                        {(isCanceled || isScheduledForCancellation) && (
+                          <Badge variant="destructive">
+                            {isCanceled ? "Canceled" : "Canceling at Period End"}
+                          </Badge>
                         )}
                       </div>
                       <p className="text-sm text-gray-600 mt-1">$15.00/month</p>
                     </div>
-                    {!isCanceled && (
+                    {!isCanceled && !isScheduledForCancellation && (
                       <Button 
                         variant="outline" 
                         onClick={() => setCancelDialogOpen(true)}
@@ -214,7 +236,7 @@ export default function Settings() {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <Label className="text-sm font-medium text-gray-700">
-                        {isCanceled ? "Access Ends" : "Next Payment"}
+                        {isCanceled || isScheduledForCancellation ? "Access Ends" : "Next Payment"}
                       </Label>
                       <p className="text-gray-900">
                         {nextPaymentDate ? nextPaymentDate.toLocaleDateString() : "Not available"}
@@ -226,12 +248,12 @@ export default function Settings() {
                     </div>
                   </div>
 
-                  {isCanceled && (
+                  {(isCanceled || isScheduledForCancellation) && (
                     <div className="space-y-4">
                       <Alert>
                         <AlertTriangle className="h-4 w-4" />
                         <AlertDescription>
-                          Your subscription is canceled and will end on {nextPaymentDate?.toLocaleDateString()}. 
+                          Your subscription is {isCanceled ? "canceled" : "scheduled for cancellation"} and will end on {nextPaymentDate?.toLocaleDateString()}. 
                           You can reactivate anytime before this date.
                         </AlertDescription>
                       </Alert>
