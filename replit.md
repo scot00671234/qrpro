@@ -105,7 +105,12 @@ The application follows a modern full-stack architecture with clear separation b
 - **Live Mode**: Only switch to live keys (sk_live_... and pk_live_...) for production
 
 ### Recent Changes
-- **July 16, 2025**: Completed migration from Replit Agent to standard Replit environment with all user-requested updates
+- **July 16, 2025**: Completed full migration from Replit Agent to standard Replit environment with UI updates
+- **July 16, 2025**: Updated landing page features - changed "Full Customization" to "Unlimited QR Generation"
+- **July 16, 2025**: Standardized Pro pricing across all pages ($15/month with Unlimited QR Codes, Full Customization, Cloud Storage, Priority Support)
+- **July 16, 2025**: Added custom favicon with QR Pro branding
+- **July 16, 2025**: Added customer service email to settings (clientservicesdigital@gmail.com)
+- **July 16, 2025**: Enhanced password reset email for Railway production deployment with all user-requested updates
 - **July 16, 2025**: Updated landing page feature section to highlight "Unlimited QR Generation" instead of customization
 - **July 16, 2025**: Updated all pricing information across pages to match Pro plan specifications ($15/month, Unlimited QR Codes, Full Customization, Cloud Storage, Priority Support)
 - **July 16, 2025**: Added favicon and improved HTML meta tags for production deployment
