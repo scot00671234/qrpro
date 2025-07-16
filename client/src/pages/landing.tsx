@@ -15,20 +15,28 @@ export default function Landing() {
 
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        {/* Background Image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
+          style={{ backgroundImage: 'url(/hero-bg.png)' }}
+        />
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-blue-900/10 to-indigo-900/20" />
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <div className="text-center">
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 leading-tight">
               Generate Professional
               <span className="text-primary"> QR Codes</span>
             </h1>
-            <p className="mt-6 max-w-2xl mx-auto text-xl text-gray-600">
+            <p className="mt-6 max-w-2xl mx-auto text-xl text-gray-700">
               Create, customize, and manage QR codes with ease. Start free, upgrade for unlimited access and advanced features.
             </p>
             <div className="mt-10 flex justify-center gap-4">
               <Button 
                 onClick={handleGetStarted}
                 size="lg"
-                className="px-8 py-4 text-lg font-semibold"
+                className="px-8 py-4 text-lg font-semibold shadow-lg"
               >
                 Start Free
               </Button>
@@ -36,7 +44,7 @@ export default function Landing() {
                 variant="outline"
                 onClick={handleGetStarted}
                 size="lg"
-                className="px-8 py-4 text-lg font-semibold"
+                className="px-8 py-4 text-lg font-semibold bg-white/90 backdrop-blur-sm border-gray-300 hover:bg-white"
               >
                 Login
               </Button>
