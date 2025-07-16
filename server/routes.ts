@@ -406,6 +406,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const subscription = await stripe.subscriptions.retrieve(user.stripeSubscriptionId);
       
+      // Also update our local database with accurate end date from Stripe
+      if (subscription.current_period_end) {
+        const stripeEndDate = new Date(subscription.current_period_end * 1000);
+        await storage.updateUserSubscription(user.id, user.subscriptionStatus, stripeEndDate);
+      }
+      
       res.json({ 
         subscription: {
           id: subscription.id,

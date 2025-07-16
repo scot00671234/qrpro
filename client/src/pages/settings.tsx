@@ -135,11 +135,17 @@ export default function Settings() {
   
   // Use Stripe data for accurate billing information
   const subscription = subscriptionData?.subscription;
+  
+  // For active subscriptions, always show next billing date from Stripe
+  // For canceled subscriptions, show when access ends
   const nextPaymentDate = subscription?.current_period_end 
     ? new Date(subscription.current_period_end * 1000) 
     : (user.subscriptionEndsAt ? new Date(user.subscriptionEndsAt) : null);
   
   const isScheduledForCancellation = subscription?.cancel_at_period_end || false;
+  
+  // Determine if subscription is truly active (not canceled and not scheduled for cancellation)
+  const isActiveSubscription = isPro && !isCanceled && !isScheduledForCancellation;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -203,11 +209,18 @@ export default function Settings() {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <Label className="text-sm font-medium text-gray-700">
-                        {isCanceled || isScheduledForCancellation ? "Access Ends" : "Next Payment"}
+                        {isActiveSubscription ? "Next Payment" : "Access Ends"}
                       </Label>
                       <p className="text-gray-900">
-                        {nextPaymentDate ? nextPaymentDate.toLocaleDateString() : "Not available"}
+                        {nextPaymentDate ? nextPaymentDate.toLocaleDateString() : "Loading..."}
                       </p>
+                      {isActiveSubscription && nextPaymentDate && (
+                        <p className="text-xs text-gray-500 mt-1">
+                          Billing cycle: {subscription?.current_period_start 
+                            ? new Date(subscription.current_period_start * 1000).toLocaleDateString() 
+                            : 'N/A'} - {nextPaymentDate.toLocaleDateString()}
+                        </p>
+                      )}
                     </div>
                     <div>
                       <Label className="text-sm font-medium text-gray-700">Amount</Label>
