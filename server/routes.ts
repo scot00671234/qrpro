@@ -424,48 +424,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/reactivate-subscription', isAuthenticated, async (req: any, res) => {
-    if (!stripe) {
-      return res.status(503).json({ message: "Payment system not configured. Please contact support." });
-    }
 
-    try {
-      const user = req.user;
-
-      if (!user || !user.stripeSubscriptionId) {
-        return res.status(404).json({ message: "No subscription found" });
-      }
-
-      // Check if subscription is canceled but still active
-      const subscription = await stripe.subscriptions.retrieve(user.stripeSubscriptionId);
-      
-      if (!subscription.cancel_at_period_end) {
-        return res.status(400).json({ message: "Subscription is not scheduled for cancellation" });
-      }
-
-      // Reactivate by removing the cancellation
-      const updatedSubscription = await stripe.subscriptions.update(user.stripeSubscriptionId, {
-        cancel_at_period_end: false,
-      });
-
-      // Update user subscription status back to active with new end date
-      const newEndDate = new Date(updatedSubscription.current_period_end * 1000);
-      await storage.updateUserSubscription(user.id, 'active', newEndDate);
-
-      res.json({ 
-        message: "Subscription reactivated successfully",
-        subscription: {
-          id: updatedSubscription.id,
-          status: updatedSubscription.status,
-          current_period_end: updatedSubscription.current_period_end,
-          cancel_at_period_end: updatedSubscription.cancel_at_period_end
-        }
-      });
-    } catch (error: any) {
-      console.error("Error reactivating subscription:", error);
-      res.status(500).json({ message: error.message || "Failed to reactivate subscription" });
-    }
-  });
 
   app.delete('/api/account', isAuthenticated, async (req: any, res) => {
     try {

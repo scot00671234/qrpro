@@ -105,10 +105,10 @@ The application follows a modern full-stack architecture with clear separation b
 - **Live Mode**: Only switch to live keys (sk_live_... and pk_live_...) for production
 
 ### Recent Changes
+- **July 16, 2025**: Simplified subscription management - removed reactivation, users purchase new subscription after cancellation
 - **July 16, 2025**: Added modern cityscape background image to landing page hero section
 - **July 16, 2025**: Fixed account deletion to work immediately with proper Stripe cancellation
 - **July 16, 2025**: Enhanced subscription management with accurate billing period display from Stripe
-- **July 16, 2025**: Improved subscription reactivation functionality with proper status updates
 - **July 16, 2025**: Completed full migration from Replit Agent to standard Replit environment with UI updates
 - **July 16, 2025**: Updated landing page features - changed "Full Customization" to "Unlimited QR Generation"
 - **July 16, 2025**: Standardized Pro pricing across all pages ($15/month with Unlimited QR Codes, Full Customization, Cloud Storage, Priority Support)

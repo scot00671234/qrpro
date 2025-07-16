@@ -75,40 +75,7 @@ export default function Settings() {
     },
   });
 
-  const reactivateSubscriptionMutation = useMutation({
-    mutationFn: async () => {
-      await apiRequest("POST", "/api/reactivate-subscription");
-    },
-    onSuccess: () => {
-      toast({
-        title: "Success",
-        description: "Subscription reactivated successfully!",
-      });
-      // Invalidate queries to refresh data
-      queryClient.invalidateQueries({ queryKey: ['subscription-details'] });
-      queryClient.invalidateQueries({ queryKey: ['auth-user'] });
-      // Refresh page to update user data
-      window.location.reload();
-    },
-    onError: (error) => {
-      if (isUnauthorizedError(error)) {
-        toast({
-          title: "Unauthorized",
-          description: "You are logged out. Logging in again...",
-          variant: "destructive",
-        });
-        setTimeout(() => {
-          window.location.href = "/api/login";
-        }, 500);
-        return;
-      }
-      toast({
-        title: "Error",
-        description: "Failed to reactivate subscription",
-        variant: "destructive",
-      });
-    },
-  });
+
 
   const deleteAccountMutation = useMutation({
     mutationFn: async () => {
@@ -254,17 +221,15 @@ export default function Settings() {
                         <AlertTriangle className="h-4 w-4" />
                         <AlertDescription>
                           Your subscription is {isCanceled ? "canceled" : "scheduled for cancellation"} and will end on {nextPaymentDate?.toLocaleDateString()}. 
-                          You can reactivate anytime before this date.
+                          After this date, you can purchase a new subscription to continue using Pro features.
                         </AlertDescription>
                       </Alert>
                       
-                      <Button 
-                        onClick={() => reactivateSubscriptionMutation.mutate()}
-                        disabled={reactivateSubscriptionMutation.isPending}
-                        className="w-full"
-                      >
-                        {reactivateSubscriptionMutation.isPending ? "Reactivating..." : "Reactivate Subscription"}
-                      </Button>
+                      <Link href="/subscribe">
+                        <Button className="w-full">
+                          Purchase New Subscription
+                        </Button>
+                      </Link>
                     </div>
                   )}
                 </div>
