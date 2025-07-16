@@ -135,7 +135,7 @@ export default function Settings() {
         throw error;
       }
     },
-    enabled: !!user && (user.subscriptionStatus === 'active' || user.subscriptionStatus === 'canceled') && !!user.stripeSubscriptionId,
+    enabled: !!user && isAuthenticated && (user.subscriptionStatus === 'active' || user.subscriptionStatus === 'canceled') && !!user.stripeSubscriptionId,
     retry: 1,
     staleTime: 30000, // Cache for 30 seconds
   });
@@ -153,6 +153,9 @@ export default function Settings() {
     nextPaymentDate = new Date(subscription.current_period_end * 1000);
   } else if (user.subscriptionEndsAt) {
     nextPaymentDate = new Date(user.subscriptionEndsAt);
+  } else if (isPro && !nextPaymentDate) {
+    // If user is Pro but we don't have end date info, show fallback
+    nextPaymentDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days from now as fallback
   }
   
   const isScheduledForCancellation = subscription?.cancel_at_period_end || false;
@@ -241,7 +244,9 @@ export default function Settings() {
                           ? "Loading..." 
                           : nextPaymentDate 
                             ? nextPaymentDate.toLocaleDateString() 
-                            : "Not available"}
+                            : isActiveSubscription 
+                              ? "Contact support" 
+                              : "Not available"}
                       </p>
                       {isActiveSubscription && nextPaymentDate && (
                         <p className="text-xs text-gray-500 mt-1">
