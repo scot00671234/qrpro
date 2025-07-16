@@ -1,0 +1,87 @@
+ range → Jul 16, 2025, 1:10 AM
+
+Starting Container
+
+npm warn config production Use `--omit=dev` instead.
+
+ 
+
+> rest-express@1.0.0 start
+
+> NODE_ENV=production node dist/index.js
+
+ 
+
+Running database migrations...
+
+Database migrations completed successfully
+
+11:11:20 PM [express] serving on port 5000
+
+11:11:33 PM [express] GET /api/auth/user 304 in 17ms :: {"id":"e4bf3a33-877c-4274-b1b8-e0143f63eaa1",…
+
+11:11:33 PM [express] GET /api/qr-codes 200 in 13ms :: [{"id":3,"userId":"e4bf3a33-877c-4274-b1b8-e01…
+
+11:11:37 PM [express] POST /api/qr-codes/3/generate 200 in 93ms :: {"dataUrl":"data:image/png;base64,…
+
+11:11:49 PM [express] POST /api/cancel-subscription 200 in 682ms :: {"message":"Subscription will be …
+
+11:11:50 PM [express] GET /api/auth/user 200 in 9ms :: {"id":"e4bf3a33-877c-4274-b1b8-e0143f63eaa1","…
+
+11:11:54 PM [express] GET /api/auth/user 304 in 9ms :: {"id":"e4bf3a33-877c-4274-b1b8-e0143f63eaa1","…
+
+11:12:13 PM [express] POST /api/create-subscription 200 in 201ms :: {"subscriptionId":"sub_1RlHoNP0VG…
+
+11:12:17 PM [express] GET /api/qr-codes 200 in 10ms :: [{"id":3,"userId":"e4bf3a33-877c-4274-b1b8-e01…
+
+Error deleting account: TypeError: Cannot read properties of undefined (reading 'sub')
+
+    at file:///app/dist/index.js:818:38
+
+    at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+
+    at next (/app/node_modules/express/lib/router/route.js:149:13)
+
+    at isAuthenticated (file:///app/dist/index.js:464:12)
+
+    at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+
+    at next (/app/node_modules/express/lib/router/route.js:149:13)
+
+    at Route.dispatch (/app/node_modules/express/lib/router/route.js:119:3)
+
+    at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+
+    at /app/node_modules/express/lib/router/index.js:284:15
+
+    at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+
+11:12:44 PM [express] DELETE /api/account 500 in 12ms :: {"message":"Cannot read properties of undefi…
+
+12:12:51 AM [express] GET /api/auth/user 304 in 8ms :: {"id":"e4bf3a33-877c-4274-b1b8-e0143f63eaa1","…
+
+12:12:52 AM [express] GET /api/qr-codes 304 in 11ms :: [{"id":3,"userId":"e4bf3a33-877c-4274-b1b8-e01…
+
+Error deleting account: TypeError: Cannot read properties of undefined (reading 'sub')
+
+    at file:///app/dist/index.js:818:38
+
+    at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+
+    at next (/app/node_modules/express/lib/router/route.js:149:13)
+
+    at isAuthenticated (file:///app/dist/index.js:464:12)
+
+    at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+
+    at next (/app/node_modules/express/lib/router/route.js:149:13)
+
+    at Route.dispatch (/app/node_modules/express/lib/router/route.js:119:3)
+
+    at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+
+    at /app/node_modules/express/lib/router/index.js:284:15
+
+    at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+
+12:13:05 AM [express] DELETE /api/account 500 in 11ms :: {"message":"Cannot read properties of undefi…

@@ -75,6 +75,38 @@ export default function Settings() {
     },
   });
 
+  const reactivateSubscriptionMutation = useMutation({
+    mutationFn: async () => {
+      await apiRequest("POST", "/api/reactivate-subscription");
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success",
+        description: "Subscription reactivated successfully!",
+      });
+      // Refresh page to update user data
+      window.location.reload();
+    },
+    onError: (error) => {
+      if (isUnauthorizedError(error)) {
+        toast({
+          title: "Unauthorized",
+          description: "You are logged out. Logging in again...",
+          variant: "destructive",
+        });
+        setTimeout(() => {
+          window.location.href = "/api/login";
+        }, 500);
+        return;
+      }
+      toast({
+        title: "Error",
+        description: "Failed to reactivate subscription",
+        variant: "destructive",
+      });
+    },
+  });
+
   const deleteAccountMutation = useMutation({
     mutationFn: async () => {
       await apiRequest("DELETE", "/api/account");
@@ -195,13 +227,23 @@ export default function Settings() {
                   </div>
 
                   {isCanceled && (
-                    <Alert>
-                      <AlertTriangle className="h-4 w-4" />
-                      <AlertDescription>
-                        Your subscription is canceled and will end on {nextPaymentDate?.toLocaleDateString()}. 
-                        You can reactivate anytime before this date.
-                      </AlertDescription>
-                    </Alert>
+                    <div className="space-y-4">
+                      <Alert>
+                        <AlertTriangle className="h-4 w-4" />
+                        <AlertDescription>
+                          Your subscription is canceled and will end on {nextPaymentDate?.toLocaleDateString()}. 
+                          You can reactivate anytime before this date.
+                        </AlertDescription>
+                      </Alert>
+                      
+                      <Button 
+                        onClick={() => reactivateSubscriptionMutation.mutate()}
+                        disabled={reactivateSubscriptionMutation.isPending}
+                        className="w-full"
+                      >
+                        {reactivateSubscriptionMutation.isPending ? "Reactivating..." : "Reactivate Subscription"}
+                      </Button>
+                    </div>
                   )}
                 </div>
               )}

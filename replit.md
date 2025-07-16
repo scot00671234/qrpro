@@ -105,6 +105,9 @@ The application follows a modern full-stack architecture with clear separation b
 - **Live Mode**: Only switch to live keys (sk_live_... and pk_live_...) for production
 
 ### Recent Changes
+- **July 16, 2025**: Fixed account deletion error that was crashing due to incorrect user ID access
+- **July 16, 2025**: Added subscription reactivation functionality with full Stripe integration
+- **July 16, 2025**: Completed migration from Replit Agent to standard Replit environment
 - **July 15, 2025**: Fixed subscription cancellation error with invalid date handling
 - **July 15, 2025**: Removed color customization from QR code generation for better scannability
 - **July 15, 2025**: Fixed subscription system with Stripe Checkout Sessions for Railway deployment
