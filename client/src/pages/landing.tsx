@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Navigation } from "@/components/navigation";
-import { QrCode, Zap, Palette, Cloud, Check, X } from "lucide-react";
+import { QrCode, BarChart3, Edit3, Cloud, Check, X, Building2, UtensilsCrossed, Home, Users } from "lucide-react";
 
 export default function Landing() {
   const handleGetStarted = () => {
@@ -26,11 +26,11 @@ export default function Landing() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <div className="text-center">
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 leading-tight">
-              Generate Professional
-              <span className="text-primary"> QR Codes</span>
+              Trackable QR Codes for
+              <span className="text-primary"> Real Businesses</span>
             </h1>
             <p className="mt-6 max-w-2xl mx-auto text-xl text-gray-700">
-              Create, customize, and manage QR codes with ease. Start free, upgrade for unlimited access and advanced features.
+              Create branded, editable QR codes with built-in scan analytics. Perfect for restaurants, real estate agents, creators, and small businesses.
             </p>
             <div className="mt-10 flex justify-center gap-4">
               <Button 
@@ -65,32 +65,55 @@ export default function Landing() {
             <Card className="p-8">
               <CardContent className="p-0">
                 <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6">
-                  <Zap className="text-primary text-xl" />
+                  <BarChart3 className="text-primary text-xl" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Instant Generation</h3>
-                <p className="text-gray-600">Create QR codes instantly with our fast and reliable generator.</p>
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">Analytics Dashboard</h3>
+                <p className="text-gray-600">Track scans with detailed analytics including location, device type, and time data.</p>
               </CardContent>
             </Card>
             
             <Card className="p-8">
               <CardContent className="p-0">
                 <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center mb-6">
-                  <QrCode className="text-emerald-500 text-xl" />
+                  <Edit3 className="text-emerald-500 text-xl" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Unlimited QR Generation</h3>
-                <p className="text-gray-600">Create unlimited QR codes with our Pro plan.</p>
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">Dynamic QR Codes</h3>
+                <p className="text-gray-600">Update destination URLs without changing the QR code. Perfect for campaigns.</p>
               </CardContent>
             </Card>
             
             <Card className="p-8">
               <CardContent className="p-0">
                 <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center mb-6">
-                  <Cloud className="text-amber-500 text-xl" />
+                  <QrCode className="text-amber-500 text-xl" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Cloud Storage</h3>
-                <p className="text-gray-600">Save and manage all your QR codes in one secure place.</p>
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">Branded QR Codes</h3>
+                <p className="text-gray-600">Add logos, customize colors, and create professional QR codes that match your brand.</p>
               </CardContent>
             </Card>
+          </div>
+          
+          {/* Industry Section */}
+          <div className="mt-20 text-center">
+            <h3 className="text-2xl font-bold text-gray-900 mb-8">Trusted by businesses across industries</h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center">
+              <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-sm">
+                <UtensilsCrossed className="text-primary w-8 h-8 mb-2" />
+                <span className="text-sm font-medium text-gray-700">Restaurants</span>
+              </div>
+              <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-sm">
+                <Home className="text-primary w-8 h-8 mb-2" />
+                <span className="text-sm font-medium text-gray-700">Real Estate</span>
+              </div>
+              <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-sm">
+                <Users className="text-primary w-8 h-8 mb-2" />
+                <span className="text-sm font-medium text-gray-700">Creators</span>
+              </div>
+              <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-sm">
+                <Building2 className="text-primary w-8 h-8 mb-2" />
+                <span className="text-sm font-medium text-gray-700">Small Business</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -121,11 +144,15 @@ export default function Landing() {
                   </li>
                   <li className="flex items-center">
                     <X className="text-gray-400 mr-3 h-5 w-5" />
-                    Customization
+                    Analytics Dashboard
                   </li>
                   <li className="flex items-center">
                     <X className="text-gray-400 mr-3 h-5 w-5" />
-                    Cloud Storage
+                    Dynamic QR Codes
+                  </li>
+                  <li className="flex items-center">
+                    <X className="text-gray-400 mr-3 h-5 w-5" />
+                    Branded Customization
                   </li>
                 </ul>
                 <Button 
@@ -154,11 +181,15 @@ export default function Landing() {
                   </li>
                   <li className="flex items-center">
                     <Check className="text-green-500 mr-3 h-5 w-5" />
-                    Full Customization
+                    Analytics Dashboard
                   </li>
                   <li className="flex items-center">
                     <Check className="text-green-500 mr-3 h-5 w-5" />
-                    Cloud Storage
+                    Dynamic QR Codes
+                  </li>
+                  <li className="flex items-center">
+                    <Check className="text-green-500 mr-3 h-5 w-5" />
+                    Branded Customization
                   </li>
                   <li className="flex items-center">
                     <Check className="text-green-500 mr-3 h-5 w-5" />

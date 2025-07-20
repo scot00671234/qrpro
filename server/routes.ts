@@ -4,7 +4,7 @@ import Stripe from "stripe";
 import QRCode from "qrcode";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./auth";
-import { insertQrCodeSchema, updateQrCodeSchema } from "@shared/schema";
+import { insertQrCodeSchema, updateQrCodeSchema, insertQrScanSchema } from "@shared/schema";
 import { sendEmail } from "./emailService";
 import { randomBytes } from "crypto";
 import { runMigrations } from "./migrate";
@@ -61,7 +61,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         userId: user.id,
       });
 
+      // For dynamic QR codes, generate a redirect URL
       const qrCode = await storage.createQrCode(qrCodeData);
+      
+      // Update the content to be a redirect URL if it's dynamic
+      if (qrCode.isDynamic) {
+        const redirectUrl = `${req.protocol}://${req.get('host')}/r/${qrCode.id}`;
+        await storage.updateQrCode(qrCode.id, user.id, { content: redirectUrl });
+      }
       res.status(201).json(qrCode);
     } catch (error: any) {
       console.error("Error creating QR code:", error);
@@ -176,6 +183,93 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error generating QR code:", error);
       res.status(500).json({ message: "Failed to generate QR code" });
+    }
+  });
+
+  // QR Redirect route (for dynamic QR codes)
+  app.get('/r/:id', async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const qrCode = await storage.getQrCodeByRedirectId(id);
+      
+      if (!qrCode || !qrCode.isActive) {
+        return res.status(404).send('QR Code not found');
+      }
+
+      // Record the scan with analytics
+      const userAgent = req.get('User-Agent') || '';
+      const ipAddress = req.ip || req.connection.remoteAddress || '';
+      
+      // Simple device detection
+      let deviceType = 'desktop';
+      if (/Mobile|Android|iPhone|iPad/.test(userAgent)) {
+        deviceType = /iPad/.test(userAgent) ? 'tablet' : 'mobile';
+      }
+
+      // Record the scan
+      await storage.recordQrScan({
+        qrCodeId: id,
+        userAgent,
+        ipAddress,
+        deviceType,
+        referrer: req.get('Referer') || null,
+        country: null, // Could integrate with IP geolocation service
+        city: null
+      });
+
+      // Increment scan count
+      await storage.incrementQrCodeScans(id);
+
+      // Redirect to destination URL
+      res.redirect(302, qrCode.destinationUrl);
+    } catch (error) {
+      console.error("Error in QR redirect:", error);
+      res.status(500).send('Internal server error');
+    }
+  });
+
+  // Analytics routes
+  app.get('/api/qr-codes/:id/analytics', isAuthenticated, async (req: any, res) => {
+    try {
+      const user = req.user;
+      const id = parseInt(req.params.id);
+      
+      if (user.subscriptionStatus === 'free') {
+        return res.status(403).json({ 
+          message: "Analytics require Pro subscription",
+          requiresUpgrade: true
+        });
+      }
+      
+      const analytics = await storage.getQrCodeAnalytics(id, user.id);
+      
+      if (!analytics) {
+        return res.status(404).json({ message: "QR code not found" });
+      }
+
+      res.json(analytics);
+    } catch (error) {
+      console.error("Error fetching QR analytics:", error);
+      res.status(500).json({ message: "Failed to fetch analytics" });
+    }
+  });
+
+  app.get('/api/analytics/summary', isAuthenticated, async (req: any, res) => {
+    try {
+      const user = req.user;
+      
+      if (user.subscriptionStatus === 'free') {
+        return res.status(403).json({ 
+          message: "Analytics require Pro subscription",
+          requiresUpgrade: true
+        });
+      }
+      
+      const summary = await storage.getUserAnalyticsSummary(user.id);
+      res.json(summary);
+    } catch (error) {
+      console.error("Error fetching analytics summary:", error);
+      res.status(500).json({ message: "Failed to fetch analytics summary" });
     }
   });
 

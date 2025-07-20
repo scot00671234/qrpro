@@ -1,8 +1,8 @@
-# QR Pro - Railway Production Application
+# QR Pro - Multi-Niche Business QR Platform
 
 ## Overview
 
-QR Pro is a production-ready freemium QR code generator SaaS application designed for Railway deployment. Users get 1 free QR code, with a $15/month Pro subscription for unlimited QR codes and customization features (colors, sizes). The application includes authentication, PostgreSQL database, Stripe payment integration, and email services.
+QR Pro is a comprehensive business-focused QR code platform positioned for multi-niche markets including restaurants, real estate, creators, and small businesses. The platform features trackable, editable QR codes with built-in analytics, moving beyond basic generation to provide real business intelligence. Users get 1 free QR code, with a $15/month Pro subscription offering unlimited QR codes, analytics dashboard, dynamic URL updates, and branded customization.
 
 ## User Preferences
 
@@ -48,11 +48,12 @@ The application follows a modern full-stack architecture with clear separation b
 - **Tiers**: Free (1 QR code limit) and Pro (unlimited)
 - **Features**: Subscription status tracking with automatic limit enforcement
 
-### QR Code Generation
-- **Backend Processing**: Server-side QR code generation using QRCode library
-- **Customization**: Size options (Pro feature) - color removed for scannability
-- **Analytics**: Scan count tracking
-- **Management**: CRUD operations with user ownership validation
+### QR Code Generation & Analytics
+- **Dynamic QR Codes**: Editable destination URLs without regenerating QR code (redirect through /r/:id)
+- **Analytics Dashboard**: Comprehensive scan tracking with device detection, location data, and performance metrics
+- **Branded Customization**: Size, color, and logo options for Pro users while maintaining scannability
+- **Business Intelligence**: Scan analytics with device breakdown, country tracking, and engagement metrics
+- **Management**: Full CRUD operations with user ownership validation and soft deletion
 
 ## Data Flow
 
@@ -105,6 +106,15 @@ The application follows a modern full-stack architecture with clear separation b
 - **Live Mode**: Only switch to live keys (sk_live_... and pk_live_...) for production
 
 ### Recent Changes
+- **July 20, 2025**: Implemented multi-niche positioning strategy with trackable QR codes for real businesses
+- **July 20, 2025**: Added comprehensive analytics dashboard with scan tracking, device detection, and performance metrics
+- **July 20, 2025**: Implemented dynamic QR codes allowing destination URL updates without changing QR code
+- **July 20, 2025**: Enhanced QR generator with branded customization options (colors, sizes) for Pro users
+- **July 20, 2025**: Added QR scan analytics table with detailed tracking (device type, location, timestamps)
+- **July 20, 2025**: Created redirect system (/r/:id) for trackable QR codes with automatic analytics recording
+- **July 20, 2025**: Updated homepage messaging to "Trackable QR Codes for Real Businesses" targeting multiple industries
+- **July 20, 2025**: Added industry showcase section featuring restaurants, real estate, creators, and small businesses
+- **July 20, 2025**: Enhanced Pro features with analytics dashboard, dynamic QR codes, and branded customization
 - **July 16, 2025**: Successfully migrated from Replit Agent to standard Replit environment with PostgreSQL database setup
 - **July 16, 2025**: Enhanced billing period display with improved fallback data for Railway deployment
 - **July 16, 2025**: Fixed subscription details API to handle cases without Stripe configuration

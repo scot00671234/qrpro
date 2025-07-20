@@ -9,6 +9,7 @@ import Landing from "@/pages/landing";
 import Login from "@/pages/login";
 import Dashboard from "@/pages/dashboard";
 import QrCodes from "@/pages/qr-codes";
+import Analytics from "@/pages/analytics";
 import Settings from "@/pages/settings";
 import Subscribe from "@/pages/subscribe";
 import ResetPassword from "@/pages/reset-password";
@@ -30,6 +31,7 @@ function Router() {
           <Route path="/" component={Dashboard} />
           <Route path="/dashboard" component={Dashboard} />
           <Route path="/qr-codes" component={QrCodes} />
+          <Route path="/analytics" component={Analytics} />
           <Route path="/settings" component={Settings} />
           <Route path="/subscribe" component={Subscribe} />
         </>

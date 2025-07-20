@@ -1,11 +1,15 @@
 import {
   users,
   qrCodes,
+  qrScans,
   type User,
   type UpsertUser,
   type QrCode,
   type InsertQrCode,
   type UpdateQrCode,
+  type InsertQrScan,
+  type QrScan,
+  type QrCodeWithAnalytics,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, desc, sql } from "drizzle-orm";
@@ -27,10 +31,20 @@ export interface IStorage {
   createQrCode(qrCode: InsertQrCode): Promise<QrCode>;
   getUserQrCodes(userId: string): Promise<QrCode[]>;
   getQrCode(id: number, userId: string): Promise<QrCode | undefined>;
+  getQrCodeByRedirectId(id: number): Promise<QrCode | undefined>;
   updateQrCode(id: number, userId: string, updates: UpdateQrCode): Promise<QrCode | undefined>;
   deleteQrCode(id: number, userId: string): Promise<boolean>;
   incrementQrCodeScans(id: number): Promise<void>;
   getUserQrCodeCount(userId: string): Promise<number>;
+  
+  // Analytics operations
+  recordQrScan(scanData: InsertQrScan): Promise<void>;
+  getQrCodeAnalytics(qrCodeId: number, userId: string): Promise<QrCodeWithAnalytics | undefined>;
+  getUserAnalyticsSummary(userId: string): Promise<{
+    totalScans: number;
+    topPerformingQr: QrCode | null;
+    recentScans: QrScan[];
+  }>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -159,6 +173,111 @@ export class DatabaseStorage implements IStorage {
       .from(qrCodes)
       .where(and(eq(qrCodes.userId, userId), eq(qrCodes.isActive, true)));
     return result.length;
+  }
+
+  async getQrCodeByRedirectId(id: number): Promise<QrCode | undefined> {
+    const [qrCode] = await db
+      .select()
+      .from(qrCodes)
+      .where(and(eq(qrCodes.id, id), eq(qrCodes.isActive, true)));
+    return qrCode;
+  }
+
+  async recordQrScan(scanData: InsertQrScan): Promise<void> {
+    await db.insert(qrScans).values(scanData);
+  }
+
+  async getQrCodeAnalytics(qrCodeId: number, userId: string): Promise<QrCodeWithAnalytics | undefined> {
+    const qrCode = await this.getQrCode(qrCodeId, userId);
+    if (!qrCode) return undefined;
+
+    // Get recent scans (last 30 days)
+    const recentScans = await db
+      .select()
+      .from(qrScans)
+      .where(and(
+        eq(qrScans.qrCodeId, qrCodeId),
+        sql`${qrScans.scannedAt} >= NOW() - INTERVAL '30 days'`
+      ))
+      .orderBy(desc(qrScans.scannedAt))
+      .limit(100);
+
+    // Get country breakdown
+    const countryData = await db
+      .select({
+        country: qrScans.country,
+        count: sql<number>`count(*)`.as('count')
+      })
+      .from(qrScans)
+      .where(eq(qrScans.qrCodeId, qrCodeId))
+      .groupBy(qrScans.country)
+      .orderBy(desc(sql`count(*)`))
+      .limit(10);
+
+    // Get device breakdown
+    const deviceData = await db
+      .select({
+        deviceType: qrScans.deviceType,
+        count: sql<number>`count(*)`.as('count')
+      })
+      .from(qrScans)
+      .where(eq(qrScans.qrCodeId, qrCodeId))
+      .groupBy(qrScans.deviceType)
+      .orderBy(desc(sql`count(*)`));
+
+    return {
+      ...qrCode,
+      totalScans: qrCode.scans,
+      recentScans,
+      topCountries: countryData.map(item => ({
+        country: item.country || 'Unknown',
+        count: item.count
+      })),
+      deviceBreakdown: deviceData.map(item => ({
+        deviceType: item.deviceType || 'Unknown',
+        count: item.count
+      }))
+    };
+  }
+
+  async getUserAnalyticsSummary(userId: string): Promise<{
+    totalScans: number;
+    topPerformingQr: QrCode | null;
+    recentScans: QrScan[];
+  }> {
+    // Get user's QR codes
+    const userQrCodes = await this.getUserQrCodes(userId);
+    
+    if (userQrCodes.length === 0) {
+      return {
+        totalScans: 0,
+        topPerformingQr: null,
+        recentScans: []
+      };
+    }
+
+    // Calculate total scans
+    const totalScans = userQrCodes.reduce((sum, qr) => sum + qr.scans, 0);
+    
+    // Find top performing QR
+    const topPerformingQr = userQrCodes.reduce((top, current) => 
+      current.scans > top.scans ? current : top
+    );
+
+    // Get recent scans across all user QRs
+    const qrCodeIds = userQrCodes.map(qr => qr.id);
+    const recentScans = await db
+      .select()
+      .from(qrScans)
+      .where(sql`${qrScans.qrCodeId} = ANY(${qrCodeIds})`)
+      .orderBy(desc(qrScans.scannedAt))
+      .limit(20);
+
+    return {
+      totalScans,
+      topPerformingQr,
+      recentScans
+    };
   }
 
   async updatePasswordResetToken(userId: string, token: string, expiry: Date): Promise<void> {

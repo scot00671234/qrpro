@@ -47,14 +47,35 @@ export const qrCodes = pgTable("qr_codes", {
   id: serial("id").primaryKey(),
   userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   name: varchar("name").notNull(),
-  content: text("content").notNull(),
+  content: text("content").notNull(), // This will now be the redirect URL, not the final destination
+  destinationUrl: text("destination_url").notNull(), // The actual URL users get redirected to (editable)
+  isDynamic: boolean("is_dynamic").default(true), // Dynamic QR codes allow URL changes
   size: integer("size").default(200),
   format: varchar("format").default("png"), // png, svg, pdf
-  customization: jsonb("customization"), // for future customization options
+  customization: jsonb("customization").$type<{
+    logoUrl?: string;
+    foregroundColor?: string;
+    backgroundColor?: string;
+    borderRadius?: number;
+    errorCorrectionLevel?: "L" | "M" | "Q" | "H";
+  }>(), // Enhanced customization options
   scans: integer("scans").default(0),
   isActive: boolean("is_active").default(true),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// QR Scan Analytics table
+export const qrScans = pgTable("qr_scans", {
+  id: serial("id").primaryKey(),
+  qrCodeId: integer("qr_code_id").notNull().references(() => qrCodes.id, { onDelete: "cascade" }),
+  scannedAt: timestamp("scanned_at").defaultNow(),
+  userAgent: text("user_agent"),
+  ipAddress: varchar("ip_address"),
+  country: varchar("country"),
+  city: varchar("city"),
+  deviceType: varchar("device_type"), // mobile, tablet, desktop
+  referrer: text("referrer"),
 });
 
 // Relations
@@ -62,10 +83,18 @@ export const usersRelations = relations(users, ({ many }) => ({
   qrCodes: many(qrCodes),
 }));
 
-export const qrCodesRelations = relations(qrCodes, ({ one }) => ({
+export const qrCodesRelations = relations(qrCodes, ({ one, many }) => ({
   user: one(users, {
     fields: [qrCodes.userId],
     references: [users.id],
+  }),
+  scans: many(qrScans),
+}));
+
+export const qrScansRelations = relations(qrScans, ({ one }) => ({
+  qrCode: one(qrCodes, {
+    fields: [qrScans.qrCodeId],
+    references: [qrCodes.id],
   }),
 }));
 
@@ -91,9 +120,24 @@ export const updateQrCodeSchema = createInsertSchema(qrCodes).omit({
   scans: true,
 }).partial();
 
+export const insertQrScanSchema = createInsertSchema(qrScans).omit({
+  id: true,
+  scannedAt: true,
+});
+
 // Types
 export type UpsertUser = typeof users.$inferInsert;
 export type User = typeof users.$inferSelect;
 export type InsertQrCode = z.infer<typeof insertQrCodeSchema>;
 export type UpdateQrCode = z.infer<typeof updateQrCodeSchema>;
 export type QrCode = typeof qrCodes.$inferSelect;
+export type InsertQrScan = z.infer<typeof insertQrScanSchema>;
+export type QrScan = typeof qrScans.$inferSelect;
+
+// Analytics types
+export type QrCodeWithAnalytics = QrCode & {
+  totalScans: number;
+  recentScans: QrScan[];
+  topCountries: Array<{ country: string; count: number }>;
+  deviceBreakdown: Array<{ deviceType: string; count: number }>;
+};

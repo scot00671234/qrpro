@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { QrCode, Settings, LogOut, User, Crown } from "lucide-react";
+import { QrCode, Settings, LogOut, User, Crown, BarChart3 } from "lucide-react";
 import { Link } from "wouter";
 
 export function Navigation() {
@@ -65,6 +65,12 @@ export function Navigation() {
                   <Link href="/qr-codes">
                     <Button variant="ghost" size="sm">
                       My QR Codes
+                    </Button>
+                  </Link>
+                  <Link href="/analytics">
+                    <Button variant="ghost" size="sm">
+                      <BarChart3 className="w-4 h-4 mr-1" />
+                      Analytics
                     </Button>
                   </Link>
                   {!isPro && (

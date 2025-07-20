@@ -9,9 +9,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { Download, Save, Crown, AlertTriangle } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { Download, Save, Crown, AlertTriangle, BarChart3, Edit3, Palette } from "lucide-react";
 import { Link } from "wouter";
 
 interface QrGeneratorProps {
@@ -24,9 +26,11 @@ export function QrGenerator({ isPro, qrCodeCount, onQrCodeCreated }: QrGenerator
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [name, setName] = useState("");
-  const [content, setContent] = useState("");
-
+  const [destinationUrl, setDestinationUrl] = useState("");
+  const [isDynamic, setIsDynamic] = useState(true);
   const [size, setSize] = useState("200");
+  const [foregroundColor, setForegroundColor] = useState("#000000");
+  const [backgroundColor, setBackgroundColor] = useState("#FFFFFF");
   const [qrImage, setQrImage] = useState<string | null>(null);
   const [generatedQrId, setGeneratedQrId] = useState<number | null>(null);
 
@@ -104,10 +108,10 @@ export function QrGenerator({ isPro, qrCodeCount, onQrCodeCreated }: QrGenerator
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!name.trim() || !content.trim()) {
+    if (!name.trim() || !destinationUrl.trim()) {
       toast({
         title: "Validation Error",
-        description: "Please fill in both name and content fields",
+        description: "Please fill in both name and destination URL fields",
         variant: "destructive",
       });
       return;
@@ -115,8 +119,15 @@ export function QrGenerator({ isPro, qrCodeCount, onQrCodeCreated }: QrGenerator
 
     const qrData = {
       name: name.trim(),
-      content: content.trim(),
+      content: destinationUrl.trim(), // This will be updated to redirect URL for dynamic QRs
+      destinationUrl: destinationUrl.trim(),
+      isDynamic,
       size: isPro ? parseInt(size) : 200,
+      customization: isPro ? {
+        foregroundColor,
+        backgroundColor,
+        errorCorrectionLevel: "M" as const
+      } : null,
     };
 
     createQrMutation.mutate(qrData);
@@ -153,28 +164,49 @@ export function QrGenerator({ isPro, qrCodeCount, onQrCodeCreated }: QrGenerator
             </div>
 
             <div>
-              <Label htmlFor="content">Content</Label>
-              <Textarea
-                id="content"
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                rows={3}
-                placeholder="Enter URL, text, or other content..."
+              <Label htmlFor="destinationUrl">Destination URL</Label>
+              <Input
+                id="destinationUrl"
+                value={destinationUrl}
+                onChange={(e) => setDestinationUrl(e.target.value)}
+                placeholder="https://example.com"
                 disabled={!canCreateQr}
               />
+              <p className="text-sm text-gray-500 mt-1">
+                {isDynamic ? "You can change this URL later without regenerating the QR code" : "This URL will be permanent"}
+              </p>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="dynamic"
+                checked={isDynamic}
+                onCheckedChange={setIsDynamic}
+                disabled={!canCreateQr}
+              />
+              <div>
+                <Label htmlFor="dynamic" className="flex items-center">
+                  <Edit3 className="w-4 h-4 mr-2" />
+                  Dynamic QR Code
+                </Label>
+                <p className="text-sm text-gray-500">
+                  Update destination without changing QR code
+                </p>
+              </div>
             </div>
             
             {/* Pro Features */}
             <div className={`space-y-4 ${!isPro ? 'opacity-50' : ''}`}>
+              <div className="flex items-center space-x-2 mb-4">
+                <Crown className="w-4 h-4 text-yellow-500" />
+                <span className="text-sm font-medium">Pro Features</span>
+                {!isPro && <Badge variant="outline">Upgrade Required</Badge>}
+              </div>
+              
               <div>
                 <Label htmlFor="size" className="flex items-center">
-                  Size 
-                  {!isPro && (
-                    <Badge variant="secondary" className="ml-2 text-xs">
-                      <Crown className="w-3 h-3 mr-1" />
-                      Pro Feature
-                    </Badge>
-                  )}
+                  <Palette className="w-4 h-4 mr-2" />
+                  Size
                 </Label>
                 <Select 
                   value={size} 
@@ -182,14 +214,38 @@ export function QrGenerator({ isPro, qrCodeCount, onQrCodeCreated }: QrGenerator
                   disabled={!isPro || !canCreateQr}
                 >
                   <SelectTrigger>
-                    <SelectValue />
+                    <SelectValue placeholder="Select size" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="200">Small (200x200)</SelectItem>
-                    <SelectItem value="400">Medium (400x400)</SelectItem>
-                    <SelectItem value="800">Large (800x800)</SelectItem>
+                    <SelectItem value="150">Small (150px)</SelectItem>
+                    <SelectItem value="200">Medium (200px)</SelectItem>
+                    <SelectItem value="300">Large (300px)</SelectItem>
+                    <SelectItem value="500">Extra Large (500px)</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="foregroundColor">Foreground Color</Label>
+                  <Input
+                    id="foregroundColor"
+                    type="color"
+                    value={foregroundColor}
+                    onChange={(e) => setForegroundColor(e.target.value)}
+                    disabled={!isPro || !canCreateQr}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="backgroundColor">Background Color</Label>
+                  <Input
+                    id="backgroundColor"
+                    type="color"
+                    value={backgroundColor}
+                    onChange={(e) => setBackgroundColor(e.target.value)}
+                    disabled={!isPro || !canCreateQr}
+                  />
+                </div>
               </div>
             </div>
             
