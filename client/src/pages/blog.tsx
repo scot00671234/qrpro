@@ -84,11 +84,14 @@ export default function Blog() {
             <Card className="overflow-hidden glass-effect warm-shadow border-0 rounded-2xl">
               <div className="md:flex">
                 <div className="md:w-1/2">
-                  <img 
-                    src="/blog/restaurant-qr.jpg" 
-                    alt="Restaurant QR code guide"
-                    className="w-full h-64 md:h-full object-cover"
-                  />
+                  <div className="w-full h-64 md:h-full bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center">
+                    <div className="text-center p-8">
+                      <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-accent/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <ArrowRight className="w-8 h-8 text-primary" />
+                      </div>
+                      <p className="text-sm text-muted-foreground font-medium">Restaurant Guide</p>
+                    </div>
+                  </div>
                 </div>
                 <div className="md:w-1/2 p-8 md:p-12">
                   <Badge className="mb-4">Featured</Badge>
@@ -122,11 +125,14 @@ export default function Blog() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {blogPosts.slice(1).map((post) => (
               <Card key={post.slug} className="overflow-hidden glass-effect warm-shadow border-0 rounded-2xl hover:shadow-lg transition-shadow">
-                <img 
-                  src={post.image} 
-                  alt={post.title}
-                  className="w-full h-48 object-cover"
-                />
+                <div className="w-full h-48 bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center">
+                  <div className="text-center p-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-accent/20 rounded-xl flex items-center justify-center mx-auto mb-2">
+                      <ArrowRight className="w-6 h-6 text-primary" />
+                    </div>
+                    <p className="text-xs text-muted-foreground font-medium">{post.category}</p>
+                  </div>
+                </div>
                 <CardContent className="p-6">
                   <Badge variant="secondary" className="mb-3">{post.category}</Badge>
                   <h3 className="text-xl font-light text-foreground mb-3 tracking-tight line-clamp-2">

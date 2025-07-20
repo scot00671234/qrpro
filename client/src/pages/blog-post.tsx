@@ -6,6 +6,84 @@ import { Button } from "@/components/ui/button";
 import { Calendar, Clock, ArrowLeft, Share2 } from "lucide-react";
 import { Link } from "wouter";
 
+// Simple markdown renderer for blog content
+function renderMarkdown(content: string) {
+  const lines = content.split('\n');
+  const elements: JSX.Element[] = [];
+  let key = 0;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    
+    // Skip empty lines
+    if (!line.trim()) {
+      elements.push(<div key={key++} className="h-4" />);
+      continue;
+    }
+    
+    // Headers
+    if (line.startsWith('### ')) {
+      elements.push(
+        <h3 key={key++} className="text-xl font-medium text-foreground mb-4 mt-8">
+          {line.replace('### ', '')}
+        </h3>
+      );
+    } else if (line.startsWith('## ')) {
+      elements.push(
+        <h2 key={key++} className="text-2xl font-light text-foreground mb-6 mt-10 tracking-tight">
+          {line.replace('## ', '')}
+        </h2>
+      );
+    } else if (line.startsWith('# ')) {
+      elements.push(
+        <h1 key={key++} className="text-3xl font-light text-foreground mb-6 mt-8 tracking-tight">
+          {line.replace('# ', '')}
+        </h1>
+      );
+    } else if (line.startsWith('- ') || line.startsWith('* ')) {
+      // List items
+      elements.push(
+        <div key={key++} className="flex items-start gap-3 mb-2">
+          <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2.5 flex-shrink-0"></div>
+          <p className="text-muted-foreground leading-relaxed">{formatInlineMarkdown(line.replace(/^[-*] /, ''))}</p>
+        </div>
+      );
+    } else {
+      // Regular paragraphs
+      elements.push(
+        <p key={key++} className="text-muted-foreground leading-relaxed mb-4">
+          {formatInlineMarkdown(line)}
+        </p>
+      );
+    }
+  }
+  
+  return elements;
+}
+
+// Format inline markdown (bold, links, etc.)
+function formatInlineMarkdown(text: string): JSX.Element[] {
+  const parts: JSX.Element[] = [];
+  let key = 0;
+  
+  // Split by ** for bold text
+  const boldParts = text.split('**');
+  
+  for (let i = 0; i < boldParts.length; i++) {
+    if (i % 2 === 0) {
+      // Regular text
+      if (boldParts[i]) {
+        parts.push(<span key={key++}>{boldParts[i]}</span>);
+      }
+    } else {
+      // Bold text
+      parts.push(<strong key={key++} className="font-medium text-foreground">{boldParts[i]}</strong>);
+    }
+  }
+  
+  return parts;
+}
+
 const blogPosts: Record<string, {
   title: string;
   content: string;
@@ -511,22 +589,22 @@ export default function BlogPost() {
             </Button>
           </div>
           
-          <img 
-            src={post.image} 
-            alt={post.title}
-            className="w-full h-64 md:h-96 object-cover rounded-2xl mb-12"
-          />
+          <div className="w-full h-64 md:h-96 bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center rounded-2xl mb-12">
+            <div className="text-center p-8">
+              <div className="w-20 h-20 bg-gradient-to-br from-primary/20 to-accent/20 rounded-3xl flex items-center justify-center mx-auto mb-6">
+                <ArrowLeft className="w-10 h-10 text-primary rotate-180" />
+              </div>
+              <p className="text-lg text-muted-foreground font-medium">{post.category} Article</p>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Article Content */}
       <div className="pb-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="prose prose-lg max-w-none prose-headings:font-light prose-headings:tracking-tight prose-h1:text-4xl prose-h2:text-3xl prose-h3:text-2xl prose-p:leading-relaxed prose-a:text-primary prose-strong:font-medium">
-            <div dangerouslySetInnerHTML={{ __html: post.content.replace(/\n/g, '<br />').replace(/#{1,6}\s/g, (match) => {
-              const level = match.trim().length;
-              return level === 1 ? '<h1>' : level === 2 ? '<h2>' : '<h3>';
-            }).replace(/<br \/><br \/>/g, '</p><p>').replace(/^\*\*(.*?)\*\*/gm, '<strong>$1</strong>') }} />
+          <div className="prose prose-lg max-w-none">
+            {renderMarkdown(post.content)}
           </div>
 
           {/* Call to Action */}
