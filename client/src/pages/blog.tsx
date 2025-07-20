@@ -185,6 +185,51 @@ const blogPosts = [
     readTime: "9 min read",
     publishDate: "January 1, 2025",
     image: "/blog/healthcare-qr.svg"
+  },
+  {
+    slug: "qr-code-vcard-generator",
+    title: "vCard QR Code Generator: Share Contacts Instantly",
+    excerpt: "Create vCard QR codes to share contact information instantly. Perfect for business networking, trade shows, and professional meetings.",
+    category: "Contact",
+    readTime: "5 min read",
+    publishDate: "December 30, 2024",
+    image: "/blog/vcard-qr.svg"
+  },
+  {
+    slug: "qr-code-tracking-analytics",
+    title: "QR Code Tracking and Analytics: Measure Success",
+    excerpt: "Complete guide to QR code analytics. Track scans, measure performance, and optimize campaigns with detailed insights and reporting.",
+    category: "Analytics",
+    readTime: "8 min read",
+    publishDate: "December 28, 2024",
+    image: "/blog/tracking-qr.svg"
+  },
+  {
+    slug: "qr-code-marketing-campaigns",
+    title: "QR Code Marketing Campaigns: 20 Examples That Work",
+    excerpt: "Real QR code marketing campaign examples from successful brands. Learn strategies that drive engagement and conversions.",
+    category: "Marketing",
+    readTime: "12 min read",
+    publishDate: "December 25, 2024",
+    image: "/blog/campaigns-qr.svg"
+  },
+  {
+    slug: "bulk-qr-code-generator",
+    title: "Bulk QR Code Generator: Create Hundreds of Codes Fast",
+    excerpt: "Generate multiple QR codes simultaneously for large campaigns. Batch creation, CSV import, and mass customization features.",
+    category: "Tools",
+    readTime: "6 min read",
+    publishDate: "December 22, 2024",
+    image: "/blog/bulk-qr.svg"
+  },
+  {
+    slug: "qr-code-api-integration",
+    title: "QR Code API Integration: Developer's Complete Guide",
+    excerpt: "Integrate QR code generation into your applications. API documentation, code examples, and implementation best practices.",
+    category: "Development",
+    readTime: "10 min read",
+    publishDate: "December 20, 2024",
+    image: "/blog/api-qr.svg"
   }
 ];
 

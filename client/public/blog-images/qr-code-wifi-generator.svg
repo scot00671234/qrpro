@@ -1,0 +1,104 @@
+<svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="wifiGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="400" fill="#dbeafe"/>
+  <circle cx="120" cy="100" r="40" fill="url(#wifiGrad)" opacity="0.3"/>
+  <circle cx="680" cy="300" r="50" fill="url(#wifiGrad)" opacity="0.2"/>
+  
+  <!-- WiFi Router -->
+  <rect x="300" y="180" width="80" height="40" fill="#1f2937" rx="4"/>
+  <rect x="310" y="190" width="60" height="20" fill="#374151" rx="2"/>
+  <circle cx="320" cy="200" r="3" fill="#10b981"/>
+  <circle cx="330" cy="200" r="3" fill="#3b82f6"/>
+  <circle cx="340" cy="200" r="3" fill="#f59e0b"/>
+  <rect x="355" y="195" width="2" height="10" fill="#6b7280"/>
+  <rect x="360" y="195" width="2" height="10" fill="#6b7280"/>
+  
+  <!-- WiFi Signals -->
+  <path d="M350 160 Q370 140 390 160" stroke="#3b82f6" stroke-width="3" fill="none" opacity="0.8"/>
+  <path d="M340 170 Q360 150 380 170" stroke="#3b82f6" stroke-width="3" fill="none" opacity="0.6"/>
+  <path d="M345 180 Q355 170 365 180" stroke="#3b82f6" stroke-width="3" fill="none" opacity="0.9"/>
+  
+  <!-- QR Code -->
+  <rect x="150" y="250" width="100" height="100" fill="#000" rx="8"/>
+  <rect x="160" y="260" width="16" height="16" fill="#fff"/>
+  <rect x="185" y="260" width="8" height="8" fill="#fff"/>
+  <rect x="200" y="260" width="16" height="16" fill="#fff"/>
+  <rect x="225" y="260" width="16" height="16" fill="#fff"/>
+  <rect x="160" y="285" width="8" height="8" fill="#fff"/>
+  <rect x="175" y="285" width="16" height="16" fill="#fff"/>
+  <rect x="200" y="285" width="8" height="8" fill="#fff"/>
+  <rect x="215" y="285" width="25" height="8" fill="#fff"/>
+  <rect x="160" y="305" width="16" height="16" fill="#fff"/>
+  <rect x="185" y="305" width="8" height="8" fill="#fff"/>
+  <rect x="200" y="305" width="16" height="16" fill="#fff"/>
+  <rect x="225" y="305" width="16" height="16" fill="#fff"/>
+  <rect x="160" y="330" width="25" height="16" fill="#fff"/>
+  <rect x="195" y="330" width="8" height="8" fill="#fff"/>
+  <rect x="210" y="330" width="16" height="16" fill="#fff"/>
+  <rect x="235" y="330" width="8" height="8" fill="#fff"/>
+  
+  <!-- WiFi Text -->
+  <text x="200" y="370" text-anchor="middle" fill="#3b82f6" font-family="Arial, sans-serif" font-size="12" font-weight="bold">Free WiFi</text>
+  <text x="200" y="385" text-anchor="middle" fill="#6b7280" font-family="Arial, sans-serif" font-size="10">Scan to Connect</text>
+  
+  <!-- Phone Connection -->
+  <rect x="500" y="200" width="45" height="80" fill="#1f2937" rx="10"/>
+  <rect x="507" y="210" width="31" height="55" fill="#3b82f6" rx="2"/>
+  <circle cx="522" cy="275" r="4" fill="#f3f4f6"/>
+  
+  <!-- WiFi Connection on Phone -->
+  <text x="522" y="225" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="8" font-weight="bold">WiFi Connected</text>
+  <path d="M510 235 Q515 230 520 235 Q525 230 530 235" stroke="#fff" stroke-width="2" fill="none"/>
+  <path d="M512 242 Q517 237 522 242 Q527 237 532 242" stroke="#fff" stroke-width="2" fill="none"/>
+  <circle cx="522" cy="250" r="2" fill="#fff"/>
+  <text x="522" y="260" text-anchor="middle" fill="#10b981" font-family="Arial, sans-serif" font-size="6" font-weight="bold">CONNECTED</text>
+  
+  <!-- Arrow -->
+  <path d="M270 300 L480 240" stroke="#3b82f6" stroke-width="3" fill="none" marker-end="url(#wifiArrowhead)"/>
+  <defs>
+    <marker id="wifiArrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#3b82f6"/>
+    </marker>
+  </defs>
+  
+  <!-- Coffee Shop Scene -->
+  <rect x="600" y="150" width="120" height="100" fill="#f3f4f6" stroke="#d1d5db" stroke-width="2" rx="8"/>
+  <text x="660" y="170" text-anchor="middle" fill="#1f2937" font-family="Arial, sans-serif" font-size="12" font-weight="bold">Coffee Shop</text>
+  <rect x="610" y="180" width="100" height="2" fill="#3b82f6" rx="1"/>
+  
+  <!-- Tables -->
+  <circle cx="630" cy="200" r="8" fill="#8b5cf6" opacity="0.6"/>
+  <circle cx="650" cy="210" r="8" fill="#8b5cf6" opacity="0.6"/>
+  <circle cx="670" cy="200" r="8" fill="#8b5cf6" opacity="0.6"/>
+  <circle cx="690" cy="210" r="8" fill="#8b5cf6" opacity="0.6"/>
+  
+  <!-- QR Codes on Tables -->
+  <rect x="626" y="196" width="8" height="8" fill="#000" rx="1"/>
+  <rect x="646" y="206" width="8" height="8" fill="#000" rx="1"/>
+  <rect x="666" y="196" width="8" height="8" fill="#000" rx="1"/>
+  <rect x="686" y="206" width="8" height="8" fill="#000" rx="1"/>
+  
+  <text x="660" y="235" text-anchor="middle" fill="#6b7280" font-family="Arial, sans-serif" font-size="9">QR Codes on Every Table</text>
+  
+  <!-- Title -->
+  <text x="400" y="50" text-anchor="middle" fill="#1f2937" font-family="Arial, sans-serif" font-size="32" font-weight="bold">WiFi QR Generator</text>
+  <text x="400" y="80" text-anchor="middle" fill="#6b7280" font-family="Arial, sans-serif" font-size="16">Share WiFi Password Instantly</text>
+  
+  <!-- Features -->
+  <circle cx="80" cy="350" r="4" fill="#10b981"/>
+  <text x="95" y="355" fill="#1f2937" font-family="Arial, sans-serif" font-size="12">Instant Access</text>
+  
+  <circle cx="220" cy="350" r="4" fill="#10b981"/>
+  <text x="235" y="355" fill="#1f2937" font-family="Arial, sans-serif" font-size="12">No Password Typing</text>
+  
+  <circle cx="380" cy="350" r="4" fill="#10b981"/>
+  <text x="395" y="355" fill="#1f2937" font-family="Arial, sans-serif" font-size="12">Better Security</text>
+  
+  <circle cx="540" cy="350" r="4" fill="#10b981"/>
+  <text x="555" y="355" fill="#1f2937" font-family="Arial, sans-serif" font-size="12">Professional Look</text>
+</svg>

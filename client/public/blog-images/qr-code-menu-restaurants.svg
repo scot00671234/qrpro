@@ -1,0 +1,93 @@
+<svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="menuGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="400" fill="#ecfdf5"/>
+  <circle cx="100" cy="80" r="35" fill="url(#menuGrad)" opacity="0.3"/>
+  <circle cx="700" cy="320" r="55" fill="url(#menuGrad)" opacity="0.2"/>
+  
+  <!-- Table -->
+  <ellipse cx="400" cy="300" rx="120" ry="60" fill="#92400e" opacity="0.8"/>
+  <ellipse cx="400" cy="295" rx="115" ry="55" fill="#d97706"/>
+  
+  <!-- QR Code Stand -->
+  <rect x="350" y="200" width="100" height="80" fill="#1f2937" rx="8"/>
+  <rect x="360" y="210" width="80" height="60" fill="#fff" rx="4"/>
+  <text x="400" y="230" text-anchor="middle" fill="#1f2937" font-family="Arial, sans-serif" font-size="12" font-weight="bold">SCAN FOR MENU</text>
+  
+  <!-- QR Code -->
+  <rect x="375" y="240" width="50" height="50" fill="#000" rx="4"/>
+  <rect x="380" y="245" width="8" height="8" fill="#fff"/>
+  <rect x="395" y="245" width="6" height="6" fill="#fff"/>
+  <rect x="405" y="245" width="8" height="8" fill="#fff"/>
+  <rect x="417" y="245" width="8" height="8" fill="#fff"/>
+  <rect x="380" y="260" width="6" height="6" fill="#fff"/>
+  <rect x="390" y="260" width="8" height="8" fill="#fff"/>
+  <rect x="405" y="260" width="6" height="6" fill="#fff"/>
+  <rect x="415" y="260" width="10" height="6" fill="#fff"/>
+  <rect x="380" y="270" width="8" height="8" fill="#fff"/>
+  <rect x="395" y="270" width="6" height="6" fill="#fff"/>
+  <rect x="405" y="270" width="8" height="8" fill="#fff"/>
+  <rect x="417" y="270" width="8" height="8" fill="#fff"/>
+  <rect x="380" y="280" width="10" height="8" fill="#fff"/>
+  <rect x="395" y="280" width="6" height="6" fill="#fff"/>
+  <rect x="405" y="280" width="8" height="8" fill="#fff"/>
+  <rect x="417" y="280" width="8" height="6" fill="#fff"/>
+  
+  <!-- Phone with Menu -->
+  <rect x="150" y="120" width="50" height="90" fill="#1f2937" rx="12"/>
+  <rect x="158" y="135" width="34" height="60" fill="#10b981" rx="4"/>
+  <circle cx="175" cy="205" r="5" fill="#f3f4f6"/>
+  
+  <!-- Menu Items on Phone -->
+  <rect x="163" y="145" width="24" height="3" fill="#fff" rx="1"/>
+  <rect x="163" y="152" width="18" height="2" fill="#d1fae5" rx="1"/>
+  <rect x="163" y="158" width="20" height="2" fill="#d1fae5" rx="1"/>
+  <rect x="163" y="165" width="24" height="3" fill="#fff" rx="1"/>
+  <rect x="163" y="172" width="16" height="2" fill="#d1fae5" rx="1"/>
+  <rect x="163" y="178" width="22" height="2" fill="#d1fae5" rx="1"/>
+  <rect x="163" y="185" width="24" height="3" fill="#fff" rx="1"/>
+  
+  <!-- Arrow -->
+  <path d="M220 160 L330 200" stroke="#10b981" stroke-width="3" fill="none" marker-end="url(#menuArrowhead)"/>
+  <defs>
+    <marker id="menuArrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#10b981"/>
+    </marker>
+  </defs>
+  
+  <!-- Contactless Icon -->
+  <circle cx="550" cy="150" r="40" fill="#10b981" opacity="0.2"/>
+  <path d="M530 140 Q540 130 550 140 Q560 130 570 140" stroke="#10b981" stroke-width="3" fill="none"/>
+  <path d="M530 150 Q540 140 550 150 Q560 140 570 150" stroke="#10b981" stroke-width="3" fill="none"/>
+  <path d="M530 160 Q540 150 550 160 Q560 150 570 160" stroke="#10b981" stroke-width="3" fill="none"/>
+  
+  <!-- Menu Categories -->
+  <rect x="500" y="220" width="120" height="80" fill="#fff" stroke="#d1d5db" stroke-width="2" rx="8"/>
+  <text x="560" y="240" text-anchor="middle" fill="#1f2937" font-family="Arial, sans-serif" font-size="12" font-weight="bold">Digital Menu</text>
+  <rect x="510" y="250" width="100" height="2" fill="#10b981" rx="1"/>
+  <text x="515" y="265" fill="#6b7280" font-family="Arial, sans-serif" font-size="9">🍕 Appetizers</text>
+  <text x="515" y="275" fill="#6b7280" font-family="Arial, sans-serif" font-size="9">🍝 Main Courses</text>
+  <text x="515" y="285" fill="#6b7280" font-family="Arial, sans-serif" font-size="9">🍰 Desserts</text>
+  <text x="515" y="295" fill="#6b7280" font-family="Arial, sans-serif" font-size="9">🍹 Beverages</text>
+  
+  <!-- Title -->
+  <text x="400" y="50" text-anchor="middle" fill="#1f2937" font-family="Arial, sans-serif" font-size="32" font-weight="bold">QR Code Menus</text>
+  <text x="400" y="80" text-anchor="middle" fill="#6b7280" font-family="Arial, sans-serif" font-size="16">Restaurant Implementation Guide</text>
+  
+  <!-- Features -->
+  <circle cx="80" cy="350" r="4" fill="#10b981"/>
+  <text x="95" y="355" fill="#1f2937" font-family="Arial, sans-serif" font-size="12">Cost Reduction</text>
+  
+  <circle cx="220" cy="350" r="4" fill="#10b981"/>
+  <text x="235" y="355" fill="#1f2937" font-family="Arial, sans-serif" font-size="12">Real-Time Updates</text>
+  
+  <circle cx="370" cy="350" r="4" fill="#10b981"/>
+  <text x="385" y="355" fill="#1f2937" font-family="Arial, sans-serif" font-size="12">Contactless Dining</text>
+  
+  <circle cx="540" cy="350" r="4" fill="#10b981"/>
+  <text x="555" y="355" fill="#1f2937" font-family="Arial, sans-serif" font-size="12">Customer Data</text>
+</svg>

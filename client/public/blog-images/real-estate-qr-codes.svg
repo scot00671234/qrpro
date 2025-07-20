@@ -1,0 +1,90 @@
+<svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="realEstateGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#dc2626;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#991b1b;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="400" fill="#fef2f2"/>
+  <circle cx="100" cy="100" r="40" fill="url(#realEstateGrad)" opacity="0.3"/>
+  <circle cx="700" cy="300" r="60" fill="url(#realEstateGrad)" opacity="0.2"/>
+  
+  <!-- House -->
+  <polygon points="350,120 450,80 550,120 550,250 350,250" fill="#fbbf24"/>
+  <polygon points="350,120 450,80 550,120 550,140 450,100 350,140" fill="#f59e0b"/>
+  <rect x="380" y="150" width="140" height="100" fill="#f3f4f6"/>
+  <rect x="390" y="160" width="30" height="40" fill="#3b82f6"/>
+  <rect x="430" y="160" width="30" height="40" fill="#3b82f6"/>
+  <rect x="470" y="160" width="30" height="40" fill="#3b82f6"/>
+  <rect x="510" y="160" width="30" height="40" fill="#3b82f6"/>
+  <rect x="440" y="210" width="20" height="40" fill="#92400e"/>
+  <circle cx="455" cy="230" r="2" fill="#fbbf24"/>
+  
+  <!-- For Sale Sign -->
+  <rect x="250" y="180" width="80" height="60" fill="#dc2626" rx="4"/>
+  <rect x="255" y="185" width="70" height="15" fill="#fff" rx="2"/>
+  <text x="290" y="195" text-anchor="middle" fill="#dc2626" font-family="Arial, sans-serif" font-size="10" font-weight="bold">FOR SALE</text>
+  <rect x="255" y="205" width="70" height="30" fill="#fff" rx="2"/>
+  
+  <!-- QR Code on Sign -->
+  <rect x="265" y="210" width="25" height="25" fill="#000" rx="2"/>
+  <rect x="267" y="212" width="4" height="4" fill="#fff"/>
+  <rect x="274" y="212" width="3" height="3" fill="#fff"/>
+  <rect x="280" y="212" width="4" height="4" fill="#fff"/>
+  <rect x="286" y="212" width="4" height="4" fill="#fff"/>
+  <rect x="267" y="219" width="3" height="3" fill="#fff"/>
+  <rect x="273" y="219" width="4" height="4" fill="#fff"/>
+  <rect x="280" y="219" width="3" height="3" fill="#fff"/>
+  <rect x="285" y="219" width="5" height="3" fill="#fff"/>
+  <rect x="267" y="226" width="4" height="4" fill="#fff"/>
+  <rect x="274" y="226" width="3" height="3" fill="#fff"/>
+  <rect x="280" y="226" width="4" height="4" fill="#fff"/>
+  <rect x="286" y="226" width="4" height="4" fill="#fff"/>
+  <rect x="267" y="232" width="5" height="3" fill="#fff"/>
+  <rect x="275" y="232" width="3" height="3" fill="#fff"/>
+  <rect x="281" y="232" width="4" height="4" fill="#fff"/>
+  <rect x="287" y="232" width="3" height="3" fill="#fff"/>
+  
+  <!-- Sign Post -->
+  <rect x="287" y="240" width="6" height="30" fill="#92400e"/>
+  
+  <!-- Virtual Tour Text -->
+  <text x="295" y="225" fill="#dc2626" font-family="Arial, sans-serif" font-size="8" font-weight="bold">SCAN FOR</text>
+  <text x="295" y="235" fill="#dc2626" font-family="Arial, sans-serif" font-size="8" font-weight="bold">VIRTUAL TOUR</text>
+  
+  <!-- Phone -->
+  <rect x="600" y="200" width="45" height="80" fill="#1f2937" rx="8"/>
+  <rect x="607" y="210" width="31" height="55" fill="#3b82f6" rx="2"/>
+  <circle cx="622" cy="275" r="4" fill="#f3f4f6"/>
+  
+  <!-- Tour Interface on Phone -->
+  <rect x="610" y="215" width="25" height="15" fill="#fff" rx="1"/>
+  <text x="622" y="225" text-anchor="middle" fill="#1f2937" font-family="Arial, sans-serif" font-size="6" font-weight="bold">VIRTUAL TOUR</text>
+  <rect x="610" y="235" width="25" height="25" fill="#fbbf24" rx="2"/>
+  <text x="622" y="250" text-anchor="middle" fill="#1f2937" font-family="Arial, sans-serif" font-size="8">▶</text>
+  
+  <!-- Arrow -->
+  <path d="M570 240 L585 240" stroke="#dc2626" stroke-width="3" fill="none" marker-end="url(#reArrowhead)"/>
+  <defs>
+    <marker id="reArrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#dc2626"/>
+    </marker>
+  </defs>
+  
+  <!-- Title -->
+  <text x="400" y="50" text-anchor="middle" fill="#1f2937" font-family="Arial, sans-serif" font-size="32" font-weight="bold">Real Estate QR Codes</text>
+  <text x="400" y="80" text-anchor="middle" fill="#6b7280" font-family="Arial, sans-serif" font-size="16">Transform Property Marketing</text>
+  
+  <!-- Features -->
+  <circle cx="80" cy="350" r="4" fill="#10b981"/>
+  <text x="95" y="355" fill="#1f2937" font-family="Arial, sans-serif" font-size="12">Virtual Tours</text>
+  
+  <circle cx="220" cy="350" r="4" fill="#10b981"/>
+  <text x="235" y="355" fill="#1f2937" font-family="Arial, sans-serif" font-size="12">Lead Capture</text>
+  
+  <circle cx="360" cy="350" r="4" fill="#10b981"/>
+  <text x="375" y="355" fill="#1f2937" font-family="Arial, sans-serif" font-size="12">Property Details</text>
+  
+  <circle cx="520" cy="350" r="4" fill="#10b981"/>
+  <text x="535" y="355" fill="#1f2937" font-family="Arial, sans-serif" font-size="12">Instant Access</text>
+</svg>

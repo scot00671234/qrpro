@@ -43,8 +43,8 @@ function renderMarkdown(content: string) {
     } else if (line.startsWith('- ') || line.startsWith('* ')) {
       // List items
       elements.push(
-        <div key={key++} className="flex items-start gap-3 mb-2">
-          <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2.5 flex-shrink-0"></div>
+        <div key={key++} className="flex items-start gap-3 mb-3 ml-4">
+          <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
           <p className="text-muted-foreground leading-relaxed">{formatInlineMarkdown(line.replace(/^[-*] /, ''))}</p>
         </div>
       );
@@ -2142,6 +2142,458 @@ QR code payments represent the future of transaction processing, offering benefi
 
 Ready to implement QR payments for your business? Start with a pilot program to test customer adoption and optimize your payment processes.
     `
+  },
+  "qr-code-retail-stores": {
+    title: "QR Codes in Retail: Boost Sales and Customer Engagement",
+    category: "Retail",
+    readTime: "8 min read",
+    publishDate: "January 6, 2025",
+    image: "/blog/retail-qr.svg",
+    metaDescription: "Discover how retail stores use QR codes for product information, promotions, loyalty programs, and seamless shopping experiences.",
+    content: `
+# QR Codes in Retail: Boost Sales and Customer Engagement
+
+Retail QR codes are transforming the shopping experience, bridging the gap between physical and digital commerce. This comprehensive guide shows how retailers can leverage QR codes to increase sales, improve customer engagement, and streamline operations.
+
+## Why Retail Stores Need QR Codes
+
+**Enhanced Product Information**: Provide detailed specifications, reviews, and additional content beyond what fits on physical tags.
+
+**Contactless Shopping**: Enable safe, hygienic shopping experiences that customers prefer post-pandemic.
+
+**Inventory Integration**: Connect customers directly to real-time stock information and alternative options.
+
+**Customer Data Collection**: Gather valuable insights about customer behavior and preferences.
+
+## Essential QR Code Applications for Retail
+
+### Product Information and Reviews
+**Detailed Specifications**: Link to comprehensive product pages with full technical details and high-resolution images.
+
+**Customer Reviews**: Direct shoppers to authentic reviews and ratings from previous customers.
+
+**Video Demonstrations**: Show products in action through embedded video content.
+
+**Size and Fit Guides**: Provide detailed sizing charts and fit recommendations.
+
+### Promotions and Discounts
+**Exclusive Offers**: Create QR-only promotions that drive engagement and reward mobile-savvy customers.
+
+**Loyalty Program Access**: Enable instant loyalty program sign-ups and point accumulation.
+
+**Seasonal Campaigns**: Launch time-sensitive promotions through scannable codes.
+
+**Referral Programs**: Facilitate easy sharing of discount codes between customers.
+
+### Inventory and Stock Management
+**Stock Checking**: Allow customers to check product availability across store locations.
+
+**Backorder Notifications**: Enable customers to request alerts when out-of-stock items return.
+
+**Alternative Suggestions**: Recommend similar products when items are unavailable.
+
+**Store Transfer Requests**: Facilitate product transfers between store locations.
+
+## Implementation Strategies by Store Type
+
+### Fashion and Apparel
+**Style Inspiration**: Link to outfit suggestions and styling tips for each garment.
+
+**Care Instructions**: Provide detailed washing and care information.
+
+**Sustainability Information**: Share details about ethical sourcing and environmental impact.
+
+**Brand Storytelling**: Connect customers to brand heritage and designer inspiration.
+
+### Electronics and Technology
+**Setup Guides**: Link to video tutorials and installation instructions.
+
+**Compatibility Checkers**: Help customers verify product compatibility with existing devices.
+
+**Technical Support**: Provide direct access to customer support and troubleshooting resources.
+
+**Software Downloads**: Enable easy access to necessary drivers and applications.
+
+### Home and Garden
+**Room Visualization**: Link to augmented reality tools for visualizing products in customer homes.
+
+**Assembly Instructions**: Provide step-by-step assembly guides and video tutorials.
+
+**Maintenance Tips**: Share care instructions and maintenance schedules.
+
+**Design Inspiration**: Connect to room design ideas and decorating tips.
+
+## Customer Experience Optimization
+
+### Mobile-First Design
+**Fast Loading**: Ensure QR code destinations load quickly on all mobile devices.
+
+**Touch-Friendly Interface**: Design with finger navigation and easy scrolling in mind.
+
+**Responsive Layout**: Optimize for various screen sizes and orientations.
+
+**Offline Capability**: Provide fallback options for customers with poor connectivity.
+
+### Seamless Integration
+**Unified Branding**: Maintain consistent visual identity across QR code experiences.
+
+**Single Sign-On**: Enable customers to use existing accounts without multiple logins.
+
+**Cart Synchronization**: Allow customers to add items to cart via QR codes.
+
+**Wishlist Integration**: Enable easy addition to customer wishlists and favorites.
+
+## Advanced Retail QR Features
+
+### Personalization
+**Customer Profiles**: Customize QR code content based on purchase history and preferences.
+
+**Location-Based Content**: Adapt information based on customer's store location.
+
+**Time-Sensitive Offers**: Present different content based on time of day or season.
+
+**Demographic Targeting**: Tailor content to specific customer segments.
+
+### Analytics and Insights
+**Scan Tracking**: Monitor which products generate the most QR code engagement.
+
+**Customer Journey Mapping**: Understand how QR codes influence the path to purchase.
+
+**Conversion Analysis**: Measure how QR code interactions impact sales.
+
+**Heat Mapping**: Identify the most effective QR code placement locations.
+
+## Staff Training and Support
+
+### Employee Education
+**QR Code Basics**: Train staff on how QR codes work and their benefits.
+
+**Customer Assistance**: Prepare team members to help customers with QR code scanning.
+
+**Product Knowledge**: Ensure staff understand what information is available via QR codes.
+
+**Troubleshooting**: Develop procedures for handling QR code technical issues.
+
+### Implementation Support
+**Pilot Programs**: Start with limited QR code implementations to test effectiveness.
+
+**Feedback Collection**: Gather input from both staff and customers during rollout.
+
+**Performance Monitoring**: Track QR code usage and identify optimization opportunities.
+
+**Continuous Training**: Provide ongoing education as QR code features expand.
+
+## Measuring Retail QR Code Success
+
+### Key Performance Indicators
+**Scan Rate**: Percentage of customers who interact with QR codes.
+
+**Engagement Time**: Duration customers spend on QR code-linked content.
+
+**Conversion Rate**: Sales attributed to QR code interactions.
+
+**Customer Satisfaction**: Feedback scores related to QR code experience.
+
+### Business Impact Metrics
+**Sales Lift**: Revenue increase in products featuring QR codes.
+
+**Customer Retention**: Repeat purchase rates among QR code users.
+
+**Operational Efficiency**: Reduced staff time spent answering product questions.
+
+**Data Collection**: Quality and quantity of customer information gathered.
+
+## Implementation Best Practices
+
+### QR Code Placement
+**Eye Level Positioning**: Place codes where customers naturally look while shopping.
+
+**Product Integration**: Position codes near relevant products without cluttering displays.
+
+**Multiple Touchpoints**: Use QR codes throughout the customer journey.
+
+**Clear Visibility**: Ensure codes are easily seen and accessible for scanning.
+
+### Technical Considerations
+**High-Quality Codes**: Use professional QR code generators for clear, scannable codes.
+
+**Error Correction**: Include adequate error correction for damaged or worn codes.
+
+**Testing Protocols**: Regularly verify all QR codes function properly.
+
+**Update Procedures**: Establish processes for maintaining current QR code content.
+
+## Future of Retail QR Codes
+
+### Emerging Technologies
+**Augmented Reality**: Enhanced QR experiences with AR product visualization.
+
+**Voice Integration**: QR codes that trigger voice-activated shopping assistants.
+
+**IoT Connectivity**: QR codes integrated with smart store systems.
+
+**Blockchain Authentication**: Secure product verification through blockchain-linked QR codes.
+
+### Market Trends
+**Omnichannel Integration**: Seamless connections between online and offline shopping.
+
+**Social Commerce**: QR codes that facilitate social media sharing and purchasing.
+
+**Sustainable Shopping**: QR codes providing environmental impact information.
+
+**Personalized Experiences**: AI-driven customization of QR code content.
+
+## Common Challenges and Solutions
+
+### Customer Adoption
+**Challenge**: Customers hesitant to scan QR codes.
+**Solution**: Clearly communicate value and provide incentives for scanning.
+
+### Technical Issues
+**Challenge**: QR codes not working properly.
+**Solution**: Regular testing and maintenance protocols.
+
+### Staff Resistance
+**Challenge**: Employees uncomfortable with QR technology.
+**Solution**: Comprehensive training and gradual implementation.
+
+### Measurement Difficulties
+**Challenge**: Tracking QR code ROI.
+**Solution**: Implement comprehensive analytics and attribution tracking.
+
+Retail QR codes offer significant opportunities to enhance customer experience while gathering valuable data and driving sales. Success requires strategic implementation, staff training, and continuous optimization based on customer feedback and performance data.
+
+Ready to implement QR codes in your retail store? Start with a pilot program focused on your most popular products and expand based on customer response and business results.
+    `
+  },
+  "qr-code-contact-information": {
+    title: "vCard QR Codes: Share Contact Information Instantly",
+    category: "Contact",
+    readTime: "5 min read",
+    publishDate: "January 5, 2025",
+    image: "/blog/vcard-qr.svg",
+    metaDescription: "Create vCard QR codes to share contact information instantly. Perfect for business networking, trade shows, and professional meetings.",
+    content: `
+# vCard QR Codes: Share Contact Information Instantly
+
+vCard QR codes revolutionize how professionals share contact information, eliminating the need for business cards while ensuring information is always current and easily accessible. This guide covers everything about creating and using vCard QR codes effectively.
+
+## What Are vCard QR Codes?
+
+**Digital Business Cards**: vCard QR codes contain complete contact information in a standardized format that smartphones recognize automatically.
+
+**Universal Compatibility**: Work with all modern smartphones and contact management applications without additional software.
+
+**Instant Contact Addition**: Recipients can add your contact information directly to their phone with a single scan.
+
+**Always Current**: Dynamic vCard QR codes can be updated without changing the QR code image.
+
+## vCard Information Components
+
+### Essential Contact Details
+**Full Name**: Complete name including titles and suffixes for professional recognition.
+
+**Organization**: Company name, department, and job title for business context.
+
+**Phone Numbers**: Multiple numbers including office, mobile, and fax with proper labeling.
+
+**Email Addresses**: Primary and secondary email addresses for comprehensive communication options.
+
+**Physical Address**: Complete business address including street, city, state, and postal code.
+
+### Enhanced vCard Elements
+**Website URLs**: Company website, personal portfolio, or professional blog links.
+
+**Social Media Profiles**: LinkedIn, Twitter, and other professional social media accounts.
+
+**Profile Photo**: Professional headshot for easy recognition and contact organization.
+
+**Notes Section**: Brief professional description or tagline for context.
+
+**Categories**: Industry tags or contact groupings for organizational purposes.
+
+## Creating Effective vCard QR Codes
+
+### Information Optimization
+**Prioritize Key Details**: Include only essential information to maintain QR code scannability.
+
+**Professional Formatting**: Use consistent formatting and professional email addresses.
+
+**Current Information**: Ensure all contact details are accurate and up-to-date.
+
+**International Standards**: Follow international formatting for phone numbers and addresses.
+
+### Design Considerations
+**Adequate Size**: Ensure QR codes are large enough for reliable scanning (minimum 1 inch square).
+
+**High Contrast**: Use sufficient contrast between QR code and background colors.
+
+**Error Correction**: Include appropriate error correction levels for damaged or worn codes.
+
+**Testing Protocol**: Verify vCard QR codes work with different smartphone models and apps.
+
+## vCard QR Code Applications
+
+### Professional Networking
+**Business Meetings**: Share contact information instantly during professional encounters.
+
+**Conference Networking**: Streamline contact exchange at industry events and trade shows.
+
+**Sales Interactions**: Provide prospects with complete contact information for follow-up.
+
+**Team Introductions**: Facilitate easy contact sharing within organizations.
+
+### Marketing and Promotion
+**Email Signatures**: Include vCard QR codes in email signatures for easy contact addition.
+
+**Business Cards**: Enhance traditional cards with QR codes for digital contact sharing.
+
+**Marketing Materials**: Add vCard codes to brochures, flyers, and promotional items.
+
+**Website Integration**: Include vCard QR codes on contact pages and staff directories.
+
+### Event Management
+**Speaker Introductions**: Provide attendee access to speaker contact information.
+
+**Vendor Booths**: Enable easy contact collection for exhibitors and vendors.
+
+**Registration Desks**: Streamline contact information sharing during check-in processes.
+
+**Follow-Up Communication**: Facilitate post-event networking and relationship building.
+
+## Technical Implementation
+
+### vCard Format Standards
+**vCard 3.0**: Most widely supported format across devices and applications.
+
+**vCard 4.0**: Enhanced format with additional features and improved Unicode support.
+
+**Field Encoding**: Proper encoding of special characters and international text.
+
+**Contact Validation**: Verification of contact information formatting and completeness.
+
+### QR Code Generation
+**Dynamic vs Static**: Choose between updateable dynamic codes or permanent static codes.
+
+**Data Compression**: Optimize vCard data to minimize QR code complexity.
+
+**Batch Generation**: Create multiple vCard QR codes for team members or departments.
+
+**Brand Integration**: Incorporate company branding while maintaining scannability.
+
+## Best Practices for vCard QR Codes
+
+### Contact Information Management
+**Regular Updates**: Keep contact information current to maintain professional credibility.
+
+**Multiple Versions**: Create different vCard versions for various professional contexts.
+
+**Privacy Considerations**: Include only information appropriate for public sharing.
+
+**Backup Methods**: Provide alternative contact methods for recipients without smartphones.
+
+### Deployment Strategies
+**Strategic Placement**: Position vCard QR codes where networking naturally occurs.
+
+**Clear Instructions**: Include brief instructions for scanning and adding contacts.
+
+**Value Communication**: Explain benefits of scanning for contact addition.
+
+**Follow-Up Integration**: Connect vCard sharing to broader follow-up strategies.
+
+## Advanced vCard Features
+
+### Enhanced Contact Data
+**Multiple Addresses**: Include both business and mailing addresses as appropriate.
+
+**Assistant Information**: Add assistant contact details for executive-level contacts.
+
+**Time Zone Information**: Include time zone data for international business contacts.
+
+**Language Preferences**: Specify preferred communication languages for global networking.
+
+### Integration Capabilities
+**CRM Connection**: Link vCard QR codes to customer relationship management systems.
+
+**Calendar Integration**: Include calendar booking links for easy meeting scheduling.
+
+**Social Proof**: Add links to professional testimonials or case studies.
+
+**Portfolio Access**: Connect to work samples or professional portfolios.
+
+## Measuring vCard QR Code Success
+
+### Engagement Metrics
+**Scan Rate**: Number of people who scan your vCard QR code.
+
+**Contact Additions**: Percentage of scans that result in contact additions.
+
+**Follow-Up Activity**: Communication initiated after vCard sharing.
+
+**Network Growth**: New professional connections attributed to vCard QR codes.
+
+### Professional Impact
+**Meeting Conversion**: In-person meetings scheduled through vCard contacts.
+
+**Business Opportunities**: Sales or partnership opportunities generated.
+
+**Referral Activity**: New connections made through vCard recipients.
+
+**Brand Recognition**: Improved professional visibility and recognition.
+
+## Industry-Specific Applications
+
+### Sales Professionals
+**Prospect Management**: Streamline lead contact collection and organization.
+
+**Trade Show Efficiency**: Maximize networking effectiveness at industry events.
+
+**Client Relationships**: Facilitate easy communication with existing and potential clients.
+
+**Team Coordination**: Share contact information within sales teams and departments.
+
+### Consultants and Freelancers
+**Client Onboarding**: Provide complete contact information during project initiation.
+
+**Network Building**: Expand professional networks through efficient contact sharing.
+
+**Service Promotion**: Include service descriptions and portfolio links in vCard data.
+
+**Project Management**: Facilitate communication across project teams and stakeholders.
+
+### Corporate Teams
+**Internal Networking**: Streamline contact sharing within large organizations.
+
+**External Partnerships**: Facilitate contact exchange with partners and vendors.
+
+**Event Representation**: Provide consistent contact information for company representatives.
+
+**Brand Consistency**: Maintain professional image through standardized contact sharing.
+
+## Security and Privacy Considerations
+
+### Information Protection
+**Data Minimization**: Include only necessary contact information in vCard QR codes.
+
+**Access Control**: Consider who has access to your contact information through QR codes.
+
+**Update Security**: Secure processes for updating dynamic vCard QR codes.
+
+**Sharing Protocols**: Establish guidelines for when and where to share vCard QR codes.
+
+### Professional Boundaries
+**Context Appropriate**: Tailor vCard content to professional vs. personal networking contexts.
+
+**Permission Protocols**: Establish norms for scanning and sharing others' vCard QR codes.
+
+**Contact Preferences**: Include preferences for how and when you prefer to be contacted.
+
+**Opt-Out Options**: Provide methods for contacts to update their preferences or opt out.
+
+vCard QR codes represent the future of professional contact sharing, offering efficiency, accuracy, and enhanced networking capabilities. Proper implementation ensures professional credibility while streamlining relationship building.
+
+Ready to create your professional vCard QR code? Start with essential contact information and expand features based on your networking needs and professional goals.
+    `
   }
 };
 
@@ -2199,12 +2651,23 @@ export default function BlogPost() {
             </Button>
           </div>
           
-          <div className="w-full h-64 md:h-96 bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center rounded-2xl mb-12">
-            <div className="text-center p-8">
-              <div className="w-20 h-20 bg-gradient-to-br from-primary/20 to-accent/20 rounded-3xl flex items-center justify-center mx-auto mb-6">
-                <ArrowLeft className="w-10 h-10 text-primary rotate-180" />
+          <div className="w-full h-64 md:h-96 rounded-2xl mb-12 overflow-hidden">
+            <img 
+              src={`/blog-images/${post.slug}.svg`} 
+              alt={post.title}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+                e.currentTarget.nextElementSibling.style.display = 'flex';
+              }}
+            />
+            <div className="w-full h-full bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center hidden">
+              <div className="text-center p-8">
+                <div className="w-20 h-20 bg-gradient-to-br from-primary/20 to-accent/20 rounded-3xl flex items-center justify-center mx-auto mb-6">
+                  <ArrowLeft className="w-10 h-10 text-primary rotate-180" />
+                </div>
+                <p className="text-lg text-muted-foreground font-medium">{post.category} Article</p>
               </div>
-              <p className="text-lg text-muted-foreground font-medium">{post.category} Article</p>
             </div>
           </div>
         </div>

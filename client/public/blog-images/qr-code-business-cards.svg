@@ -1,0 +1,91 @@
+<svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="businessGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7c3aed;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#5b21b6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="400" fill="#f3e8ff"/>
+  <circle cx="150" cy="100" r="35" fill="url(#businessGrad)" opacity="0.3"/>
+  <circle cx="650" cy="320" r="55" fill="url(#businessGrad)" opacity="0.2"/>
+  
+  <!-- Business Card 1 -->
+  <rect x="150" y="180" width="160" height="100" fill="#fff" stroke="#e5e7eb" stroke-width="2" rx="8"/>
+  <rect x="165" y="195" width="50" height="50" fill="#000" rx="4"/>
+  <!-- QR Code details -->
+  <rect x="170" y="200" width="8" height="8" fill="#fff"/>
+  <rect x="185" y="200" width="6" height="6" fill="#fff"/>
+  <rect x="195" y="200" width="8" height="8" fill="#fff"/>
+  <rect x="207" y="200" width="8" height="8" fill="#fff"/>
+  <rect x="170" y="215" width="6" height="6" fill="#fff"/>
+  <rect x="180" y="215" width="8" height="8" fill="#fff"/>
+  <rect x="195" y="215" width="6" height="6" fill="#fff"/>
+  <rect x="205" y="215" width="10" height="6" fill="#fff"/>
+  <rect x="170" y="225" width="8" height="8" fill="#fff"/>
+  <rect x="185" y="225" width="6" height="6" fill="#fff"/>
+  <rect x="195" y="225" width="8" height="8" fill="#fff"/>
+  <rect x="207" y="225" width="8" height="8" fill="#fff"/>
+  <rect x="170" y="235" width="10" height="8" fill="#fff"/>
+  <rect x="185" y="235" width="6" height="6" fill="#fff"/>
+  <rect x="195" y="235" width="8" height="8" fill="#fff"/>
+  <rect x="207" y="235" width="8" height="6" fill="#fff"/>
+  
+  <!-- Card Text -->
+  <text x="230" y="210" fill="#1f2937" font-family="Arial, sans-serif" font-size="14" font-weight="bold">John Smith</text>
+  <text x="230" y="225" fill="#6b7280" font-family="Arial, sans-serif" font-size="10">Marketing Director</text>
+  <text x="230" y="240" fill="#6b7280" font-family="Arial, sans-serif" font-size="9">john@company.com</text>
+  <text x="230" y="252" fill="#6b7280" font-family="Arial, sans-serif" font-size="9">+1 (555) 123-4567</text>
+  <text x="170" y="260" fill="#7c3aed" font-family="Arial, sans-serif" font-size="8">Scan for Contact</text>
+  
+  <!-- Business Card 2 (slightly behind and rotated) -->
+  <rect x="180" y="160" width="160" height="100" fill="#fff" stroke="#e5e7eb" stroke-width="2" rx="8" opacity="0.8" transform="rotate(5 260 210)"/>
+  
+  <!-- Phone -->
+  <rect x="450" y="200" width="50" height="90" fill="#1f2937" rx="12"/>
+  <rect x="458" y="215" width="34" height="60" fill="#7c3aed" rx="4"/>
+  <circle cx="475" cy="285" r="5" fill="#f3f4f6"/>
+  
+  <!-- Contact Card on Phone -->
+  <rect x="463" y="225" width="24" height="35" fill="#fff" rx="2"/>
+  <circle cx="467" cy="232" r="3" fill="#7c3aed"/>
+  <rect x="473" y="230" width="11" height="2" fill="#1f2937" rx="1"/>
+  <rect x="473" y="235" width="8" height="1.5" fill="#6b7280" rx="0.5"/>
+  <rect x="473" y="239" width="10" height="1.5" fill="#6b7280" rx="0.5"/>
+  <rect x="473" y="243" width="6" height="1.5" fill="#6b7280" rx="0.5"/>
+  <rect x="463" y="250" width="24" height="1" fill="#e5e7eb"/>
+  <rect x="466" y="253" width="6" height="4" fill="#10b981" rx="2"/>
+  <text x="475" y="256" fill="#fff" font-family="Arial, sans-serif" font-size="4" font-weight="bold">SAVE</text>
+  
+  <!-- Arrow -->
+  <path d="M330 230 L430 230" stroke="#7c3aed" stroke-width="3" fill="none" marker-end="url(#bcArrowhead)"/>
+  <defs>
+    <marker id="bcArrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#7c3aed"/>
+    </marker>
+  </defs>
+  
+  <!-- Networking Elements -->
+  <circle cx="600" cy="150" r="25" fill="#7c3aed" opacity="0.3"/>
+  <circle cx="650" cy="180" r="20" fill="#7c3aed" opacity="0.4"/>
+  <circle cx="680" cy="140" r="15" fill="#7c3aed" opacity="0.5"/>
+  <path d="M600 150 L650 180" stroke="#7c3aed" stroke-width="2" opacity="0.6"/>
+  <path d="M650 180 L680 140" stroke="#7c3aed" stroke-width="2" opacity="0.6"/>
+  <path d="M600 150 L680 140" stroke="#7c3aed" stroke-width="2" opacity="0.6"/>
+  
+  <!-- Title -->
+  <text x="400" y="50" text-anchor="middle" fill="#1f2937" font-family="Arial, sans-serif" font-size="32" font-weight="bold">QR Business Cards</text>
+  <text x="400" y="80" text-anchor="middle" fill="#6b7280" font-family="Arial, sans-serif" font-size="16">Future of Professional Networking</text>
+  
+  <!-- Features -->
+  <circle cx="80" cy="350" r="4" fill="#10b981"/>
+  <text x="95" y="355" fill="#1f2937" font-family="Arial, sans-serif" font-size="12">Instant Contact Exchange</text>
+  
+  <circle cx="280" cy="350" r="4" fill="#10b981"/>
+  <text x="295" y="355" fill="#1f2937" font-family="Arial, sans-serif" font-size="12">Always Updated</text>
+  
+  <circle cx="450" cy="350" r="4" fill="#10b981"/>
+  <text x="465" y="355" fill="#1f2937" font-family="Arial, sans-serif" font-size="12">Eco-Friendly</text>
+  
+  <circle cx="600" cy="350" r="4" fill="#10b981"/>
+  <text x="615" y="355" fill="#1f2937" font-family="Arial, sans-serif" font-size="12">Digital Portfolio</text>
+</svg>
