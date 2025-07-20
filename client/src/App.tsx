@@ -28,32 +28,8 @@ function Router() {
 
   return (
     <Switch>
-      {isLoading ? (
-        <Route path="/" component={Landing} />
-      ) : !isAuthenticated ? (
-        <>
-          <Route path="/" component={Landing} />
-          <Route path="/login" component={Login} />
-          <Route path="/blog" component={Blog} />
-          <Route path="/blog/:slug" component={BlogPost} />
-          <Route path="/contact" component={Contact} />
-          <Route path="/privacy" component={Privacy} />
-          <Route path="/terms" component={Terms} />
-          <Route path="/support" component={Support} />
-          <Route path="/api-docs" component={APIDocs} />
-          <Route path="/pricing" component={Pricing} />
-          <Route path="/features" component={Features} />
-        </>
-      ) : (
-        <>
-          <Route path="/" component={Dashboard} />
-          <Route path="/dashboard" component={Dashboard} />
-          <Route path="/qr-codes" component={QrCodes} />
-          <Route path="/analytics" component={Analytics} />
-          <Route path="/settings" component={Settings} />
-          <Route path="/subscribe" component={Subscribe} />
-        </>
-      )}
+      {/* Public routes - always available */}
+      <Route path="/login" component={Login} />
       <Route path="/reset-password" component={ResetPassword} />
       <Route path="/blog" component={Blog} />
       <Route path="/blog/:slug" component={BlogPost} />
@@ -64,6 +40,22 @@ function Router() {
       <Route path="/api-docs" component={APIDocs} />
       <Route path="/pricing" component={Pricing} />
       <Route path="/features" component={Features} />
+      
+      {/* Protected routes - authenticated users */}
+      {isAuthenticated && (
+        <>
+          <Route path="/" component={Dashboard} />
+          <Route path="/dashboard" component={Dashboard} />
+          <Route path="/qr-codes" component={QrCodes} />
+          <Route path="/analytics" component={Analytics} />
+          <Route path="/settings" component={Settings} />
+          <Route path="/subscribe" component={Subscribe} />
+        </>
+      )}
+      
+      {/* Default route - landing or dashboard based on auth */}
+      {!isAuthenticated && <Route path="/" component={Landing} />}
+      
       <Route component={NotFound} />
     </Switch>
   );
