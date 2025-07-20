@@ -46,7 +46,11 @@ export function Navigation() {
         <div className="flex justify-between items-center h-20">
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
-              <QrCode className="text-primary w-8 h-8 mr-3" />
+              <img 
+                src="/logo.png" 
+                alt="QR Pro" 
+                className="w-10 h-10 mr-3"
+              />
               <span className="text-2xl font-light text-foreground tracking-tight">QR Pro</span>
             </Link>
           </div>
