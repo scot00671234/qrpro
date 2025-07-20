@@ -13,6 +13,8 @@ import Analytics from "@/pages/analytics";
 import Settings from "@/pages/settings";
 import Subscribe from "@/pages/subscribe";
 import ResetPassword from "@/pages/reset-password";
+import Blog from "@/pages/blog";
+import BlogPost from "@/pages/blog-post";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -25,6 +27,8 @@ function Router() {
         <>
           <Route path="/" component={Landing} />
           <Route path="/login" component={Login} />
+          <Route path="/blog" component={Blog} />
+          <Route path="/blog/:slug" component={BlogPost} />
         </>
       ) : (
         <>
@@ -37,6 +41,8 @@ function Router() {
         </>
       )}
       <Route path="/reset-password" component={ResetPassword} />
+      <Route path="/blog" component={Blog} />
+      <Route path="/blog/:slug" component={BlogPost} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -1,0 +1,38 @@
+<svg width="800" height="400" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f59e0b;stop-opacity:0.1" />
+      <stop offset="100%" style="stop-color:#ef4444;stop-opacity:0.1" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="400" fill="url(#bg)"/>
+  <rect x="50" y="50" width="150" height="150" fill="#000" rx="10"/>
+  <rect x="60" y="60" width="130" height="130" fill="#fff"/>
+  <!-- QR Code pattern -->
+  <rect x="70" y="70" width="10" height="10" fill="#000"/>
+  <rect x="90" y="70" width="10" height="10" fill="#000"/>
+  <rect x="110" y="70" width="10" height="10" fill="#000"/>
+  <rect x="130" y="70" width="10" height="10" fill="#000"/>
+  <rect x="150" y="70" width="10" height="10" fill="#000"/>
+  <rect x="170" y="70" width="10" height="10" fill="#000"/>
+  <rect x="70" y="90" width="10" height="10" fill="#000"/>
+  <rect x="170" y="90" width="10" height="10" fill="#000"/>
+  <rect x="70" y="110" width="10" height="10" fill="#000"/>
+  <rect x="110" y="110" width="10" height="10" fill="#000"/>
+  <rect x="170" y="110" width="10" height="10" fill="#000"/>
+  <rect x="70" y="130" width="10" height="10" fill="#000"/>
+  <rect x="170" y="130" width="10" height="10" fill="#000"/>
+  <rect x="70" y="150" width="10" height="10" fill="#000"/>
+  <rect x="90" y="150" width="10" height="10" fill="#000"/>
+  <rect x="110" y="150" width="10" height="10" fill="#000"/>
+  <rect x="130" y="150" width="10" height="10" fill="#000"/>
+  <rect x="150" y="150" width="10" height="10" fill="#000"/>
+  <rect x="170" y="150" width="10" height="10" fill="#000"/>
+  
+  <!-- Restaurant elements -->
+  <circle cx="350" cy="120" r="40" fill="#ef4444" opacity="0.2"/>
+  <path d="M330 100 L330 140 M340 100 L340 140 M350 90 L350 140 M360 100 L360 140 M370 100 L370 140" stroke="#ef4444" stroke-width="3"/>
+  
+  <text x="250" y="280" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#1f2937">Restaurant QR Codes</text>
+  <text x="250" y="320" font-family="Arial, sans-serif" font-size="18" fill="#6b7280">Digital menus • Contactless ordering • Customer engagement</text>
+</svg>

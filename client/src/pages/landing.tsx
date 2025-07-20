@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Navigation } from "@/components/navigation";
+import { Footer } from "@/components/footer";
 import { QrCode, BarChart3, Edit3, Cloud, Check, X, Building2, UtensilsCrossed, Home, Users } from "lucide-react";
 
 export default function Landing() {
@@ -255,6 +256,8 @@ export default function Landing() {
           </div>
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 }
