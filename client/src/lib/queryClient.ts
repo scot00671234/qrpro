@@ -42,8 +42,18 @@ export const getQueryFn: <T>(options: {
 }) => QueryFunction<T> =
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
-    const res = await fetch(queryKey.join("/") as string, {
+    // For single URL string in queryKey array, use as-is
+    // For multiple segments, join with empty string (no additional slashes)  
+    const url = queryKey.length === 1 ? queryKey[0] as string : queryKey.join("");
+    console.log(`Making GET request to ${url}`, { queryKey });
+    
+    const res = await fetch(url, {
       credentials: "include",
+    });
+
+    console.log(`GET Response from ${url}:`, {
+      status: res.status,
+      statusText: res.statusText
     });
 
     if (unauthorizedBehavior === "returnNull" && res.status === 401) {
