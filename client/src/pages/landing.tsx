@@ -15,16 +15,28 @@ export default function Landing() {
 
       {/* Hero Section */}
       <div className="relative overflow-hidden">
-        {/* Warm gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-50 via-stone-50 to-neutral-100" />
+        {/* Video background */}
+        <div className="absolute inset-0">
+          <video 
+            autoPlay 
+            muted 
+            loop 
+            playsInline
+            className="w-full h-full object-cover"
+          >
+            <source src="/hero-video.mp4" type="video/mp4" />
+          </video>
+          {/* Overlay for readability */}
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-50/80 via-stone-50/70 to-neutral-100/80 backdrop-blur-sm" />
+        </div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
           <div className="text-center">
-            <h1 className="text-5xl sm:text-6xl md:text-7xl font-light text-foreground leading-tight tracking-tight">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl font-light text-gray-900 leading-tight tracking-tight drop-shadow-sm">
               Trackable QR Codes for
               <span className="text-gradient font-medium"> Real Businesses</span>
             </h1>
-            <p className="mt-8 max-w-3xl mx-auto text-xl text-muted-foreground leading-relaxed">
+            <p className="mt-8 max-w-3xl mx-auto text-xl text-gray-700 leading-relaxed drop-shadow-sm">
               Create branded, editable QR codes with built-in scan analytics. Perfect for restaurants, real estate agents, creators, and small businesses.
             </p>
             <div className="mt-12 flex justify-center gap-6">
