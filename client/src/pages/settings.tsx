@@ -198,7 +198,7 @@ export default function Settings() {
                   <AlertDescription className="flex items-center justify-between">
                     <div>
                       <strong className="text-amber-800">Free Plan</strong>
-                      <p className="text-sm text-amber-600">Limited to 1 QR code</p>
+                      <p className="text-sm text-amber-600">Limited to 1 QR code and 1 scan per month</p>
                     </div>
                     <Link href="/subscribe">
                       <Button>

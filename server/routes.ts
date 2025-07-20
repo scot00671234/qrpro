@@ -164,12 +164,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "User not found" });
       }
 
-      // Check subscription limits
-      const qrCodeCount = await storage.getUserQrCodeCount(user.id);
-      if (user.subscriptionStatus === 'free' && qrCodeCount >= 1) {
+      // Check QR code limits based on subscription plan
+      const existingQrCodes = await storage.getUserQrCodes(user.id);
+      const planLimits = {
+        free: 1,
+        pro: Infinity,
+        business: Infinity
+      };
+
+      const limit = planLimits[user.subscriptionPlan as keyof typeof planLimits] || 1;
+      if (existingQrCodes.length >= limit) {
         return res.status(403).json({ 
-          message: "Free plan limited to 1 QR code. Upgrade to Pro for unlimited access.",
-          requiresUpgrade: true
+          message: user.subscriptionPlan === 'free' 
+            ? "Free plan limited to 1 QR code. Upgrade to Pro for unlimited QR codes."
+            : "QR code limit reached for your plan.",
+          requiresUpgrade: user.subscriptionPlan === 'free',
+          currentPlan: user.subscriptionPlan,
+          currentCount: existingQrCodes.length,
+          maxAllowed: limit
         });
       }
 
@@ -311,6 +323,44 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       if (!qrCode || !qrCode.isActive) {
         return res.status(404).send('QR Code not found');
+      }
+
+      // Get user and check scan limits
+      const user = await storage.getUser(qrCode.userId);
+      if (user) {
+        const now = new Date();
+        const lastReset = user.lastScanReset ? new Date(user.lastScanReset) : new Date();
+        const monthsSinceReset = (now.getFullYear() - lastReset.getFullYear()) * 12 + (now.getMonth() - lastReset.getMonth());
+        
+        // Reset monthly scans if a month has passed
+        if (monthsSinceReset >= 1) {
+          await storage.resetUserScans(user.id);
+        }
+
+        // Check scan limits based on subscription plan
+        const scanLimits = {
+          free: 1,
+          pro: Infinity,
+          business: Infinity
+        };
+
+        const currentScans = monthsSinceReset >= 1 ? 0 : (user.monthlyScansUsed || 0);
+        const limit = scanLimits[user.subscriptionPlan as keyof typeof scanLimits] || 1;
+        
+        if (currentScans >= limit) {
+          return res.status(403).send(`
+            <html><body style="font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #f5f5f5;">
+              <div style="background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); max-width: 500px; margin: 0 auto;">
+                <h2 style="color: #e53e3e; margin-bottom: 20px;">Scan Limit Reached</h2>
+                <p style="color: #666; margin-bottom: 30px;">This QR code has reached its monthly scan limit (${limit} scan${limit > 1 ? 's' : ''}).</p>
+                <p><a href="https://${req.get('host')}/pricing" style="background: #0066cc; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">Upgrade to Pro for Unlimited Scans</a></p>
+              </div>
+            </body></html>
+          `);
+        }
+
+        // Increment user's monthly scan count
+        await storage.incrementUserScans(user.id);
       }
 
       // Record the scan with analytics

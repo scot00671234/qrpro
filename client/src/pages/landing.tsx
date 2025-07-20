@@ -138,18 +138,22 @@ export default function Landing() {
             {/* Free Plan */}
             <Card className="p-8 border-gray-200">
               <CardContent className="p-0">
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">Get Started</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">Free</h3>
                 <div className="text-4xl font-bold text-gray-900 mb-6">
                   $0<span className="text-lg text-gray-500">/month</span>
                 </div>
                 <ul className="space-y-4 mb-8">
                   <li className="flex items-center">
                     <Check className="text-green-500 mr-3 h-5 w-5" />
+                    1 QR code
+                  </li>
+                  <li className="flex items-center">
+                    <Check className="text-green-500 mr-3 h-5 w-5" />
                     Basic QR generation
                   </li>
                   <li className="flex items-center">
                     <Check className="text-green-500 mr-3 h-5 w-5" />
-                    100 scans/month
+                    1 scan/month
                   </li>
                   <li className="flex items-center">
                     <Check className="text-green-500 mr-3 h-5 w-5" />

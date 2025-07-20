@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { QrCode, User, Calendar, Settings, Crown } from "lucide-react";
+import { QrCode, User, Calendar, Settings, Crown, Eye, AlertTriangle } from "lucide-react";
 import { Link } from "wouter";
 
 export default function Dashboard() {
@@ -74,8 +74,9 @@ export default function Dashboard() {
     );
   }
 
-  const isPro = user.subscriptionStatus === 'active';
-  const qrCodeCount = qrCodes?.length || 0;
+  const isPro = user?.subscriptionStatus === 'active';
+  const qrCodeCount = Array.isArray(qrCodes) ? qrCodes.length : 0;
+  const monthlyScansUsed = user?.monthlyScansUsed || 0;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-stone-50 to-neutral-100">
@@ -145,37 +146,33 @@ export default function Dashboard() {
             </CardContent>
           </Card>
           
-          <Card>
-            <CardContent className="p-6">
+          <Card className="glass-effect warm-shadow border-0 rounded-2xl">
+            <CardContent className="p-8">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-600 text-sm">Plan Status</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {isPro ? "Pro" : "Free"}
+                  <p className="text-muted-foreground text-lg">Monthly Scans</p>
+                  <p className="text-3xl font-light text-foreground tracking-tight">
+                    {monthlyScansUsed} {!isPro ? "/ 1" : ""}
                   </p>
                 </div>
-                <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
-                  isPro ? "bg-emerald-100" : "bg-amber-100"
-                }`}>
-                  <User className={`h-6 w-6 ${
-                    isPro ? "text-emerald-500" : "text-amber-500"
-                  }`} />
+                <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-accent/20 rounded-2xl flex items-center justify-center">
+                  <Eye className="text-primary h-8 w-8" />
                 </div>
               </div>
             </CardContent>
           </Card>
           
-          <Card>
-            <CardContent className="p-6">
+          <Card className="glass-effect warm-shadow border-0 rounded-2xl">
+            <CardContent className="p-8">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-600 text-sm">Account Since</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "Today"}
+                  <p className="text-muted-foreground text-lg">Plan Status</p>
+                  <p className="text-3xl font-light text-foreground tracking-tight">
+                    {isPro ? "Pro" : "Free"}
                   </p>
                 </div>
-                <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center">
-                  <Calendar className="text-emerald-500 h-6 w-6" />
+                <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-accent/20 rounded-2xl flex items-center justify-center">
+                  <User className="text-primary h-8 w-8" />
                 </div>
               </div>
             </CardContent>

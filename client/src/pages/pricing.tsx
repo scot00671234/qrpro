@@ -16,8 +16,8 @@ const plans = [
     color: "from-gray-500/20 to-slate-500/20",
     textColor: "text-gray-600",
     features: [
-      "3 QR codes maximum",
-      "100 scans per month",
+      "1 QR code",
+      "1 scan per month",
       "Basic QR code generation",
       "Standard support",
       "PNG downloads"
