@@ -22,7 +22,9 @@ export interface IStorage {
   getAllUsers(): Promise<User[]>;
   upsertUser(user: UpsertUser): Promise<User>;
   updateUserStripeInfo(userId: string, customerId: string, subscriptionId?: string): Promise<User>;
-  updateUserSubscription(userId: string, status: string, endsAt?: Date): Promise<User>;
+  updateUserSubscription(userId: string, plan: string, status: string, endsAt?: Date): Promise<User>;
+  incrementUserScans(userId: string): Promise<void>;
+  resetUserScans(userId: string): Promise<void>;
   updatePasswordResetToken(userId: string, token: string, expiry: Date): Promise<void>;
   updatePassword(userId: string, hashedPassword: string): Promise<void>;
   deleteUser(userId: string): Promise<void>;
@@ -96,10 +98,11 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
-  async updateUserSubscription(userId: string, status: string, endsAt?: Date): Promise<User> {
+  async updateUserSubscription(userId: string, plan: string, status: string, endsAt?: Date): Promise<User> {
     const [user] = await db
       .update(users)
       .set({
+        subscriptionPlan: plan,
         subscriptionStatus: status,
         subscriptionEndsAt: endsAt,
         updatedAt: new Date(),
@@ -109,11 +112,32 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
+  async incrementUserScans(userId: string): Promise<void> {
+    await db
+      .update(users)
+      .set({
+        monthlyScansUsed: sql`${users.monthlyScansUsed} + 1`,
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, userId));
+  }
+
+  async resetUserScans(userId: string): Promise<void> {
+    await db
+      .update(users)
+      .set({
+        monthlyScansUsed: 0,
+        lastScanReset: new Date(),
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, userId));
+  }
+
   // QR Code operations
   async createQrCode(qrCodeData: InsertQrCode): Promise<QrCode> {
     const [qrCode] = await db
       .insert(qrCodes)
-      .values(qrCodeData)
+      .values(qrCodeData as any)
       .returning();
     return qrCode;
   }
@@ -140,7 +164,7 @@ export class DatabaseStorage implements IStorage {
       .set({
         ...updates,
         updatedAt: new Date(),
-      })
+      } as any)
       .where(and(eq(qrCodes.id, id), eq(qrCodes.userId, userId)))
       .returning();
     return qrCode;
@@ -227,7 +251,7 @@ export class DatabaseStorage implements IStorage {
 
     return {
       ...qrCode,
-      totalScans: qrCode.scans,
+      totalScans: qrCode.scans || 0,
       recentScans,
       topCountries: countryData.map(item => ({
         country: item.country || 'Unknown',
@@ -257,11 +281,11 @@ export class DatabaseStorage implements IStorage {
     }
 
     // Calculate total scans
-    const totalScans = userQrCodes.reduce((sum, qr) => sum + qr.scans, 0);
+    const totalScans = userQrCodes.reduce((sum, qr) => sum + (qr.scans || 0), 0);
     
     // Find top performing QR
     const topPerformingQr = userQrCodes.reduce((top, current) => 
-      current.scans > top.scans ? current : top
+      (current.scans || 0) > (top.scans || 0) ? current : top
     );
 
     // Get recent scans across all user QRs
