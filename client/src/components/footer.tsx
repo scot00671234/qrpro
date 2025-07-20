@@ -24,7 +24,7 @@ export function Footer() {
               <li><Link href="/login" className="text-gray-400 hover:text-white transition-colors">QR Generator</Link></li>
               <li><Link href="/pricing" className="text-gray-400 hover:text-white transition-colors">Pricing</Link></li>
               <li><Link href="/login" className="text-gray-400 hover:text-white transition-colors">Analytics</Link></li>
-              <li><Link href="/api-docs" className="text-gray-400 hover:text-white transition-colors">API</Link></li>
+              <li><Link href="/login" className="text-gray-400 hover:text-white transition-colors">Features</Link></li>
             </ul>
           </div>
 
