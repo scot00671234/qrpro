@@ -1,0 +1,138 @@
+SEO BASICS FOR YOUR TYPESCRIPT SITE (2025 Checklist)
+✅ 1. Meta Tags
+Add these to each page’s <head> using your framework (e.g., next/head in Next.js):
+
+html
+Copy
+Edit
+<title>QRProGenerator – Trackable QR Codes for Your Business</title>
+<meta name="description" content="Create branded, editable QR codes with real-time analytics. Perfect for restaurants, real estate, and smart marketers." />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://qrprogenerator.com/" />
+Page title: Clear, keyword-rich (under 60 characters)
+
+Description: Hook + value + target user (under 160 chars)
+
+✅ 2. Header Tags (H1, H2, etc.)
+Structure matters:
+
+1 H1 per page (main topic)
+
+Use H2, H3 for supporting sections
+
+Example:
+
+tsx
+Copy
+Edit
+<h1>QR Code Generator with Analytics</h1>
+<h2>How It Works</h2>
+<h2>Choose a Plan</h2>
+<h3>Pro Plan Features</h3>
+Search engines use this to understand your content hierarchy.
+
+✅ 3. Image Alt Text
+Always add descriptive alt tags:
+
+tsx
+Copy
+Edit
+<img src="/demo-qr.png" alt="Branded QR code with scan tracking" />
+This helps with:
+
+SEO ranking
+
+Accessibility
+
+Google Image search traffic
+
+✅ 4. Readable URLs
+Use clean, descriptive slugs:
+✅ qrprogenerator.com/pricing
+✅ qrprogenerator.com/faq/analytics
+❌ qrprogenerator.com/page?id=7a8f123
+
+✅ 5. Sitemap.xml + robots.txt
+Help Google crawl your site:
+
+Sitemap (auto-gen if using Next.js or manually):
+
+Use next-sitemap if on Next.js
+
+Place sitemap at https://qrprogenerator.com/sitemap.xml
+
+robots.txt:
+
+txt
+Copy
+Edit
+User-agent: *
+Allow: /
+Sitemap: https://qrprogenerator.com/sitemap.xml
+✅ 6. Fast Load Speed
+Use tools like Google PageSpeed Insights:
+
+Optimize images (use .webp)
+
+Use static generation (getStaticProps or SSG) where possible
+
+Avoid blocking scripts above the fold
+
+Lazy load large assets
+
+✅ 7. Mobile-Friendly
+Google is mobile-first. Your site must work flawlessly on phones.
+
+Use flex/grid
+
+Test touch targets
+
+Check viewport meta:
+
+html
+Copy
+Edit
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+✅ 8. OG (Open Graph) + Twitter Tags (For Sharing)
+These improve link previews on X/LinkedIn/Discord:
+
+html
+Copy
+Edit
+<meta property="og:title" content="QRProGenerator" />
+<meta property="og:description" content="Create editable, trackable QR codes for your business." />
+<meta property="og:image" content="https://qrprogenerator.com/preview.jpg" />
+<meta property="og:url" content="https://qrprogenerator.com" />
+<meta name="twitter:card" content="summary_large_image" />
+✅ 9. Keyword Strategy (Content SEO)
+Even for SaaS, you can:
+
+Add a blog: “How restaurants use QR codes” / “Dynamic QR vs static”
+
+Include FAQ sections with keyword-rich questions
+
+Think like your user:
+“QR code menu tracker” → should exist as text in your page
+
+✅ 10. Analytics + Search Console
+Track what’s working:
+
+ Install Google Search Console
+
+ Add Google Analytics (or Plausible if privacy-focused)
+
+⚡ Bonus: Tools You’ll Want
+Tool	Use
+Ahrefs Webmaster	SEO audit + keywords
+Next-Sitemap	Auto sitemap for TS/Next
+OpenGraph.xyz	Preview OG cards
+PageSpeed Insights	Site speed testing
+
+🚀 TL;DR SEO Quick Start
+Task	Status
+Meta title + description	✅
+Clean URLs	✅
+Alt tags for images	✅
+Sitemap + robots.txt	✅
+OG + Twitter tags	✅
+Mobile + speed optimized	✅

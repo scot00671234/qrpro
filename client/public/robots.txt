@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Block access to API endpoints
+Disallow: /api/
+
+# Block access to admin areas
+Disallow: /dashboard/
+Disallow: /settings/
+
+Sitemap: /sitemap.xml
