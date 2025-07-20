@@ -20,9 +20,10 @@ export interface IStorage {
   getUserByEmail(email: string): Promise<User | undefined>;
   getUserByResetToken(token: string): Promise<User | undefined>;
   getAllUsers(): Promise<User[]>;
+  createUser(user: { email: string; password: string; firstName: string; lastName: string }): Promise<User>;
   upsertUser(user: UpsertUser): Promise<User>;
   updateUserStripeInfo(userId: string, customerId: string, subscriptionId?: string): Promise<User>;
-  updateUserSubscription(userId: string, plan: string, status: string, endsAt?: Date): Promise<User>;
+  updateUserSubscription(userId: string, status: string, plan?: string, endsAt?: Date): Promise<User>;
   incrementUserScans(userId: string): Promise<void>;
   resetUserScans(userId: string): Promise<void>;
   updatePasswordResetToken(userId: string, token: string, expiry: Date): Promise<void>;
@@ -70,6 +71,14 @@ export class DatabaseStorage implements IStorage {
     return await db.select().from(users);
   }
 
+  async createUser(userData: { email: string; password: string; firstName: string; lastName: string }): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values(userData as any)
+      .returning();
+    return user;
+  }
+
   async upsertUser(userData: UpsertUser): Promise<User> {
     const [user] = await db
       .insert(users)
@@ -98,15 +107,18 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
-  async updateUserSubscription(userId: string, plan: string, status: string, endsAt?: Date): Promise<User> {
+  async updateUserSubscription(userId: string, status: string, plan?: string, endsAt?: Date): Promise<User> {
+    const updateData: any = {
+      subscriptionStatus: status,
+      updatedAt: new Date(),
+    };
+    
+    if (plan) updateData.subscriptionPlan = plan;
+    if (endsAt) updateData.subscriptionEndsAt = endsAt;
+
     const [user] = await db
       .update(users)
-      .set({
-        subscriptionPlan: plan,
-        subscriptionStatus: status,
-        subscriptionEndsAt: endsAt,
-        updatedAt: new Date(),
-      })
+      .set(updateData)
       .where(eq(users.id, userId))
       .returning();
     return user;

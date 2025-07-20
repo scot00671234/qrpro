@@ -5,8 +5,10 @@ import QRCode from "qrcode";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./auth";
 import { insertQrCodeSchema, updateQrCodeSchema, insertQrScanSchema } from "@shared/schema";
-import { sendEmail } from "./emailService";
+import { sendEmail, sendWelcomeEmail } from "./emailService";
 import { randomBytes } from "crypto";
+import bcrypt from "bcrypt";
+import passport from "passport";
 import { runMigrations } from "./migrate";
 
 // Only initialize Stripe if the key is available (for Railway deployment)
@@ -34,6 +36,94 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error("Error fetching user:", error);
       res.status(500).json({ message: "Failed to fetch user" });
     }
+  });
+
+  // Registration route
+  app.post('/api/register', async (req, res) => {
+    try {
+      const { email, password, firstName, lastName } = req.body;
+      
+      if (!email || !password || !firstName || !lastName) {
+        return res.status(400).json({ message: "All fields are required" });
+      }
+
+      // Check if user already exists
+      const existingUser = await storage.getUserByEmail(email);
+      if (existingUser) {
+        return res.status(409).json({ message: "User already exists" });
+      }
+
+      // Hash password
+      const hashedPassword = await bcrypt.hash(password, 12);
+
+      // Create user
+      const user = await storage.createUser({
+        email,
+        password: hashedPassword,
+        firstName,
+        lastName
+      });
+
+      // Send welcome email if configured
+      if (process.env.SMTP_HOST) {
+        try {
+          await sendWelcomeEmail(email, firstName);
+        } catch (emailError) {
+          console.error("Failed to send welcome email:", emailError);
+          // Don't fail registration if email fails
+        }
+      }
+
+      res.status(201).json({ 
+        message: "Account created successfully",
+        user: {
+          id: user.id,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName
+        }
+      });
+    } catch (error: any) {
+      console.error("Registration error:", error);
+      res.status(500).json({ message: "Failed to create account" });
+    }
+  });
+
+  // Login route
+  app.post('/api/login', (req, res, next) => {
+    passport.authenticate('local', (err: any, user: any, info: any) => {
+      if (err) {
+        return res.status(500).json({ message: "Authentication error" });
+      }
+      if (!user) {
+        return res.status(401).json({ message: info?.message || "Invalid credentials" });
+      }
+      req.logIn(user, (err) => {
+        if (err) {
+          return res.status(500).json({ message: "Login error" });
+        }
+        res.json({
+          message: "Login successful",
+          user: {
+            id: user.id,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            subscriptionStatus: user.subscriptionStatus
+          }
+        });
+      });
+    })(req, res, next);
+  });
+
+  // Logout route
+  app.post('/api/logout', (req, res) => {
+    req.logout((err) => {
+      if (err) {
+        return res.status(500).json({ message: "Logout error" });
+      }
+      res.json({ message: "Logged out successfully" });
+    });
   });
 
 
@@ -386,7 +476,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       if (session.payment_status === 'paid' && session.subscription) {
         await storage.updateUserStripeInfo(user.id, session.customer as string, session.subscription as string);
-        await storage.updateUserSubscription(user.id, 'active');
+        await storage.updateUserSubscription(user.id, 'active', session.metadata?.plan || 'pro');
       }
 
       res.json({ message: "Subscription activated successfully" });
@@ -489,8 +579,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Convert Stripe timestamp to Date, with fallback to 30 days from now
       let endsAt: Date;
-      if (subscription.current_period_end) {
-        endsAt = new Date(subscription.current_period_end * 1000);
+      if ((subscription as any).current_period_end) {
+        endsAt = new Date((subscription as any).current_period_end * 1000);
       } else {
         // Fallback: 30 days from now
         endsAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
@@ -499,6 +589,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await storage.updateUserSubscription(
         user.id, 
         'canceled', 
+        undefined,
         endsAt
       );
 
@@ -552,13 +643,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log("Stripe subscription retrieved:", {
         id: subscription.id,
         status: subscription.status,
-        current_period_end: subscription.current_period_end
+        current_period_end: (subscription as any).current_period_end
       });
       
       // Also update our local database with accurate end date from Stripe
-      if (subscription.current_period_end) {
-        const stripeEndDate = new Date(subscription.current_period_end * 1000);
-        await storage.updateUserSubscription(user.id, user.subscriptionStatus, stripeEndDate);
+      if ((subscription as any).current_period_end) {
+        const stripeEndDate = new Date((subscription as any).current_period_end * 1000);
+        await storage.updateUserSubscription(user.id, user.subscriptionStatus, undefined, stripeEndDate);
         console.log("Updated local subscription end date:", stripeEndDate);
       }
       
@@ -566,12 +657,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         subscription: {
           id: subscription.id,
           status: subscription.status,
-          current_period_end: subscription.current_period_end,
-          current_period_start: subscription.current_period_start,
-          cancel_at_period_end: subscription.cancel_at_period_end,
-          canceled_at: subscription.canceled_at,
-          amount: subscription.items.data[0]?.price?.unit_amount || 1500,
-          currency: subscription.items.data[0]?.price?.currency || 'usd'
+          current_period_end: (subscription as any).current_period_end,
+          current_period_start: (subscription as any).current_period_start,
+          cancel_at_period_end: (subscription as any).cancel_at_period_end,
+          canceled_at: (subscription as any).canceled_at,
+          amount: (subscription.items as any)?.data?.[0]?.price?.unit_amount || 1500,
+          currency: (subscription.items as any)?.data?.[0]?.price?.currency || 'usd'
         }
       });
     } catch (error: any) {
