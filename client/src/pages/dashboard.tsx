@@ -78,15 +78,15 @@ export default function Dashboard() {
   const qrCodeCount = qrCodes?.length || 0;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-stone-50 to-neutral-100">
       <Navigation />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Dashboard Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-12">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-            <p className="mt-2 text-gray-600">Manage your QR codes and account</p>
+            <h1 className="text-5xl font-light text-foreground tracking-tight">Dashboard</h1>
+            <p className="mt-4 text-xl text-muted-foreground leading-relaxed">Manage your QR codes and account</p>
           </div>
           <div className="mt-4 lg:mt-0 flex items-center space-x-4">
             <Badge 
@@ -128,18 +128,18 @@ export default function Dashboard() {
         )}
 
         {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card>
-            <CardContent className="p-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+          <Card className="glass-effect warm-shadow border-0 rounded-2xl">
+            <CardContent className="p-8">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-600 text-sm">QR Codes Created</p>
-                  <p className="text-2xl font-bold text-gray-900">
+                  <p className="text-muted-foreground text-lg">QR Codes Created</p>
+                  <p className="text-3xl font-light text-foreground tracking-tight">
                     {qrCodeCount} {!isPro ? "/ 1" : ""}
                   </p>
                 </div>
-                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                  <QrCode className="text-primary h-6 w-6" />
+                <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-accent/20 rounded-2xl flex items-center justify-center">
+                  <QrCode className="text-primary h-8 w-8" />
                 </div>
               </div>
             </CardContent>

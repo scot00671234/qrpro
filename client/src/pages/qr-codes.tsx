@@ -169,14 +169,14 @@ export default function QrCodes() {
   const isPro = user.subscriptionStatus === 'active';
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-stone-50 to-neutral-100">
       <Navigation />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex items-center justify-between mb-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="flex items-center justify-between mb-12">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">My QR Codes</h1>
-            <p className="mt-2 text-gray-600">Manage and organize your saved QR codes</p>
+            <h1 className="text-5xl font-light text-foreground tracking-tight">My QR Codes</h1>
+            <p className="mt-4 text-xl text-muted-foreground leading-relaxed">Manage and organize your saved QR codes</p>
           </div>
           <Link href="/dashboard">
             <Button>

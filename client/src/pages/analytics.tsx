@@ -33,23 +33,23 @@ export default function Analytics() {
 
   if (!isPro) {
     return (
-      <div className="min-h-screen bg-gray-50 p-8">
+      <div className="min-h-screen bg-gradient-to-br from-amber-50 via-stone-50 to-neutral-100 p-12">
         <div className="max-w-4xl mx-auto">
           <div className="text-center">
-            <BarChart3 className="w-16 h-16 mx-auto text-gray-400 mb-4" />
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">Analytics Dashboard</h1>
-            <p className="text-xl text-gray-600 mb-8">
+            <BarChart3 className="w-20 h-20 mx-auto text-primary mb-8" />
+            <h1 className="text-5xl font-light text-foreground mb-6 tracking-tight">Analytics Dashboard</h1>
+            <p className="text-2xl text-muted-foreground mb-12 leading-relaxed">
               Track your QR code performance with detailed analytics
             </p>
             
-            <Card className="max-w-md mx-auto">
-              <CardContent className="p-8 text-center">
-                <Crown className="w-12 h-12 mx-auto text-yellow-500 mb-4" />
-                <h3 className="text-xl font-semibold mb-2">Pro Feature</h3>
-                <p className="text-gray-600 mb-6">
+            <Card className="max-w-lg mx-auto glass-effect warm-shadow border-0 rounded-2xl">
+              <CardContent className="p-12 text-center">
+                <Crown className="w-16 h-16 mx-auto text-primary mb-8" />
+                <h3 className="text-2xl font-light mb-4 tracking-tight">Pro Feature</h3>
+                <p className="text-muted-foreground mb-8 text-lg leading-relaxed">
                   Analytics dashboard is available for Pro subscribers only
                 </p>
-                <Button asChild>
+                <Button asChild className="rounded-full px-8 py-3 text-lg">
                   <Link href="/subscribe">Upgrade to Pro</Link>
                 </Button>
               </CardContent>
@@ -89,11 +89,11 @@ export default function Analytics() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-stone-50 to-neutral-100 p-12">
       <div className="max-w-6xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Analytics Dashboard</h1>
-          <p className="text-gray-600">Track your QR code performance and engagement</p>
+        <div className="mb-12">
+          <h1 className="text-5xl font-light text-foreground mb-4 tracking-tight">Analytics Dashboard</h1>
+          <p className="text-xl text-muted-foreground leading-relaxed">Track your QR code performance and engagement</p>
         </div>
 
         {/* Overview Cards */}

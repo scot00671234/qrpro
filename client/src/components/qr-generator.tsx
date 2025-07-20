@@ -145,10 +145,10 @@ export function QrGenerator({ isPro, qrCodeCount, onQrCodeCreated }: QrGenerator
   const canCreateQr = isPro || qrCodeCount === 0;
 
   return (
-    <div className="grid lg:grid-cols-2 gap-8">
-      <Card>
-        <CardHeader>
-          <CardTitle>Create New QR Code</CardTitle>
+    <div className="grid lg:grid-cols-2 gap-12">
+      <Card className="glass-effect warm-shadow border-0 rounded-2xl">
+        <CardHeader className="pb-8">
+          <CardTitle className="text-3xl font-light text-foreground tracking-tight">Create New QR Code</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -275,9 +275,9 @@ export function QrGenerator({ isPro, qrCodeCount, onQrCodeCreated }: QrGenerator
       </Card>
       
       {/* QR Preview */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Preview</CardTitle>
+      <Card className="glass-effect warm-shadow border-0 rounded-2xl">
+        <CardHeader className="pb-8">
+          <CardTitle className="text-3xl font-light text-foreground tracking-tight">Preview</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col items-center space-y-4">

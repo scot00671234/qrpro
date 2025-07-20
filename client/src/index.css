@@ -2,6 +2,76 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    --background: 28 25 23;
+    --foreground: 250 245 240;
+    --card: 32 29 26;
+    --card-foreground: 250 245 240;
+    --popover: 32 29 26;
+    --popover-foreground: 250 245 240;
+    --primary: 195 165 132;
+    --primary-foreground: 28 25 23;
+    --secondary: 41 37 33;
+    --secondary-foreground: 250 245 240;
+    --muted: 41 37 33;
+    --muted-foreground: 163 157 148;
+    --accent: 195 165 132;
+    --accent-foreground: 28 25 23;
+    --destructive: 220 38 38;
+    --destructive-foreground: 250 245 240;
+    --border: 68 64 60;
+    --input: 68 64 60;
+    --ring: 195 165 132;
+    --radius: 0.75rem;
+  }
+
+  .light {
+    --background: 250 245 240;
+    --foreground: 28 25 23;
+    --card: 255 255 255;
+    --card-foreground: 28 25 23;
+    --popover: 255 255 255;
+    --popover-foreground: 28 25 23;
+    --primary: 139 116 94;
+    --primary-foreground: 250 245 240;
+    --secondary: 245 238 230;
+    --secondary-foreground: 28 25 23;
+    --muted: 245 238 230;
+    --muted-foreground: 120 113 108;
+    --accent: 139 116 94;
+    --accent-foreground: 250 245 240;
+    --destructive: 220 38 38;
+    --destructive-foreground: 250 245 240;
+    --border: 231 220 209;
+    --input: 231 220 209;
+    --ring: 139 116 94;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+  }
+  
+  .glass-effect {
+    @apply bg-white/80 backdrop-blur-md border border-white/20;
+  }
+  
+  .warm-shadow {
+    box-shadow: 0 8px 32px rgba(139, 116, 94, 0.1);
+  }
+}
+
 :root {
   --background: hsl(0, 0%, 100%);
   --foreground: hsl(20, 14.3%, 4.1%);

@@ -10,33 +10,28 @@ export default function Landing() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       <Navigation />
 
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-white">
-        {/* Background Image */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
-          style={{ backgroundImage: 'url(/hero-bg.png)' }}
-        />
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-blue-900/10 to-indigo-900/20" />
+      <div className="relative overflow-hidden">
+        {/* Warm gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-50 via-stone-50 to-neutral-100" />
         
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
           <div className="text-center">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 leading-tight">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl font-light text-foreground leading-tight tracking-tight">
               Trackable QR Codes for
-              <span className="text-primary"> Real Businesses</span>
+              <span className="text-gradient font-medium"> Real Businesses</span>
             </h1>
-            <p className="mt-6 max-w-2xl mx-auto text-xl text-gray-700">
+            <p className="mt-8 max-w-3xl mx-auto text-xl text-muted-foreground leading-relaxed">
               Create branded, editable QR codes with built-in scan analytics. Perfect for restaurants, real estate agents, creators, and small businesses.
             </p>
-            <div className="mt-10 flex justify-center gap-4">
+            <div className="mt-12 flex justify-center gap-6">
               <Button 
                 onClick={handleGetStarted}
                 size="lg"
-                className="px-8 py-4 text-lg font-semibold shadow-lg"
+                className="px-10 py-4 text-lg font-medium warm-shadow rounded-full bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 Start Free
               </Button>
@@ -44,7 +39,7 @@ export default function Landing() {
                 variant="outline"
                 onClick={handleGetStarted}
                 size="lg"
-                className="px-8 py-4 text-lg font-semibold bg-white/90 backdrop-blur-sm border-gray-300 hover:bg-white"
+                className="px-10 py-4 text-lg font-medium rounded-full border-border hover:bg-muted"
               >
                 Login
               </Button>
@@ -54,64 +49,64 @@ export default function Landing() {
       </div>
 
       {/* Features Section */}
-      <div className="bg-gray-50 py-24">
+      <div className="py-32 bg-gradient-to-b from-stone-50 to-amber-50/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900">Why Choose QR Pro?</h2>
-            <p className="mt-4 text-xl text-gray-600">Simple, powerful, and affordable QR code generation</p>
+          <div className="text-center mb-20">
+            <h2 className="text-4xl font-light text-foreground tracking-tight">Why Choose QR Pro?</h2>
+            <p className="mt-6 text-xl text-muted-foreground leading-relaxed">Simple, powerful, and beautifully designed</p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card className="p-8">
+          <div className="grid md:grid-cols-3 gap-12">
+            <Card className="p-10 glass-effect warm-shadow border-0 rounded-2xl">
               <CardContent className="p-0">
-                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6">
-                  <BarChart3 className="text-primary text-xl" />
+                <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-accent/20 rounded-2xl flex items-center justify-center mb-8">
+                  <BarChart3 className="text-primary w-8 h-8" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Analytics Dashboard</h3>
-                <p className="text-gray-600">Track scans with detailed analytics including location, device type, and time data.</p>
+                <h3 className="text-2xl font-light text-foreground mb-6 tracking-tight">Analytics Dashboard</h3>
+                <p className="text-muted-foreground leading-relaxed">Track scans with detailed analytics including location, device type, and time data.</p>
               </CardContent>
             </Card>
             
-            <Card className="p-8">
+            <Card className="p-10 glass-effect warm-shadow border-0 rounded-2xl">
               <CardContent className="p-0">
-                <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center mb-6">
-                  <Edit3 className="text-emerald-500 text-xl" />
+                <div className="w-16 h-16 bg-gradient-to-br from-emerald-200/40 to-teal-200/40 rounded-2xl flex items-center justify-center mb-8">
+                  <Edit3 className="text-emerald-600 w-8 h-8" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Dynamic QR Codes</h3>
-                <p className="text-gray-600">Update destination URLs without changing the QR code. Perfect for campaigns.</p>
+                <h3 className="text-2xl font-light text-foreground mb-6 tracking-tight">Dynamic QR Codes</h3>
+                <p className="text-muted-foreground leading-relaxed">Update destination URLs without changing the QR code. Perfect for campaigns.</p>
               </CardContent>
             </Card>
             
-            <Card className="p-8">
+            <Card className="p-10 glass-effect warm-shadow border-0 rounded-2xl">
               <CardContent className="p-0">
-                <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center mb-6">
-                  <QrCode className="text-amber-500 text-xl" />
+                <div className="w-16 h-16 bg-gradient-to-br from-amber-200/40 to-orange-200/40 rounded-2xl flex items-center justify-center mb-8">
+                  <QrCode className="text-amber-600 w-8 h-8" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Branded QR Codes</h3>
-                <p className="text-gray-600">Add logos, customize colors, and create professional QR codes that match your brand.</p>
+                <h3 className="text-2xl font-light text-foreground mb-6 tracking-tight">Branded QR Codes</h3>
+                <p className="text-muted-foreground leading-relaxed">Add logos, customize colors, and create professional QR codes that match your brand.</p>
               </CardContent>
             </Card>
           </div>
           
           {/* Industry Section */}
-          <div className="mt-20 text-center">
-            <h3 className="text-2xl font-bold text-gray-900 mb-8">Trusted by businesses across industries</h3>
+          <div className="mt-24 text-center">
+            <h3 className="text-3xl font-light text-foreground mb-12 tracking-tight">Trusted by businesses across industries</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center">
-              <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-sm">
-                <UtensilsCrossed className="text-primary w-8 h-8 mb-2" />
-                <span className="text-sm font-medium text-gray-700">Restaurants</span>
+              <div className="flex flex-col items-center p-8 glass-effect rounded-2xl warm-shadow border-0">
+                <UtensilsCrossed className="text-primary w-10 h-10 mb-4" />
+                <span className="text-lg font-light text-foreground">Restaurants</span>
               </div>
-              <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-sm">
-                <Home className="text-primary w-8 h-8 mb-2" />
-                <span className="text-sm font-medium text-gray-700">Real Estate</span>
+              <div className="flex flex-col items-center p-8 glass-effect rounded-2xl warm-shadow border-0">
+                <Home className="text-primary w-10 h-10 mb-4" />
+                <span className="text-lg font-light text-foreground">Real Estate</span>
               </div>
-              <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-sm">
-                <Users className="text-primary w-8 h-8 mb-2" />
-                <span className="text-sm font-medium text-gray-700">Creators</span>
+              <div className="flex flex-col items-center p-8 glass-effect rounded-2xl warm-shadow border-0">
+                <Users className="text-primary w-10 h-10 mb-4" />
+                <span className="text-lg font-light text-foreground">Creators</span>
               </div>
-              <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-sm">
-                <Building2 className="text-primary w-8 h-8 mb-2" />
-                <span className="text-sm font-medium text-gray-700">Small Business</span>
+              <div className="flex flex-col items-center p-8 glass-effect rounded-2xl warm-shadow border-0">
+                <Building2 className="text-primary w-10 h-10 mb-4" />
+                <span className="text-lg font-light text-foreground">Small Business</span>
               </div>
             </div>
           </div>
@@ -119,11 +114,11 @@ export default function Landing() {
       </div>
 
       {/* Pricing Section */}
-      <div className="bg-white py-24">
+      <div className="py-32 bg-gradient-to-b from-amber-50/30 to-stone-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900">Simple, Transparent Pricing</h2>
-            <p className="mt-4 text-xl text-gray-600">Start free, upgrade when you need more</p>
+          <div className="text-center mb-20">
+            <h2 className="text-4xl font-light text-foreground tracking-tight">Simple, Transparent Pricing</h2>
+            <p className="mt-6 text-xl text-muted-foreground leading-relaxed">Start free, upgrade when you need more</p>
           </div>
           
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
