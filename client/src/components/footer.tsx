@@ -24,7 +24,7 @@ export function Footer() {
               <li><Link href="/login" className="text-gray-400 hover:text-white transition-colors">QR Generator</Link></li>
               <li><Link href="/subscribe" className="text-gray-400 hover:text-white transition-colors">Pricing</Link></li>
               <li><Link href="/login" className="text-gray-400 hover:text-white transition-colors">Analytics</Link></li>
-              <li><Link href="/login" className="text-gray-400 hover:text-white transition-colors">API</Link></li>
+              <li><Link href="/api-docs" className="text-gray-400 hover:text-white transition-colors">API</Link></li>
             </ul>
           </div>
 
@@ -43,10 +43,10 @@ export function Footer() {
           <div>
             <h3 className="text-lg font-medium mb-4">Company</h3>
             <ul className="space-y-3">
-              <li><Link href="/login" className="text-gray-400 hover:text-white transition-colors">Contact</Link></li>
-              <li><Link href="/login" className="text-gray-400 hover:text-white transition-colors">Privacy</Link></li>
-              <li><Link href="/login" className="text-gray-400 hover:text-white transition-colors">Terms</Link></li>
-              <li><Link href="/login" className="text-gray-400 hover:text-white transition-colors">Support</Link></li>
+              <li><Link href="/contact" className="text-gray-400 hover:text-white transition-colors">Contact</Link></li>
+              <li><Link href="/privacy" className="text-gray-400 hover:text-white transition-colors">Privacy</Link></li>
+              <li><Link href="/terms" className="text-gray-400 hover:text-white transition-colors">Terms</Link></li>
+              <li><Link href="/support" className="text-gray-400 hover:text-white transition-colors">Support</Link></li>
             </ul>
           </div>
         </div>
@@ -57,9 +57,9 @@ export function Footer() {
               © 2025 QR Pro. All rights reserved.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
-              <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm">Privacy Policy</a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm">Terms of Service</a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm">Cookie Policy</a>
+              <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors text-sm">Privacy Policy</Link>
+              <Link href="/terms" className="text-gray-400 hover:text-white transition-colors text-sm">Terms of Service</Link>
+              <Link href="/contact" className="text-gray-400 hover:text-white transition-colors text-sm">Contact</Link>
             </div>
           </div>
         </div>

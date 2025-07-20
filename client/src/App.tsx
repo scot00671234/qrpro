@@ -15,6 +15,11 @@ import Subscribe from "@/pages/subscribe";
 import ResetPassword from "@/pages/reset-password";
 import Blog from "@/pages/blog";
 import BlogPost from "@/pages/blog-post";
+import Contact from "@/pages/contact";
+import Privacy from "@/pages/privacy";
+import Terms from "@/pages/terms";
+import Support from "@/pages/support";
+import APIDocs from "@/pages/api-docs";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -29,6 +34,11 @@ function Router() {
           <Route path="/login" component={Login} />
           <Route path="/blog" component={Blog} />
           <Route path="/blog/:slug" component={BlogPost} />
+          <Route path="/contact" component={Contact} />
+          <Route path="/privacy" component={Privacy} />
+          <Route path="/terms" component={Terms} />
+          <Route path="/support" component={Support} />
+          <Route path="/api-docs" component={APIDocs} />
         </>
       ) : (
         <>
@@ -43,6 +53,11 @@ function Router() {
       <Route path="/reset-password" component={ResetPassword} />
       <Route path="/blog" component={Blog} />
       <Route path="/blog/:slug" component={BlogPost} />
+      <Route path="/contact" component={Contact} />
+      <Route path="/privacy" component={Privacy} />
+      <Route path="/terms" component={Terms} />
+      <Route path="/support" component={Support} />
+      <Route path="/api-docs" component={APIDocs} />
       <Route component={NotFound} />
     </Switch>
   );
