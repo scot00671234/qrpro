@@ -111,16 +111,16 @@ export default function Dashboard() {
         </div>
 
         {/* Upgrade Banner (Free Users) */}
-        {!isPro && (
+        {user?.subscriptionStatus !== 'active' && (
           <Alert className="mb-8 border-primary bg-gradient-to-r from-primary/10 to-primary/5">
             <Crown className="h-4 w-4" />
             <AlertDescription className="flex items-center justify-between">
               <div>
-                <strong>Upgrade to Pro</strong> - Unlock unlimited QR codes and advanced customization features
+                <strong>Upgrade to Pro</strong> - Unlock unlimited QR codes, analytics, and advanced features
               </div>
               <Link href="/subscribe">
                 <Button size="sm" className="ml-4">
-                  Upgrade Now
+                  Choose Plan
                 </Button>
               </Link>
             </AlertDescription>

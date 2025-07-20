@@ -24,7 +24,7 @@ interface AnalyticsSummary {
 
 export default function Analytics() {
   const { user } = useAuth();
-  const isPro = user?.subscriptionStatus === 'active';
+  const isPro = user?.subscriptionStatus === 'active' && (user?.subscriptionPlan === 'pro' || user?.subscriptionPlan === 'business');
 
   const { data: analytics, isLoading, error } = useQuery<AnalyticsSummary>({
     queryKey: ['/api/analytics/summary'],

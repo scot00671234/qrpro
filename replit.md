@@ -45,8 +45,11 @@ The application follows a modern full-stack architecture with clear separation b
 
 ### Subscription System
 - **Provider**: Stripe for payment processing
-- **Tiers**: Free (1 QR code limit) and Pro (unlimited)
-- **Features**: Subscription status tracking with automatic limit enforcement
+- **Tiers**: 
+  - Free ($0): 3 QR codes, 100 scans/month, basic generation
+  - Pro ($9/month): Unlimited scans, branded QR codes, analytics, dynamic QR codes
+  - Business ($29/month): Everything in Pro plus team features, bulk generation, custom domain
+- **Features**: Plan-based access control, Stripe webhook integration, subscription metadata tracking
 
 ### QR Code Generation & Analytics
 - **Dynamic QR Codes**: Editable destination URLs without regenerating QR code (redirect through /r/:id)
@@ -106,6 +109,12 @@ The application follows a modern full-stack architecture with clear separation b
 - **Live Mode**: Only switch to live keys (sk_live_... and pk_live_...) for production
 
 ### Recent Changes
+- **July 20, 2025**: Completed comprehensive 3-tier pricing model implementation (Free $0, Pro $9/month, Business $29/month)
+- **July 20, 2025**: Updated Stripe integration to support plan selection and dynamic pricing for both Pro and Business tiers
+- **July 20, 2025**: Enhanced subscription management with plan metadata tracking and webhook processing
+- **July 20, 2025**: Updated landing page with 3-column pricing display showcasing all tier features
+- **July 20, 2025**: Redesigned subscription page with plan selection interface for Pro and Business options
+- **July 20, 2025**: Modified analytics access control to support both Pro and Business subscribers
 - **July 20, 2025**: Implemented multi-niche positioning strategy with trackable QR codes for real businesses
 - **July 20, 2025**: Added comprehensive analytics dashboard with scan tracking, device detection, and performance metrics
 - **July 20, 2025**: Implemented dynamic QR codes allowing destination URL updates without changing QR code

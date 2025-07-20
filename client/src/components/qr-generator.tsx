@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { apiRequest } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
@@ -24,6 +25,7 @@ interface QrGeneratorProps {
 
 export function QrGenerator({ isPro, qrCodeCount, onQrCodeCreated }: QrGeneratorProps) {
   const { toast } = useToast();
+  const { user } = useAuth();
   const queryClient = useQueryClient();
   const [name, setName] = useState("");
   const [destinationUrl, setDestinationUrl] = useState("");
@@ -142,7 +144,8 @@ export function QrGenerator({ isPro, qrCodeCount, onQrCodeCreated }: QrGenerator
     }
   };
 
-  const canCreateQr = isPro || qrCodeCount === 0;
+  // Check if user can create QR codes based on their plan
+  const canCreateQr = user?.subscriptionStatus === 'active' || (qrCodeCount < 3); // Free users get 3 QR codes
 
   return (
     <div className="grid lg:grid-cols-2 gap-12">
@@ -196,11 +199,11 @@ export function QrGenerator({ isPro, qrCodeCount, onQrCodeCreated }: QrGenerator
             </div>
             
             {/* Pro Features */}
-            <div className={`space-y-4 ${!isPro ? 'opacity-50' : ''}`}>
+            <div className={`space-y-4 ${user?.subscriptionStatus !== 'active' ? 'opacity-50' : ''}`}>
               <div className="flex items-center space-x-2 mb-4">
                 <Crown className="w-4 h-4 text-yellow-500" />
                 <span className="text-sm font-medium">Pro Features</span>
-                {!isPro && <Badge variant="outline">Upgrade Required</Badge>}
+                {user?.subscriptionStatus !== 'active' && <Badge variant="outline">Upgrade Required</Badge>}
               </div>
               
               <div>

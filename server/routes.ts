@@ -234,9 +234,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const user = req.user;
       const id = parseInt(req.params.id);
       
-      if (user.subscriptionStatus === 'free') {
+      if (user.subscriptionStatus !== 'active' || (user.subscriptionPlan !== 'pro' && user.subscriptionPlan !== 'business')) {
         return res.status(403).json({ 
-          message: "Analytics require Pro subscription",
+          message: "Analytics require Pro or Business subscription",
           requiresUpgrade: true
         });
       }
@@ -258,9 +258,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const user = req.user;
       
-      if (user.subscriptionStatus === 'free') {
+      if (user.subscriptionStatus !== 'active' || (user.subscriptionPlan !== 'pro' && user.subscriptionPlan !== 'business')) {
         return res.status(403).json({ 
-          message: "Analytics require Pro subscription",
+          message: "Analytics require Pro or Business subscription",
           requiresUpgrade: true
         });
       }
@@ -281,6 +281,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
     try {
       const user = req.user;
+      const { plan = 'pro' } = req.body; // Default to pro plan
 
       if (!user) {
         return res.status(404).json({ message: "User not found" });
@@ -313,8 +314,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         await storage.updateUserStripeInfo(user.id, customerId);
       }
 
-      // For Railway deployment, we need to create a price ID first or use an existing one
-      // Let's create a simple checkout session instead for better Railway compatibility
+      // Define pricing based on selected plan
+      const planPricing = {
+        pro: {
+          amount: 900, // $9.00 in cents
+          name: 'QR Pro - Smart QR Plan',
+          description: 'Unlimited scans, branded QR codes, analytics dashboard'
+        },
+        business: {
+          amount: 2900, // $29.00 in cents  
+          name: 'QR Pro - Growth Kit Plan',
+          description: 'Everything in Pro plus team features, bulk generation, custom domain'
+        }
+      };
+
+      const selectedPlan = planPricing[plan as keyof typeof planPricing] || planPricing.pro;
+
       const session = await stripe.checkout.sessions.create({
         customer: customerId,
         payment_method_types: ['card'],
@@ -323,10 +338,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
             price_data: {
               currency: 'usd',
               product_data: {
-                name: 'QR Pro Monthly Subscription',
-                description: 'Unlimited QR codes with full customization',
+                name: selectedPlan.name,
+                description: selectedPlan.description,
               },
-              unit_amount: 1500, // $15.00 in cents
+              unit_amount: selectedPlan.amount,
               recurring: {
                 interval: 'month',
               },
@@ -339,6 +354,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         cancel_url: `${req.protocol}://${req.get('host')}/subscribe`,
         metadata: {
           userId: user.id,
+          plan: plan,
         },
       });
 
@@ -419,7 +435,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
               endsAt = new Date(subscription.current_period_end * 1000);
             }
             
-            await storage.updateUserSubscription(user.id, subscription.status, endsAt);
+            // Extract plan from subscription metadata or determine from price
+            let plan = 'pro'; // default
+            if (subscription.metadata?.plan) {
+              plan = subscription.metadata.plan;
+            } else if (subscription.items?.data?.[0]?.price?.unit_amount) {
+              const amount = subscription.items.data[0].price.unit_amount;
+              plan = amount >= 2900 ? 'business' : 'pro';
+            }
+            
+            await storage.updateUserSubscription(user.id, plan, subscription.status, endsAt);
           }
           break;
         
@@ -431,7 +456,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const userToUpdate = allUsers.find(u => u.stripeCustomerId === deletedCustomerId);
           
           if (userToUpdate) {
-            await storage.updateUserSubscription(userToUpdate.id, 'canceled');
+            await storage.updateUserSubscription(userToUpdate.id, 'free', 'canceled');
           }
           break;
         

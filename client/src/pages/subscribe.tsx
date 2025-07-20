@@ -1,165 +1,77 @@
-import { useStripe, Elements, PaymentElement, useElements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { useToast } from "@/hooks/use-toast";
-import { isUnauthorizedError } from "@/lib/authUtils";
-import { apiRequest } from "@/lib/queryClient";
-import { Navigation } from "@/components/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Check, Crown, ArrowLeft } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Crown, Check, Building2, ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
-
-// Only load Stripe if the key is available (for Railway deployment)
-const stripePromise = import.meta.env.VITE_STRIPE_PUBLIC_KEY 
-  ? loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY)
-  : null;
-
-const SubscribeForm = () => {
-  const stripe = useStripe();
-  const elements = useElements();
-  const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    if (!stripe || !elements) {
-      setIsLoading(false);
-      return;
-    }
-
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: `${window.location.origin}/dashboard`,
-      },
-    });
-
-    if (error) {
-      toast({
-        title: "Payment Failed",
-        description: error.message,
-        variant: "destructive",
-      });
-    } else {
-      toast({
-        title: "Payment Successful",
-        description: "Welcome to QR Pro! You now have access to all Pro features.",
-      });
-    }
-    setIsLoading(false);
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <PaymentElement />
-      <Button 
-        type="submit" 
-        className="w-full" 
-        disabled={!stripe || isLoading}
-      >
-        {isLoading ? "Processing..." : "Subscribe to Pro - $15/month"}
-      </Button>
-    </form>
-  );
-};
+import { useToast } from "@/hooks/use-toast";
+import { Navigation } from "@/components/navigation";
+import { apiRequest } from "@/lib/queryClient";
+import { isUnauthorizedError } from "@/lib/authUtils";
 
 export default function Subscribe() {
-  const { user, isAuthenticated, isLoading } = useAuth();
+  const { user, isAuthenticated } = useAuth();
+  const [selectedPlan, setSelectedPlan] = useState<'pro' | 'business'>('pro');
+  const [subscriptionError, setSubscriptionError] = useState<string>("");
   const { toast } = useToast();
-  const [clientSecret, setClientSecret] = useState("");
-  const [subscriptionError, setSubscriptionError] = useState("");
 
+  // Redirect to login if not authenticated
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
+    if (!isAuthenticated) {
       toast({
-        title: "Unauthorized",
-        description: "You are logged out. Logging in again...",
+        title: "Login Required",
+        description: "Please log in to access subscription features.",
         variant: "destructive",
       });
       setTimeout(() => {
-        window.location.href = "/api/login";
-      }, 500);
-      return;
+        window.location.href = "/login";
+      }, 1000);
     }
-  }, [isAuthenticated, isLoading, toast]);
+  }, [isAuthenticated, toast]);
 
   const handleSubscribe = async () => {
     try {
-      const response = await apiRequest("POST", "/api/create-subscription");
+      const response = await apiRequest("POST", "/api/create-subscription", {
+        plan: selectedPlan
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to create subscription");
+      }
+
       const data = await response.json();
       
-      if (data.url) {
-        // Redirect to Stripe Checkout
-        window.location.href = data.url;
-      } else if (data.message === "Already subscribed") {
-        toast({
-          title: "Already Subscribed",
-          description: "You already have an active Pro subscription!",
-        });
+      if (data.sessionUrl) {
+        window.location.href = data.sessionUrl;
       } else {
-        setSubscriptionError(data.message || "Failed to create subscription");
+        throw new Error("No session URL returned");
       }
     } catch (error: any) {
+      console.error("Subscription error:", error);
+      setSubscriptionError(error.message);
+      
       if (isUnauthorizedError(error)) {
         toast({
-          title: "Unauthorized",
-          description: "You are logged out. Logging in again...",
+          title: "Session Expired",
+          description: "Please log in again to continue.",
           variant: "destructive",
         });
         setTimeout(() => {
-          window.location.href = "/api/login";
-        }, 500);
-      } else {
-        setSubscriptionError("Failed to create subscription");
+          window.location.href = "/login";
+        }, 1000);
       }
     }
   };
 
-  useEffect(() => {
-    // Check for successful subscription from URL parameters
-    const urlParams = new URLSearchParams(window.location.search);
-    const sessionId = urlParams.get('session_id');
-    
-    if (sessionId) {
-      // Process successful subscription
-      apiRequest("POST", "/api/subscription-success", { session_id: sessionId })
-        .then(() => {
-          toast({
-            title: "Subscription Successful",
-            description: "Welcome to QR Pro! You now have access to all Pro features.",
-          });
-          window.location.href = "/dashboard";
-        })
-        .catch((error) => {
-          console.error('Error processing subscription success:', error);
-        });
-    }
-  }, [toast]);
-
-  useEffect(() => {
-    if (isAuthenticated && user?.subscriptionStatus === 'active') {
-      // User is already subscribed, redirect to dashboard
-      window.location.href = "/dashboard";
-    }
-  }, [isAuthenticated, user]);
-
-  if (isLoading || !isAuthenticated || !user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
-      </div>
-    );
+  if (!isAuthenticated) {
+    return null; // Don't render anything while redirecting
   }
 
-  const isPro = user.subscriptionStatus === 'active';
-
-  if (isPro) {
+  // Show different content if user is already subscribed
+  if (user?.subscriptionStatus === 'active') {
     return (
       <div className="min-h-screen bg-gray-50">
         <Navigation />
@@ -204,93 +116,128 @@ export default function Subscribe() {
               Back to Dashboard
             </Button>
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">Upgrade to Pro</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Choose Your Plan</h1>
           <p className="mt-2 text-gray-600">Unlock unlimited QR codes and advanced features</p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* Plan Details */}
-          <div>
-            <Card className="border-2 border-primary">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle className="flex items-center">
-                    <Crown className="mr-2 h-5 w-5" />
-                    Pro Plan
-                  </CardTitle>
-                  <Badge className="bg-primary text-white">Popular</Badge>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="text-4xl font-bold text-gray-900 mb-6">
-                  $15<span className="text-lg text-gray-500">/month</span>
-                </div>
-                
-                <ul className="space-y-4">
-                  <li className="flex items-center">
-                    <Check className="text-green-500 mr-3 h-5 w-5" />
-                    Unlimited QR Codes
-                  </li>
-                  <li className="flex items-center">
-                    <Check className="text-green-500 mr-3 h-5 w-5" />
-                    Full Customization
-                  </li>
-                  <li className="flex items-center">
-                    <Check className="text-green-500 mr-3 h-5 w-5" />
-                    Cloud Storage
-                  </li>
-                  <li className="flex items-center">
-                    <Check className="text-green-500 mr-3 h-5 w-5" />
-                    Priority Support
-                  </li>
-                </ul>
+        {/* Plan Selection */}
+        <div className="grid md:grid-cols-2 gap-8 mb-12">
+          {/* Pro Plan */}
+          <Card className={`border-2 cursor-pointer transition-all ${selectedPlan === 'pro' ? 'border-primary bg-primary/5' : 'border-gray-200 hover:border-primary/50'}`} 
+                onClick={() => setSelectedPlan('pro')}>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center">
+                  <Crown className="mr-2 h-5 w-5" />
+                  Smart QR
+                </CardTitle>
+                <Badge className="bg-primary text-white">Popular</Badge>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-4xl font-bold text-gray-900 mb-6">
+                $9<span className="text-lg text-gray-500">/month</span>
+              </div>
+              
+              <ul className="space-y-4">
+                <li className="flex items-center">
+                  <Check className="text-green-500 mr-3 h-5 w-5" />
+                  Unlimited scans
+                </li>
+                <li className="flex items-center">
+                  <Check className="text-green-500 mr-3 h-5 w-5" />
+                  Branded QR codes
+                </li>
+                <li className="flex items-center">
+                  <Check className="text-green-500 mr-3 h-5 w-5" />
+                  Analytics dashboard
+                </li>
+                <li className="flex items-center">
+                  <Check className="text-green-500 mr-3 h-5 w-5" />
+                  Dynamic QR codes
+                </li>
+                <li className="flex items-center">
+                  <Check className="text-green-500 mr-3 h-5 w-5" />
+                  Multiple formats
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
 
-                <Alert className="mt-6">
+          {/* Business Plan */}
+          <Card className={`border-2 cursor-pointer transition-all ${selectedPlan === 'business' ? 'border-primary bg-primary/5' : 'border-gray-200 hover:border-primary/50'}`}
+                onClick={() => setSelectedPlan('business')}>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <Building2 className="mr-2 h-5 w-5" />
+                Growth Kit
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-4xl font-bold text-gray-900 mb-6">
+                $29<span className="text-lg text-gray-500">/month</span>
+              </div>
+              
+              <ul className="space-y-4">
+                <li className="flex items-center">
+                  <Check className="text-green-500 mr-3 h-5 w-5" />
+                  Everything in Pro
+                </li>
+                <li className="flex items-center">
+                  <Check className="text-green-500 mr-3 h-5 w-5" />
+                  Multiple team members
+                </li>
+                <li className="flex items-center">
+                  <Check className="text-green-500 mr-3 h-5 w-5" />
+                  Bulk QR generation
+                </li>
+                <li className="flex items-center">
+                  <Check className="text-green-500 mr-3 h-5 w-5" />
+                  Custom domain
+                </li>
+                <li className="flex items-center">
+                  <Check className="text-green-500 mr-3 h-5 w-5" />
+                  Priority support
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Payment Form */}
+        <Card className="max-w-lg mx-auto">
+          <CardHeader>
+            <CardTitle>Payment Information</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {subscriptionError ? (
+              <Alert variant="destructive">
+                <AlertDescription>{subscriptionError}</AlertDescription>
+              </Alert>
+            ) : (
+              <div className="text-center py-8">
+                <Button 
+                  onClick={handleSubscribe}
+                  className="w-full"
+                  size="lg"
+                  disabled={!selectedPlan}
+                >
+                  Subscribe to {selectedPlan === 'pro' ? 'Smart QR - $9' : 'Growth Kit - $29'}/month
+                </Button>
+                <p className="mt-4 text-sm text-gray-600">
+                  Click to continue with secure Stripe checkout
+                </p>
+                
+                <Alert className="mt-6 text-left">
                   <Crown className="h-4 w-4" />
                   <AlertDescription>
                     Cancel anytime. No long-term commitment required.
                   </AlertDescription>
                 </Alert>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Payment Form */}
-          <div>
-            <Card>
-              <CardHeader>
-                <CardTitle>Payment Information</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {subscriptionError ? (
-                  <Alert variant="destructive">
-                    <AlertDescription>{subscriptionError}</AlertDescription>
-                  </Alert>
-                ) : (
-                  <div className="text-center py-8">
-                    <Button 
-                      onClick={handleSubscribe}
-                      className="w-full"
-                      size="lg"
-                    >
-                      Subscribe to Pro - $15/month
-                    </Button>
-                    <p className="mt-4 text-sm text-gray-600">
-                      Click to continue with secure Stripe checkout
-                    </p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            <div className="mt-6 text-center text-sm text-gray-500">
-              <p>Secure payment powered by Stripe</p>
-              <p className="mt-1">
-                By subscribing, you agree to our Terms of Service and Privacy Policy
-              </p>
-            </div>
-          </div>
-        </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
