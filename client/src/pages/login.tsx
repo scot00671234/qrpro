@@ -40,21 +40,16 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      console.log("Attempting login with:", { email: loginForm.email });
-      const response = await apiRequest("POST", "/api/login", loginForm);
-      console.log("Login successful:", response.status);
+      await apiRequest("POST", "/api/login", loginForm);
       
       toast({
         title: "Success",
         description: "Logged in successfully!",
       });
       
-      // Add a small delay before redirect to ensure session is set
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 500);
+      // Redirect to dashboard
+      window.location.href = "/";
     } catch (error: any) {
-      console.error("Login error details:", error);
       toast({
         title: "Login Failed",
         description: error.message || "Invalid email or password",
@@ -89,30 +84,21 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      console.log("Attempting registration with:", { 
-        email: signupForm.email,
-        firstName: signupForm.firstName,
-        lastName: signupForm.lastName 
-      });
-      const response = await apiRequest("POST", "/api/register", {
+      await apiRequest("POST", "/api/register", {
         email: signupForm.email,
         password: signupForm.password,
         firstName: signupForm.firstName,
         lastName: signupForm.lastName
       });
-      console.log("Registration successful:", response.status);
       
       toast({
         title: "Success",
         description: "Account created successfully! Welcome to QR Pro!",
       });
       
-      // Add a small delay before redirect to ensure session is set
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 500);
+      // Redirect to dashboard
+      window.location.href = "/";
     } catch (error: any) {
-      console.error("Registration error details:", error);
       toast({
         title: "Signup Failed",
         description: error.message || "Failed to create account",

@@ -74,14 +74,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
 
-      res.status(201).json({ 
-        message: "Account created successfully",
-        user: {
-          id: user.id,
-          email: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName
+      // Auto-login after successful registration
+      req.login(user, (err) => {
+        if (err) {
+          console.error("Auto-login after registration failed:", err);
+          return res.status(201).json({ 
+            message: "Account created successfully, please log in manually",
+            user: {
+              id: user.id,
+              email: user.email,
+              firstName: user.firstName,
+              lastName: user.lastName
+            }
+          });
         }
+        
+        res.status(201).json({ 
+          message: "Account created successfully",
+          user: {
+            id: user.id,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            subscriptionPlan: user.subscriptionPlan,
+            subscriptionStatus: user.subscriptionStatus
+          }
+        });
       });
     } catch (error: any) {
       console.error("Registration error:", error);
@@ -93,24 +111,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/login', (req, res, next) => {
     passport.authenticate('local', (err: any, user: any, info: any) => {
       if (err) {
+        console.error("Authentication error:", err);
         return res.status(500).json({ message: "Authentication error" });
       }
       if (!user) {
+        console.log("Login failed for:", req.body.email, "reason:", info?.message);
         return res.status(401).json({ message: info?.message || "Invalid credentials" });
       }
       req.logIn(user, (err) => {
         if (err) {
+          console.error("Session login error:", err);
           return res.status(500).json({ message: "Login error" });
         }
+        
+        // Remove password from response
+        const userResponse = {
+          id: user.id,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          subscriptionStatus: user.subscriptionStatus,
+          subscriptionPlan: user.subscriptionPlan
+        };
+        
+        console.log("Login successful for user:", user.email);
         res.json({
-          message: "Login successful",
-          user: {
-            id: user.id,
-            email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            subscriptionStatus: user.subscriptionStatus
-          }
+          message: "Logged in successfully",
+          user: userResponse
         });
       });
     })(req, res, next);
@@ -120,8 +147,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/logout', (req, res) => {
     req.logout((err) => {
       if (err) {
+        console.error("Logout error:", err);
         return res.status(500).json({ message: "Logout error" });
       }
+      console.log("User logged out successfully");
       res.json({ message: "Logged out successfully" });
     });
   });

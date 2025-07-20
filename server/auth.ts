@@ -78,77 +78,7 @@ export async function setupAuth(app: Express) {
     }
   });
 
-  // Register route
-  app.post('/api/register', async (req, res) => {
-    try {
-      const { email, password, firstName, lastName } = req.body;
-      
-      if (!email || !password) {
-        return res.status(400).json({ message: 'Email and password are required' });
-      }
-
-      // Check if user already exists
-      const existingUser = await storage.getUserByEmail(email);
-      if (existingUser) {
-        return res.status(400).json({ message: 'User already exists' });
-      }
-
-      // Hash password
-      const hashedPassword = await bcrypt.hash(password, 12);
-
-      // Create user
-      const newUser = await storage.upsertUser({
-        id: crypto.randomUUID(),
-        email,
-        password: hashedPassword,
-        firstName: firstName || '',
-        lastName: lastName || '',
-        subscriptionStatus: 'free'
-      });
-
-      // Send welcome email
-      try {
-        await sendWelcomeEmail(email, firstName || email.split('@')[0]);
-      } catch (emailError) {
-        console.warn('Failed to send welcome email:', emailError);
-      }
-
-      // Auto login after registration
-      req.login(newUser, (err) => {
-        if (err) {
-          return res.status(500).json({ message: 'Registration successful but login failed' });
-        }
-        res.status(201).json({ 
-          message: 'Account created successfully', 
-          user: { ...newUser, password: undefined }
-        });
-      });
-    } catch (error) {
-      console.error('Registration error:', error);
-      res.status(500).json({ message: 'Failed to create account' });
-    }
-  });
-
-  // Login route
-  app.post('/api/login', (req, res, next) => {
-    passport.authenticate('local', (err: any, user: any, info: any) => {
-      if (err) {
-        return res.status(500).json({ message: 'Authentication error' });
-      }
-      if (!user) {
-        return res.status(401).json({ message: info.message || 'Invalid credentials' });
-      }
-      req.login(user, (loginErr) => {
-        if (loginErr) {
-          return res.status(500).json({ message: 'Login failed' });
-        }
-        res.json({ 
-          message: 'Logged in successfully', 
-          user: { ...user, password: undefined }
-        });
-      });
-    })(req, res, next);
-  });
+  // Auth routes are defined in routes.ts
 
   // Forgot password route
   app.post('/api/forgot-password', async (req, res) => {
@@ -212,11 +142,7 @@ export async function setupAuth(app: Express) {
     }
   });
 
-  app.post('/api/logout', (req, res) => {
-    req.logout(() => {
-      res.json({ message: 'Logged out successfully' });
-    });
-  });
+  // Logout route is defined in routes.ts
 }
 
 export const isAuthenticated: RequestHandler = (req, res, next) => {

@@ -12,28 +12,15 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
-  console.log(`Making ${method} request to ${url}`, data ? { data } : "");
-  
-  try {
-    const res = await fetch(url, {
-      method,
-      headers: data ? { "Content-Type": "application/json" } : {},
-      body: data ? JSON.stringify(data) : undefined,
-      credentials: "include",
-    });
+  const res = await fetch(url, {
+    method,
+    headers: data ? { "Content-Type": "application/json" } : {},
+    body: data ? JSON.stringify(data) : undefined,
+    credentials: "include",
+  });
 
-    console.log(`Response from ${url}:`, {
-      status: res.status,
-      statusText: res.statusText,
-      headers: Object.fromEntries(res.headers.entries())
-    });
-
-    await throwIfResNotOk(res);
-    return res;
-  } catch (error) {
-    console.error(`API request failed for ${method} ${url}:`, error);
-    throw error;
-  }
+  await throwIfResNotOk(res);
+  return res;
 }
 
 type UnauthorizedBehavior = "returnNull" | "throw";
@@ -45,15 +32,9 @@ export const getQueryFn: <T>(options: {
     // For single URL string in queryKey array, use as-is
     // For multiple segments, join with empty string (no additional slashes)  
     const url = queryKey.length === 1 ? queryKey[0] as string : queryKey.join("");
-    console.log(`Making GET request to ${url}`, { queryKey });
     
     const res = await fetch(url, {
       credentials: "include",
-    });
-
-    console.log(`GET Response from ${url}:`, {
-      status: res.status,
-      statusText: res.statusText
     });
 
     if (unauthorizedBehavior === "returnNull" && res.status === 401) {
