@@ -20,6 +20,7 @@ import Privacy from "@/pages/privacy";
 import Terms from "@/pages/terms";
 import Support from "@/pages/support";
 import APIDocs from "@/pages/api-docs";
+import Pricing from "@/pages/pricing";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -39,6 +40,7 @@ function Router() {
           <Route path="/terms" component={Terms} />
           <Route path="/support" component={Support} />
           <Route path="/api-docs" component={APIDocs} />
+          <Route path="/pricing" component={Pricing} />
         </>
       ) : (
         <>
@@ -58,6 +60,7 @@ function Router() {
       <Route path="/terms" component={Terms} />
       <Route path="/support" component={Support} />
       <Route path="/api-docs" component={APIDocs} />
+      <Route path="/pricing" component={Pricing} />
       <Route component={NotFound} />
     </Switch>
   );

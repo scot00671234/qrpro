@@ -22,7 +22,7 @@ export function Footer() {
             <h3 className="text-lg font-medium mb-4">Product</h3>
             <ul className="space-y-3">
               <li><Link href="/login" className="text-gray-400 hover:text-white transition-colors">QR Generator</Link></li>
-              <li><Link href="/subscribe" className="text-gray-400 hover:text-white transition-colors">Pricing</Link></li>
+              <li><Link href="/pricing" className="text-gray-400 hover:text-white transition-colors">Pricing</Link></li>
               <li><Link href="/login" className="text-gray-400 hover:text-white transition-colors">Analytics</Link></li>
               <li><Link href="/api-docs" className="text-gray-400 hover:text-white transition-colors">API</Link></li>
             </ul>
