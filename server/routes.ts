@@ -31,9 +31,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      res.json(user);
+      // Remove password from response
+      const { password, ...userResponse } = user;
+      res.json(userResponse);
     } catch (error) {
-      console.error("Error fetching user:", error);
       res.status(500).json({ message: "Failed to fetch user" });
     }
   });
@@ -77,7 +78,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Auto-login after successful registration
       req.login(user, (err) => {
         if (err) {
-          console.error("Auto-login after registration failed:", err);
+  
           return res.status(201).json({ 
             message: "Account created successfully, please log in manually",
             user: {
@@ -102,7 +103,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       });
     } catch (error: any) {
-      console.error("Registration error:", error);
       res.status(500).json({ message: "Failed to create account" });
     }
   });
@@ -134,7 +134,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           subscriptionPlan: user.subscriptionPlan
         };
         
-        console.log("Login successful for user:", user.email);
+  
         res.json({
           message: "Logged in successfully",
           user: userResponse
@@ -147,10 +147,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/logout', (req, res) => {
     req.logout((err) => {
       if (err) {
-        console.error("Logout error:", err);
         return res.status(500).json({ message: "Logout error" });
       }
-      console.log("User logged out successfully");
       res.json({ message: "Logged out successfully" });
     });
   });
