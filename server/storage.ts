@@ -73,22 +73,33 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createUser(userData: { email: string; password: string; firstName: string; lastName: string }): Promise<User> {
-    const userId = crypto.randomUUID();
-    
-    const [user] = await db
-      .insert(users)
-      .values({
-        id: userId,
-        email: userData.email,
-        password: userData.password,
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        subscriptionPlan: 'free',
-        subscriptionStatus: 'free',
-      })
-      .returning();
-    
-    return user;
+    try {
+      console.log('Creating user with data:', { ...userData, password: '[REDACTED]' });
+      const userId = crypto.randomUUID();
+      
+      console.log('Inserting user into database with ID:', userId);
+      const [user] = await db
+        .insert(users)
+        .values({
+          id: userId,
+          email: userData.email,
+          password: userData.password,
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          subscriptionPlan: 'free',
+          subscriptionStatus: 'free',
+        })
+        .returning();
+      
+      console.log('Database insert successful, user created:', user.email);
+      return user;
+    } catch (error) {
+      console.error('Database error creating user:', error);
+      console.error('Database error code:', (error as any).code);
+      console.error('Database error detail:', (error as any).detail);
+      console.error('User data that failed:', { ...userData, password: '[REDACTED]' });
+      throw error;
+    }
   }
 
   async upsertUser(userData: UpsertUser): Promise<User> {

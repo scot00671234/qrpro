@@ -42,22 +42,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Registration route
   app.post('/api/register', async (req, res) => {
     try {
+      console.log('Registration attempt:', { email: req.body.email, hasData: !!req.body });
       const { email, password, firstName, lastName } = req.body;
       
       if (!email || !password || !firstName || !lastName) {
+        console.log('Missing fields:', { email: !!email, password: !!password, firstName: !!firstName, lastName: !!lastName });
         return res.status(400).json({ message: "All fields are required" });
       }
 
       // Check if user already exists
+      console.log('Checking if user exists:', email);
       const existingUser = await storage.getUserByEmail(email);
       if (existingUser) {
+        console.log('User already exists:', email);
         return res.status(409).json({ message: "User already exists" });
       }
 
       // Hash password
+      console.log('Hashing password for user:', email);
       const hashedPassword = await bcrypt.hash(password, 12);
 
       // Create user
+      console.log('Creating user:', email);
       const user = await storage.createUser({
         email,
         password: hashedPassword,
@@ -103,7 +109,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       });
     } catch (error: any) {
-      res.status(500).json({ message: "Failed to create account" });
+      console.error('Registration error details:', error);
+      console.error('Error stack:', error.stack);
+      console.error('Error message:', error.message);
+      res.status(500).json({ message: "Failed to create account", error: error.message });
     }
   });
 

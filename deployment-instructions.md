@@ -72,7 +72,36 @@ If using custom domain (qrprogenerator.com):
 ## Testing the Fix
 
 1. **Local Development**: Already working ✅
-2. **Railway Production**: Deploy with these changes
+2. **Railway Production**: Deploy with these changes and check logs
 3. **Custom Domain**: Configure DNS and test
+
+## Debugging Steps for Railway
+
+### Step 1: Deploy with Enhanced Logging
+The latest build includes detailed error logging to identify the exact issue:
+- Database connection errors
+- User creation failures
+- CORS and session issues
+
+### Step 2: Check Railway Logs
+After deployment, check Railway logs for:
+```
+Registration attempt: { email: 'user@example.com', hasData: true }
+Creating user with data: { email: 'user@example.com', password: '[REDACTED]', ... }
+Inserting user into database with ID: <uuid>
+```
+
+### Step 3: Common Railway Production Issues
+1. **DATABASE_URL format**: Ensure PostgreSQL URL is correct
+2. **SSL requirements**: Railway may require SSL for database connections
+3. **Environment variables**: Verify all required vars are set
+4. **Memory/timeout limits**: Check if registration times out
+
+### Step 4: Frontend Cache Issue
+The "api/auth/user1" issue in browser suggests cache corruption:
+1. Clear Railway build cache completely
+2. Deploy fresh build
+3. Test in private browser window
+4. Hard refresh (Ctrl+F5) on production site
 
 The authentication system is production-ready and should work correctly once deployed with these configurations.
