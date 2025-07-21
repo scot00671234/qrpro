@@ -4,13 +4,32 @@
 
 The QR Pro platform works perfectly in Replit development environment but authentication fails in Railway production with URLs getting corrupted (api/auth/user1, api/register1).
 
-## Root Cause
+## Root Cause IDENTIFIED
 
-This is a **production environment issue**, not a code issue. The built JavaScript files are completely correct. The problem occurs due to:
+The error is: **`column "subscription_plan" does not exist`**
 
-1. **Browser caching** of corrupted network requests
-2. **CDN/proxy interference** in Railway's edge network
-3. **Service worker caching** of old requests
+This is a **database schema mismatch** - Railway's PostgreSQL database doesn't have the updated schema columns. The registration fails because the code tries to insert `subscription_plan` and `subscription_status` columns that don't exist in production.
+
+## IMMEDIATE FIX REQUIRED
+
+### Step 1: Update Railway Database Schema
+Run this SQL in Railway's PostgreSQL console:
+
+```sql
+-- Add missing columns to users table
+ALTER TABLE users ADD COLUMN IF NOT EXISTS subscription_plan VARCHAR DEFAULT 'free';
+ALTER TABLE users ADD COLUMN IF NOT EXISTS subscription_status VARCHAR DEFAULT 'inactive';
+ALTER TABLE users ADD COLUMN IF NOT EXISTS subscription_ends_at TIMESTAMP;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS monthly_scans_used INTEGER DEFAULT 0;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS last_scan_reset TIMESTAMP DEFAULT NOW();
+ALTER TABLE users ADD COLUMN IF NOT EXISTS password_reset_token VARCHAR;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS password_reset_expiry TIMESTAMP;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT NOW();
+ALTER TABLE users ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP DEFAULT NOW();
+```
+
+### Step 2: Deploy Updated Code
+The latest build removes subscription columns from user creation to work with minimal schema.
 
 ## Solution Steps for Railway Deployment
 

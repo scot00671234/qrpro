@@ -86,8 +86,6 @@ export class DatabaseStorage implements IStorage {
           password: userData.password,
           firstName: userData.firstName,
           lastName: userData.lastName,
-          subscriptionPlan: 'free',
-          subscriptionStatus: 'free',
         })
         .returning();
       
