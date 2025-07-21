@@ -109,9 +109,17 @@ The application follows a modern full-stack architecture with clear separation b
 - **Live Mode**: Only switch to live keys (sk_live_... and pk_live_...) for production
 
 ### Recent Changes
+- **July 21, 2025**: ✅ **ANALYTICS PAGE COMPLETELY REMOVED**: Removed analytics functionality per user request
+  - Deleted analytics page component and all routes
+  - Removed analytics links from navigation 
+  - Removed all analytics-related API endpoints
+  - Updated pricing model to Free (3 QR codes/month) + QR Pro ($19/month unlimited)
+  - Changed terminology from "scans" to "QR code generation" for free user limits
+  - Simplified subscription system to single Pro plan instead of Pro/Business tiers
+  - Updated all pricing displays across landing, pricing, and subscription pages
 - **July 21, 2025**: ✅ **DYNAMIC STRIPE SUBSCRIPTION FIX**: Fixed subscription creation issues with automatic price creation
-  - Replaced hardcoded price IDs with dynamic product/price creation system
-  - System now automatically creates $9/month Pro and $29/month Business plans in Stripe
+  - Replaced hardcoded price IDs with dynamic product/price creation system  
+  - System now automatically creates $19/month Pro plan in Stripe
   - Fixed "No such price" errors by creating products and prices on-demand
   - Enhanced error handling for Stripe API interactions
   - Subscription system now works seamlessly with both test and live Stripe accounts

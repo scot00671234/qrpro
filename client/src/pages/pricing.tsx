@@ -16,7 +16,7 @@ const plans = [
     color: "from-gray-500/20 to-slate-500/20",
     textColor: "text-gray-600",
     features: [
-      "1 scan/month",
+      "3 QR codes per month",
       "Basic QR generation"
     ],
     limitations: [],
@@ -25,42 +25,23 @@ const plans = [
     popular: false
   },
   {
-    name: "Smart QR",
-    price: "$9",
+    name: "QR Pro",
+    price: "$19",
     period: "/month",
-    description: "For professionals and small businesses",
+    description: "Unlimited QR code generation for professionals",
     icon: Crown,
     color: "from-primary/20 to-accent/20",
     textColor: "text-primary",
     features: [
-      "25 scans per month",
+      "Unlimited QR code generation",
       "Cloud storage & organization",
-      "Analytics dashboard",
-      "Easy QR code management"
+      "Professional QR code management",
+      "Priority support"
     ],
     limitations: [],
     buttonText: "Choose Pro",
     buttonVariant: "default" as const,
     popular: true
-  },
-  {
-    name: "Growth Kit",
-    price: "$29",
-    period: "/month",
-    description: "For growing businesses",
-    icon: Building,
-    color: "from-emerald-500/20 to-teal-500/20",
-    textColor: "text-emerald-600",
-    features: [
-      "Unlimited scans",
-      "Cloud storage & organization", 
-      "Advanced analytics dashboard",
-      "Professional QR management"
-    ],
-    limitations: [],
-    buttonText: "Choose Business",
-    buttonVariant: "outline" as const,
-    popular: false
   }
 ];
 
@@ -82,7 +63,7 @@ export default function Pricing() {
           </div>
 
           {/* Pricing Cards */}
-          <div className="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {plans.map((plan) => (
               <Card key={plan.name} className={`glass-effect warm-shadow border-0 rounded-2xl relative overflow-hidden ${plan.popular ? 'ring-2 ring-primary/20 scale-105' : ''}`}>
                 {plan.popular && (

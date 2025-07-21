@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { QrCode, Settings, LogOut, User, Crown, BarChart3 } from "lucide-react";
+import { QrCode, Settings, LogOut, User, Crown } from "lucide-react";
 import { Link } from "wouter";
 
 export function Navigation() {
@@ -29,16 +29,16 @@ export function Navigation() {
   };
 
   const getUserInitials = () => {
-    if (user?.firstName && user?.lastName) {
+    if (user && 'firstName' in user && 'lastName' in user && user.firstName && user.lastName) {
       return `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase();
     }
-    if (user?.email) {
+    if (user && 'email' in user && user.email) {
       return user.email.charAt(0).toUpperCase();
     }
     return "U";
   };
 
-  const isPro = user?.subscriptionStatus === 'active';
+  const isPro = user && 'subscriptionStatus' in user && user.subscriptionStatus === 'active';
 
   return (
     <nav className="glass-effect warm-shadow sticky top-0 z-50 border-b border-border/50">
@@ -67,12 +67,7 @@ export function Navigation() {
                       My QR Codes
                     </Button>
                   </Link>
-                  <Link href="/analytics">
-                    <Button variant="ghost" size="sm">
-                      <BarChart3 className="w-4 h-4 mr-1" />
-                      Analytics
-                    </Button>
-                  </Link>
+
                   {!isPro && (
                     <Link href="/subscribe">
                       <Button size="sm" className="bg-primary hover:bg-primary/90">
@@ -87,7 +82,7 @@ export function Navigation() {
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                       <Avatar className="h-8 w-8">
-                        <AvatarImage src={user.profileImageUrl || ""} alt="Profile" />
+                        <AvatarImage src={(user && 'profileImageUrl' in user && user.profileImageUrl) || ""} alt="Profile" />
                         <AvatarFallback className="bg-primary text-primary-foreground">
                           {getUserInitials()}
                         </AvatarFallback>
@@ -97,11 +92,11 @@ export function Navigation() {
                   <DropdownMenuContent className="w-56" align="end" forceMount>
                     <div className="flex items-center justify-start gap-2 p-2">
                       <div className="flex flex-col space-y-1 leading-none">
-                        {user.firstName && user.lastName && (
+                        {user && 'firstName' in user && 'lastName' in user && user.firstName && user.lastName && (
                           <p className="font-medium">{user.firstName} {user.lastName}</p>
                         )}
                         <p className="w-[200px] truncate text-sm text-muted-foreground">
-                          {user.email}
+                          {user && 'email' in user ? user.email : ''}
                         </p>
                         {isPro && (
                           <div className="flex items-center text-xs text-emerald-600">

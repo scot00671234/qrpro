@@ -38,7 +38,7 @@ export function getPublishableKey(): string {
 }
 
 // Create or get price IDs dynamically
-export async function getOrCreatePrice(plan: 'pro' | 'business'): Promise<string> {
+export async function getOrCreatePrice(plan: 'pro'): Promise<string> {
   if (!stripe) {
     throw new Error('Stripe not configured');
   }
@@ -46,14 +46,9 @@ export async function getOrCreatePrice(plan: 'pro' | 'business'): Promise<string
   // Define pricing for each plan
   const planConfig = {
     pro: {
-      amount: 900, // $9.00 in cents
-      name: 'QR Pro - Smart Plan',
-      description: '25 scans per month, cloud storage, analytics dashboard, easy QR code management'
-    },
-    business: {
-      amount: 2900, // $29.00 in cents
-      name: 'QR Pro - Growth Kit',
-      description: 'Unlimited scans, cloud storage, advanced analytics, team collaboration'
+      amount: 1900, // $19.00 in cents
+      name: 'QR Pro',
+      description: 'Unlimited QR code generation, cloud storage, professional features'
     }
   };
 
@@ -118,7 +113,7 @@ export async function getOrCreatePrice(plan: 'pro' | 'business'): Promise<string
 }
 
 // Backward compatibility - get price ID (now async)
-export async function getPriceId(plan: 'pro' | 'business'): Promise<string> {
+export async function getPriceId(plan: 'pro'): Promise<string> {
   if (!STRIPE_SECRET_KEY) {
     throw new Error('Stripe not configured');
   }

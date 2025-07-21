@@ -172,18 +172,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const currentQrCount = await storage.getUserQrCodeCount(user.id);
       const subscriptionPlan = user.subscriptionPlan || 'free';
       
-      // Free users can only create 3 QR codes per month
+      // Free users can only create 3 QR codes per month  
       let maxQrCodes = 3; // Free plan default
       if (subscriptionPlan === 'pro') {
         maxQrCodes = -1; // Unlimited for Pro
-      } else if (subscriptionPlan === 'business') {
-        maxQrCodes = -1; // Unlimited for Business
       }
 
       // Enforce QR creation limits for free users
       if (maxQrCodes > 0 && currentQrCount >= maxQrCodes) {
         return res.status(403).json({ 
-          message: `Free users can only create ${maxQrCodes} QR codes. Upgrade to Pro for unlimited QR codes.`,
+          message: `Free users can only create ${maxQrCodes} QR codes per month. Upgrade to QR Pro for unlimited QR code generation.`,
           requiresUpgrade: true,
           currentCount: currentQrCount,
           maxAllowed: maxQrCodes
@@ -323,50 +321,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 
 
-  // Analytics routes
-  app.get('/api/qr-codes/:id/analytics', isAuthenticated, async (req: any, res) => {
-    try {
-      const user = req.user;
-      const id = parseInt(req.params.id);
-      
-      if (user.subscriptionStatus !== 'active' || (user.subscriptionPlan !== 'pro' && user.subscriptionPlan !== 'business')) {
-        return res.status(403).json({ 
-          message: "Analytics require Pro or Business subscription",
-          requiresUpgrade: true
-        });
-      }
-      
-      const analytics = await storage.getQrCodeAnalytics(id, user.id);
-      
-      if (!analytics) {
-        return res.status(404).json({ message: "QR code not found" });
-      }
-
-      res.json(analytics);
-    } catch (error) {
-      console.error("Error fetching QR analytics:", error);
-      res.status(500).json({ message: "Failed to fetch analytics" });
-    }
-  });
-
-  app.get('/api/analytics/summary', isAuthenticated, async (req: any, res) => {
-    try {
-      const user = req.user;
-      
-      if (user.subscriptionStatus !== 'active' || (user.subscriptionPlan !== 'pro' && user.subscriptionPlan !== 'business')) {
-        return res.status(403).json({ 
-          message: "Analytics require Pro or Business subscription",
-          requiresUpgrade: true
-        });
-      }
-      
-      const summary = await storage.getUserAnalyticsSummary(user.id);
-      res.json(summary);
-    } catch (error) {
-      console.error("Error fetching analytics summary:", error);
-      res.status(500).json({ message: "Failed to fetch analytics summary" });
-    }
-  });
+  // Analytics routes removed - no longer part of the app
 
   // Stripe subscription routes
   app.post('/api/create-subscription', isAuthenticated, async (req: any, res) => {
@@ -376,7 +331,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
     try {
       const user = req.user;
-      const { plan = 'pro' } = req.body; // Default to pro plan
+      // Only one plan available: Pro for $19/month
 
       if (!user) {
         return res.status(404).json({ message: "User not found" });
@@ -410,7 +365,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Use dynamic pricing based on test/live mode
-      const priceId = await getPriceId(plan as 'pro' | 'business');
+      const priceId = await getPriceId('pro');
       
       const session = await stripe.checkout.sessions.create({
         customer: customerId,
@@ -426,7 +381,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         cancel_url: `${req.protocol}://${req.get('host')}/subscribe`,
         metadata: {
           userId: user.id,
-          plan: plan,
+          plan: 'pro',
         },
       });
 
@@ -459,7 +414,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       if (session.payment_status === 'paid' && session.subscription) {
         await storage.updateUserStripeInfo(user.id, session.customer as string, session.subscription as string);
-        await storage.updateUserSubscription(user.id, session.metadata?.plan || 'pro', 'active');
+        await storage.updateUserSubscription(user.id, 'pro', 'active');
       }
 
       res.json({ message: "Subscription activated successfully" });

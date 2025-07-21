@@ -13,7 +13,7 @@ import { isUnauthorizedError } from "@/lib/authUtils";
 
 export default function Subscribe() {
   const { user, isAuthenticated } = useAuth();
-  const [selectedPlan, setSelectedPlan] = useState<'pro' | 'business'>('pro');
+  const [selectedPlan] = useState<'pro'>('pro'); // Only one plan available
   const [subscriptionError, setSubscriptionError] = useState<string>("");
   const { toast } = useToast();
 
@@ -83,7 +83,7 @@ export default function Subscribe() {
                 You're already a Pro member!
               </h2>
               <p className="text-gray-600 mb-6">
-                You have access to all Pro features including unlimited QR codes and customization options.
+                You have access to unlimited QR code generation and all professional features.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link href="/dashboard">
@@ -116,33 +116,32 @@ export default function Subscribe() {
               Back to Dashboard
             </Button>
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">Choose Your Plan</h1>
-          <p className="mt-2 text-gray-600">Unlock unlimited QR codes and advanced features</p>
+          <h1 className="text-3xl font-bold text-gray-900">Upgrade to QR Pro</h1>
+          <p className="mt-2 text-gray-600">Unlock unlimited QR code generation and professional features</p>
         </div>
 
         {/* Plan Selection */}
-        <div className="grid md:grid-cols-2 gap-8 mb-12">
-          {/* Pro Plan */}
-          <Card className={`border-2 cursor-pointer transition-all ${selectedPlan === 'pro' ? 'border-primary bg-primary/5' : 'border-gray-200 hover:border-primary/50'}`} 
-                onClick={() => setSelectedPlan('pro')}>
+        <div className="max-w-lg mx-auto mb-12">
+          {/* QR Pro Plan */}
+          <Card className="border-2 border-primary bg-primary/5">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle className="flex items-center">
                   <Crown className="mr-2 h-5 w-5" />
-                  Smart QR
+                  QR Pro
                 </CardTitle>
-                <Badge className="bg-primary text-white">Popular</Badge>
+                <Badge className="bg-primary text-white">Only Plan</Badge>
               </div>
             </CardHeader>
             <CardContent>
               <div className="text-4xl font-bold text-gray-900 mb-6">
-                $9<span className="text-lg text-gray-500">/month</span>
+                $19<span className="text-lg text-gray-500">/month</span>
               </div>
               
               <ul className="space-y-4">
                 <li className="flex items-center">
                   <Check className="text-green-500 mr-3 h-5 w-5" />
-                  25 scans per month
+                  Unlimited QR code generation
                 </li>
                 <li className="flex items-center">
                   <Check className="text-green-500 mr-3 h-5 w-5" />
@@ -150,46 +149,11 @@ export default function Subscribe() {
                 </li>
                 <li className="flex items-center">
                   <Check className="text-green-500 mr-3 h-5 w-5" />
-                  Analytics dashboard
+                  Professional QR code management
                 </li>
                 <li className="flex items-center">
                   <Check className="text-green-500 mr-3 h-5 w-5" />
-                  Easy QR code management
-                </li>
-              </ul>
-            </CardContent>
-          </Card>
-
-          {/* Business Plan */}
-          <Card className={`border-2 cursor-pointer transition-all ${selectedPlan === 'business' ? 'border-primary bg-primary/5' : 'border-gray-200 hover:border-primary/50'}`}
-                onClick={() => setSelectedPlan('business')}>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Building2 className="mr-2 h-5 w-5" />
-                Growth Kit
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-4xl font-bold text-gray-900 mb-6">
-                $29<span className="text-lg text-gray-500">/month</span>
-              </div>
-              
-              <ul className="space-y-4">
-                <li className="flex items-center">
-                  <Check className="text-green-500 mr-3 h-5 w-5" />
-                  Unlimited scans
-                </li>
-                <li className="flex items-center">
-                  <Check className="text-green-500 mr-3 h-5 w-5" />
-                  Cloud storage & organization
-                </li>
-                <li className="flex items-center">
-                  <Check className="text-green-500 mr-3 h-5 w-5" />
-                  Advanced analytics dashboard
-                </li>
-                <li className="flex items-center">
-                  <Check className="text-green-500 mr-3 h-5 w-5" />
-                  Professional QR management
+                  Priority support
                 </li>
               </ul>
             </CardContent>
@@ -214,7 +178,7 @@ export default function Subscribe() {
                   size="lg"
                   disabled={!selectedPlan}
                 >
-                  Subscribe to {selectedPlan === 'pro' ? 'Smart QR - $9' : 'Growth Kit - $29'}/month
+                  Subscribe to QR Pro - $19/month
                 </Button>
                 <p className="mt-4 text-sm text-gray-600">
                   Click to continue with secure Stripe checkout
