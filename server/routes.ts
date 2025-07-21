@@ -109,6 +109,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Login route
   app.post('/api/login', (req, res, next) => {
+    console.log("Login attempt for:", req.body.email);
     passport.authenticate('local', (err: any, user: any, info: any) => {
       if (err) {
         console.error("Authentication error:", err);
@@ -124,6 +125,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return res.status(500).json({ message: "Login error" });
         }
         
+        console.log("User logged in successfully:", user.email);
+        
         // Remove password from response
         const userResponse = {
           id: user.id,
@@ -134,7 +137,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
           subscriptionPlan: user.subscriptionPlan
         };
         
-  
         res.json({
           message: "Logged in successfully",
           user: userResponse

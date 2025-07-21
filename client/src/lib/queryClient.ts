@@ -29,9 +29,8 @@ export const getQueryFn: <T>(options: {
 }) => QueryFunction<T> =
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
-    // For single URL string in queryKey array, use as-is
-    // For multiple segments, join with empty string (no additional slashes)  
-    const url = queryKey.length === 1 ? queryKey[0] as string : queryKey.join("");
+    // Extract URL from queryKey array - first element should be the complete URL
+    const url = Array.isArray(queryKey) ? String(queryKey[0]) : String(queryKey);
     
     const res = await fetch(url, {
       credentials: "include",
