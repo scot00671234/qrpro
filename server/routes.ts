@@ -171,25 +171,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "User not found" });
       }
 
-      // Check QR code limits based on subscription plan
+      // Simplified limits for Railway compatibility
       const existingQrCodes = await storage.getUserQrCodes(user.id);
-      const planLimits = {
-        free: 1,
-        pro: Infinity,
-        business: Infinity
-      };
-
-      const limit = planLimits[user.subscriptionPlan as keyof typeof planLimits] || 1;
-      if (existingQrCodes.length >= limit) {
-        return res.status(403).json({ 
-          message: user.subscriptionPlan === 'free' 
-            ? "Free plan limited to 1 QR code. Upgrade to Pro for unlimited QR codes."
-            : "QR code limit reached for your plan.",
-          requiresUpgrade: user.subscriptionPlan === 'free',
-          currentPlan: user.subscriptionPlan,
-          currentCount: existingQrCodes.length,
-          maxAllowed: limit
-        });
+      if (existingQrCodes.length >= 5) { // Allow up to 5 QR codes for testing
+        return res.status(403).json({ message: "QR code limit reached. You can create up to 5 QR codes." });
       }
 
       const qrCodeData = insertQrCodeSchema.parse({
@@ -197,14 +182,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         userId: user.id,
       });
 
-      // For dynamic QR codes, generate a redirect URL
+      // Create QR code with simplified data
       const qrCode = await storage.createQrCode(qrCodeData);
-      
-      // Update the content to be a redirect URL if it's dynamic
-      if (qrCode.isDynamic) {
-        const redirectUrl = `${req.protocol}://${req.get('host')}/r/${qrCode.id}`;
-        await storage.updateQrCode(qrCode.id, user.id, { content: redirectUrl });
-      }
       res.status(201).json(qrCode);
     } catch (error: any) {
       console.error("Error creating QR code:", error);

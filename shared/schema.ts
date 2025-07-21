@@ -40,23 +40,14 @@ export const users = pgTable("users", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-// QR Codes table
+// QR Codes table - simplified for Railway compatibility
 export const qrCodes = pgTable("qr_codes", {
   id: serial("id").primaryKey(),
   userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   name: varchar("name").notNull(),
-  content: text("content").notNull(), // This will now be the redirect URL, not the final destination
-  destinationUrl: text("destination_url").notNull(), // The actual URL users get redirected to (editable)
-  isDynamic: boolean("is_dynamic").default(true), // Dynamic QR codes allow URL changes
+  content: text("content").notNull(), // The QR code content/URL
   size: integer("size").default(200),
   format: varchar("format").default("png"), // png, svg, pdf
-  customization: jsonb("customization").$type<{
-    logoUrl?: string;
-    foregroundColor?: string;
-    backgroundColor?: string;
-    borderRadius?: number;
-    errorCorrectionLevel?: "L" | "M" | "Q" | "H";
-  }>(), // Enhanced customization options
   scans: integer("scans").default(0),
   isActive: boolean("is_active").default(true),
   createdAt: timestamp("created_at").defaultNow(),

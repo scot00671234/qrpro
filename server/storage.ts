@@ -128,13 +128,26 @@ export class DatabaseStorage implements IStorage {
 
   // Subscription features removed for Railway compatibility
 
-  // QR Code operations
+  // QR Code operations - simplified for Railway
   async createQrCode(qrCodeData: InsertQrCode): Promise<QrCode> {
-    const [qrCode] = await db
-      .insert(qrCodes)
-      .values(qrCodeData as any)
-      .returning();
-    return qrCode;
+    try {
+      console.log('Creating QR code with data:', qrCodeData);
+      const [qrCode] = await db
+        .insert(qrCodes)
+        .values({
+          userId: qrCodeData.userId,
+          name: qrCodeData.name,
+          content: qrCodeData.content,
+          size: qrCodeData.size || 200,
+          format: qrCodeData.format || 'png'
+        })
+        .returning();
+      console.log('QR code created successfully:', qrCode.id);
+      return qrCode;
+    } catch (error) {
+      console.error('Error creating QR code:', error);
+      throw error;
+    }
   }
 
   async getUserQrCodes(userId: string): Promise<QrCode[]> {

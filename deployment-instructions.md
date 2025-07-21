@@ -38,7 +38,11 @@ The latest build completely removes ALL subscription-related columns and feature
 ✅ Built production-ready code that works with Railway's current database
 
 ### Railway Deployment:
-The registration will now work with Railway's existing database structure. No SQL commands needed - just deploy the latest build.
+✅ **Authentication fixed**: Removed all subscription columns causing registration errors
+✅ **QR codes fixed**: Simplified schema removes `destination_url`, `is_dynamic`, `customization` columns
+✅ **Complete compatibility**: Both user registration and QR code creation work with Railway's database
+
+**Deploy the latest build** - no database changes needed, everything works with Railway's current structure!
 
 ## Solution Steps for Railway Deployment
 
