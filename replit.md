@@ -93,7 +93,7 @@ The application follows a modern full-stack architecture with clear separation b
 
 ### Railway Production Deployment
 - **Platform**: Railway.app with Node.js 18+ runtime
-- **Build Process**: Vite builds frontend to `dist/public`, esbuild bundles backend
+- **Build Process**: Vite builds frontend to `dist/public`, custom esbuild config bundles backend with externalized dependencies
 - **Static Serving**: Express serves built frontend files
 - **Database**: Railway PostgreSQL with SSL support
 - **Environment**: Production PostgreSQL, Stripe integration, Gmail SMTP
@@ -109,6 +109,13 @@ The application follows a modern full-stack architecture with clear separation b
 - **Live Mode**: Only switch to live keys (sk_live_... and pk_live_...) for production
 
 ### Recent Changes
+- **July 21, 2025**: ✅ **RAILWAY PRODUCTION BUILD FIX**: Fixed "Dynamic require of 'stripe' is not supported" error
+  - Replaced require() with ES module import in server/stripe.ts
+  - Updated Stripe API version to 2025-06-30.basil for compatibility
+  - Created custom esbuild.config.js with proper external package handling
+  - Added build.js wrapper script for Railway deployment
+  - Verified build process works correctly with all dependencies externalized
+  - Railway production deployment should now work without bundling issues
 - **July 21, 2025**: ✅ **DYNAMIC STRIPE KEY SYSTEM**: Implemented automatic switching between test and live Stripe modes via environment variables
   - Created server/stripe.ts with dynamic key detection (sk_test_ vs sk_live_)
   - Added API endpoint /api/stripe-config to provide frontend with correct publishable keys

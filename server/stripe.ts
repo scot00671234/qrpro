@@ -18,9 +18,8 @@ if (STRIPE_SECRET_KEY) {
 
 // Initialize Stripe only if key is available
 if (STRIPE_SECRET_KEY) {
-  const Stripe = require('stripe');
   stripe = new Stripe(STRIPE_SECRET_KEY, {
-    apiVersion: '2023-10-16',
+    apiVersion: '2025-06-30.basil',
   });
 }
 
