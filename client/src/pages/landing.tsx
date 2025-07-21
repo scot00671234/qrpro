@@ -195,7 +195,7 @@ export default function Landing() {
                   </li>
                   <li className="flex items-center">
                     <Check className="text-green-500 mr-3 h-5 w-5" />
-                    Branded QR codes
+                    Custom sizes
                   </li>
                   <li className="flex items-center">
                     <Check className="text-green-500 mr-3 h-5 w-5" />
@@ -203,11 +203,7 @@ export default function Landing() {
                   </li>
                   <li className="flex items-center">
                     <Check className="text-green-500 mr-3 h-5 w-5" />
-                    Dynamic QR codes
-                  </li>
-                  <li className="flex items-center">
-                    <Check className="text-green-500 mr-3 h-5 w-5" />
-                    Multiple formats
+                    PNG downloads
                   </li>
                 </ul>
                 <Button 

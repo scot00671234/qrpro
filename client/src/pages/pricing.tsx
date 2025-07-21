@@ -10,70 +10,61 @@ const plans = [
   {
     name: "Free",
     price: "$0",
-    period: "forever",
-    description: "Perfect for trying out QR Pro",
+    period: "/month",
+    description: "Basic QR code generation",
     icon: Zap,
     color: "from-gray-500/20 to-slate-500/20",
     textColor: "text-gray-600",
     features: [
       "1 QR code",
-      "1 scan per month",
-      "Basic QR code generation",
-      "Standard support",
-      "PNG downloads"
+      "Basic QR generation",
+      "1 scan/month",
+      "Limited styling"
     ],
     limitations: [
       "No analytics",
-      "No customization",
-      "No dynamic QR codes"
+      "No custom logo"
     ],
     buttonText: "Get Started",
     buttonVariant: "outline" as const,
     popular: false
   },
   {
-    name: "Pro",
+    name: "Smart QR",
     price: "$9",
-    period: "per month",
+    period: "/month",
     description: "For professionals and small businesses",
     icon: Crown,
     color: "from-primary/20 to-accent/20",
     textColor: "text-primary",
     features: [
-      "Unlimited QR codes",
       "Unlimited scans",
-      "Dynamic QR codes",
+      "Custom sizes",
       "Analytics dashboard",
-      "Custom colors & branding",
-      "Multiple formats (PNG, SVG, PDF)",
-      "Priority email support",
-      "Bulk generation"
+      "PNG downloads"
     ],
     limitations: [],
-    buttonText: "Start Pro Trial",
+    buttonText: "Choose Pro",
     buttonVariant: "default" as const,
     popular: true
   },
   {
-    name: "Business",
+    name: "Growth Kit",
     price: "$29",
-    period: "per month",
+    period: "/month",
     description: "For teams and growing businesses",
     icon: Building,
     color: "from-emerald-500/20 to-teal-500/20",
     textColor: "text-emerald-600",
     features: [
       "Everything in Pro",
-      "Team collaboration",
-      "API access",
-      "White-label options",
-      "Custom domain redirect",
-      "Advanced analytics",
-      "Dedicated account manager",
-      "99.9% uptime SLA"
+      "Multiple team members",
+      "Bulk QR generation",
+      "Custom domain",
+      "Priority support"
     ],
     limitations: [],
-    buttonText: "Contact Sales",
+    buttonText: "Choose Business",
     buttonVariant: "outline" as const,
     popular: false
   }

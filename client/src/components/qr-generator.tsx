@@ -31,8 +31,6 @@ export function QrGenerator({ isPro, qrCodeCount, onQrCodeCreated }: QrGenerator
   const [destinationUrl, setDestinationUrl] = useState("");
 
   const [size, setSize] = useState("200");
-  const [foregroundColor, setForegroundColor] = useState("#000000");
-  const [backgroundColor, setBackgroundColor] = useState("#FFFFFF");
   const [qrImage, setQrImage] = useState<string | null>(null);
   const [generatedQrId, setGeneratedQrId] = useState<number | null>(null);
 
@@ -123,11 +121,6 @@ export function QrGenerator({ isPro, qrCodeCount, onQrCodeCreated }: QrGenerator
       name: name.trim(),
       content: destinationUrl.trim(),
       size: isPro ? parseInt(size) : 200,
-      customization: isPro ? {
-        foregroundColor,
-        backgroundColor,
-        errorCorrectionLevel: "M" as const
-      } : null,
     };
 
     createQrMutation.mutate(qrData);
@@ -208,28 +201,7 @@ export function QrGenerator({ isPro, qrCodeCount, onQrCodeCreated }: QrGenerator
                 </Select>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="foregroundColor">Foreground Color</Label>
-                  <Input
-                    id="foregroundColor"
-                    type="color"
-                    value={foregroundColor}
-                    onChange={(e) => setForegroundColor(e.target.value)}
-                    disabled={!isPro || !canCreateQr}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="backgroundColor">Background Color</Label>
-                  <Input
-                    id="backgroundColor"
-                    type="color"
-                    value={backgroundColor}
-                    onChange={(e) => setBackgroundColor(e.target.value)}
-                    disabled={!isPro || !canCreateQr}
-                  />
-                </div>
-              </div>
+
             </div>
             
             <Button 

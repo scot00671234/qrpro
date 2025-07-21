@@ -1,14 +1,14 @@
-// Pricing model configuration
+// Pricing model configuration - ACCURATE features only
 export const PRICING_PLANS = {
   free: {
     id: 'free',
-    name: 'Get Started',
+    name: 'Free',
     price: 0,
     stripePriceId: null,
     features: {
-      qrCodes: 'Basic QR code generation',
-      styling: 'Limited styling options',
-      scans: 100, // per month
+      qrCodes: '1 QR code',
+      styling: 'Basic QR generation', 
+      scans: '1 scan/month',
       analytics: false,
       customDomain: false,
       logo: false,
@@ -16,11 +16,11 @@ export const PRICING_PLANS = {
       dynamicQR: false,
       bulkGeneration: false,
       teamMembers: 1,
-      support: 'Community'
+      support: 'Limited styling'
     },
     limits: {
-      monthlyScans: 100,
-      qrCodes: 3,
+      monthlyScans: 1,
+      qrCodes: 1,
       teamMembers: 1
     }
   },
@@ -32,14 +32,14 @@ export const PRICING_PLANS = {
     stripePriceId: process.env.STRIPE_PRO_PRICE_ID || 'price_pro_monthly',
     stripeYearlyPriceId: process.env.STRIPE_PRO_YEARLY_PRICE_ID || 'price_pro_yearly',
     features: {
-      qrCodes: 'Unlimited QR codes',
-      styling: 'Branded QR codes (logo, color, frames)',
-      scans: 'Unlimited',
-      analytics: 'Analytics dashboard (scan count, time, location)',
+      qrCodes: 'Unlimited scans',
+      styling: 'Branded QR codes',
+      scans: 'Analytics dashboard',
+      analytics: 'Multiple formats',
       customDomain: false,
       logo: true,
-      formats: ['PNG', 'SVG', 'PDF'],
-      dynamicQR: true,
+      formats: ['PNG'],
+      dynamicQR: false,
       bulkGeneration: false,
       teamMembers: 1,
       support: 'Email'
@@ -59,16 +59,16 @@ export const PRICING_PLANS = {
     stripeYearlyPriceId: process.env.STRIPE_BUSINESS_YEARLY_PRICE_ID || 'price_business_yearly',
     features: {
       qrCodes: 'Everything in Pro',
-      styling: 'Full branding & white-label',
-      scans: 'Unlimited',
-      analytics: 'Advanced analytics & retargeting pixels',
-      customDomain: true,
+      styling: 'Multiple team members',
+      scans: 'Bulk QR generation',
+      analytics: 'Custom domain',
+      customDomain: 'Priority support',
       logo: true,
-      formats: ['PNG', 'SVG', 'PDF'],
-      dynamicQR: true,
-      bulkGeneration: 'CSV upload',
-      teamMembers: 'Multiple team members',
-      support: 'Priority support'
+      formats: ['PNG'],
+      dynamicQR: false,
+      bulkGeneration: false,
+      teamMembers: 10,
+      support: 'Priority'
     },
     limits: {
       monthlyScans: -1, // unlimited
