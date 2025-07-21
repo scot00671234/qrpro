@@ -4,12 +4,37 @@ import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
 
-// CORS middleware for better compatibility
+// CORS middleware for better compatibility with Railway production
 app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  
+  // More robust CORS for Railway production environment
+  if (process.env.NODE_ENV === 'production') {
+    const allowedOrigins = [
+      'https://qrprogenerator.com',
+      'https://www.qrprogenerator.com',
+      'https://qrprogenerator.up.railway.app'
+    ];
+    
+    if (allowedOrigins.includes(origin || '') || !origin) {
+      res.header('Access-Control-Allow-Origin', origin || 'https://qrprogenerator.com');
+    }
+  } else {
+    // Development - allow any origin
+    res.header('Access-Control-Allow-Origin', origin || '*');
+  }
+  
   res.header('Access-Control-Allow-Credentials', 'true');
-  res.header('Access-Control-Allow-Origin', req.headers.origin);
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  
+  // Add cache control headers to prevent caching issues
+  if (req.path.startsWith('/api/')) {
+    res.header('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.header('Pragma', 'no-cache');
+    res.header('Expires', '0');
+  }
+  
   if (req.method === 'OPTIONS') {
     res.sendStatus(200);
   } else {

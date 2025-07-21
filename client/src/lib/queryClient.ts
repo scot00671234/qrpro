@@ -12,10 +12,18 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
-  console.log("API Request:", method, url, data);
-  const res = await fetch(url, {
+  // Ensure URL doesn't have any cache-busting parameters that could be corrupted
+  const cleanUrl = url.includes('?') ? url.split('?')[0] : url;
+  console.log("API Request:", method, "Original URL:", url, "Clean URL:", cleanUrl, "Data:", data);
+  
+  const res = await fetch(cleanUrl, {
     method,
-    headers: data ? { "Content-Type": "application/json" } : {},
+    headers: {
+      ...(data ? { "Content-Type": "application/json" } : {}),
+      // Add cache-busting headers for production
+      'Cache-Control': 'no-cache',
+      'Pragma': 'no-cache'
+    },
     body: data ? JSON.stringify(data) : undefined,
     credentials: "include",
   });
@@ -32,10 +40,16 @@ export const getQueryFn: <T>(options: {
   async ({ queryKey }) => {
     // Extract URL from queryKey array - first element should be the complete URL
     const url = Array.isArray(queryKey) ? String(queryKey[0]) : String(queryKey);
-    console.log("Query Request:", url, queryKey);
+    // Clean URL to prevent any cache-busting corruption
+    const cleanUrl = url.includes('?') ? url.split('?')[0] : url;
+    console.log("Query Request:", "Original:", url, "Clean:", cleanUrl, "QueryKey:", queryKey);
     
-    const res = await fetch(url, {
+    const res = await fetch(cleanUrl, {
       credentials: "include",
+      headers: {
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache'
+      }
     });
 
     if (unauthorizedBehavior === "returnNull" && res.status === 401) {
