@@ -14,7 +14,7 @@ import { Switch } from "@/components/ui/switch";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Download, Save, Crown, AlertTriangle, BarChart3, Edit3, Palette } from "lucide-react";
+import { Download, Save, Crown, AlertTriangle, BarChart3, Palette } from "lucide-react";
 import { Link } from "wouter";
 
 interface QrGeneratorProps {
@@ -29,7 +29,7 @@ export function QrGenerator({ isPro, qrCodeCount, onQrCodeCreated }: QrGenerator
   const queryClient = useQueryClient();
   const [name, setName] = useState("");
   const [destinationUrl, setDestinationUrl] = useState("");
-  const [isDynamic, setIsDynamic] = useState(true);
+
   const [size, setSize] = useState("200");
   const [foregroundColor, setForegroundColor] = useState("#000000");
   const [backgroundColor, setBackgroundColor] = useState("#FFFFFF");
@@ -121,9 +121,7 @@ export function QrGenerator({ isPro, qrCodeCount, onQrCodeCreated }: QrGenerator
 
     const qrData = {
       name: name.trim(),
-      content: destinationUrl.trim(), // This will be updated to redirect URL for dynamic QRs
-      destinationUrl: destinationUrl.trim(),
-      isDynamic,
+      content: destinationUrl.trim(),
       size: isPro ? parseInt(size) : 200,
       customization: isPro ? {
         foregroundColor,
@@ -145,7 +143,7 @@ export function QrGenerator({ isPro, qrCodeCount, onQrCodeCreated }: QrGenerator
   };
 
   // Check if user can create QR codes based on their plan
-  const canCreateQr = user?.subscriptionStatus === 'active' || (qrCodeCount < 3); // Free users get 3 QR codes
+  const canCreateQr = (user as any)?.subscriptionStatus === 'active' || (qrCodeCount < 3); // Free users get 3 QR codes
 
   return (
     <div className="grid lg:grid-cols-2 gap-12">
@@ -176,34 +174,16 @@ export function QrGenerator({ isPro, qrCodeCount, onQrCodeCreated }: QrGenerator
                 disabled={!canCreateQr}
               />
               <p className="text-sm text-gray-500 mt-1">
-                {isDynamic ? "You can change this URL later without regenerating the QR code" : "This URL will be permanent"}
+                This URL will be permanent
               </p>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="dynamic"
-                checked={isDynamic}
-                onCheckedChange={setIsDynamic}
-                disabled={!canCreateQr}
-              />
-              <div>
-                <Label htmlFor="dynamic" className="flex items-center">
-                  <Edit3 className="w-4 h-4 mr-2" />
-                  Dynamic QR Code
-                </Label>
-                <p className="text-sm text-gray-500">
-                  Update destination without changing QR code
-                </p>
-              </div>
             </div>
             
             {/* Pro Features */}
-            <div className={`space-y-4 ${user?.subscriptionStatus !== 'active' ? 'opacity-50' : ''}`}>
+            <div className={`space-y-4 ${(user as any)?.subscriptionStatus !== 'active' ? 'opacity-50' : ''}`}>
               <div className="flex items-center space-x-2 mb-4">
                 <Crown className="w-4 h-4 text-yellow-500" />
                 <span className="text-sm font-medium">Pro Features</span>
-                {user?.subscriptionStatus !== 'active' && <Badge variant="outline">Upgrade Required</Badge>}
+                {(user as any)?.subscriptionStatus !== 'active' && <Badge variant="outline">Upgrade Required</Badge>}
               </div>
               
               <div>

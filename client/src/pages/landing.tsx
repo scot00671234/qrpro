@@ -38,7 +38,7 @@ export default function Landing() {
               <span className="text-gradient font-medium"> Real Businesses</span>
             </h1>
             <p className="mt-8 max-w-3xl mx-auto text-xl text-gray-700 leading-relaxed drop-shadow-sm">
-              Create branded, editable QR codes with built-in scan analytics. Perfect for restaurants, real estate agents, creators, and small businesses.
+              Create branded QR codes with built-in scan analytics. Perfect for restaurants, real estate agents, creators, and small businesses.
             </p>
             <div className="mt-12 flex justify-center gap-6">
               <Button 

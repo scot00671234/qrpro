@@ -32,18 +32,7 @@ const coreFeatures = [
     ],
     available: "All Plans"
   },
-  {
-    icon: RefreshCw,
-    title: "Dynamic QR Codes",
-    description: "Update destination URLs without changing your QR code image",
-    details: [
-      "Change URLs anytime after printing",
-      "No need to reprint materials",
-      "Perfect for marketing campaigns",
-      "Track performance over time"
-    ],
-    available: "Pro & Business"
-  },
+
   {
     icon: BarChart3,
     title: "Advanced Analytics",

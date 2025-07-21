@@ -109,6 +109,13 @@ The application follows a modern full-stack architecture with clear separation b
 - **Live Mode**: Only switch to live keys (sk_live_... and pk_live_...) for production
 
 ### Recent Changes
+- **July 21, 2025**: ✅ **DYNAMIC QR CODE REMOVAL**: Removed dynamic QR code functionality as requested by user
+  - Removed /r/:id redirect route for dynamic QR codes
+  - Removed getQrCodeByRedirectId method from storage interface
+  - Updated QR generator component to remove dynamic QR toggle and related UI
+  - Updated features page to remove dynamic QR code feature listing
+  - Updated landing page copy to remove "editable" reference
+  - Simplified QR code creation flow to only create static QR codes with direct URLs
 - **July 21, 2025**: ✅ **PRODUCTION DEPLOYMENT FIX**: Identified and resolved Railway production authentication issues
 - **July 21, 2025**: ✅ **Root Cause**: URL corruption (api/auth/user1) was browser/CDN caching issue, not code problem
 - **July 21, 2025**: ✅ **Solution**: Enhanced CORS configuration, cache-busting headers, production-specific settings
