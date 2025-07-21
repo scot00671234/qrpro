@@ -23,12 +23,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const user = req.user;
       if (!user) {
+        console.log('No user found in session');
         return res.status(404).json({ message: "User not found" });
       }
+      console.log('User authenticated successfully:', user.email);
       // Remove password from response
       const { password, ...userResponse } = user;
       res.json(userResponse);
     } catch (error) {
+      console.error('Error in /api/auth/user:', error);
       res.status(500).json({ message: "Failed to fetch user" });
     }
   });
@@ -162,10 +165,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const user = req.user;
       
       if (!user) {
-        return res.status(404).json({ message: "User not found" });
+        return res.status(401).json({ message: "User not found" });
       }
 
-      // Users can create unlimited QR codes, but QR generation (scanning) has limits based on subscription tier
+      // Check QR code creation limits for free users
+      const currentQrCount = await storage.getUserQrCodeCount(user.id);
+      const subscriptionPlan = user.subscriptionPlan || 'free';
+      
+      // Free users can only create 3 QR codes per month
+      let maxQrCodes = 3; // Free plan default
+      if (subscriptionPlan === 'pro') {
+        maxQrCodes = -1; // Unlimited for Pro
+      } else if (subscriptionPlan === 'business') {
+        maxQrCodes = -1; // Unlimited for Business
+      }
+
+      // Enforce QR creation limits for free users
+      if (maxQrCodes > 0 && currentQrCount >= maxQrCodes) {
+        return res.status(403).json({ 
+          message: `Free users can only create ${maxQrCodes} QR codes. Upgrade to Pro for unlimited QR codes.`,
+          requiresUpgrade: true,
+          currentCount: currentQrCount,
+          maxAllowed: maxQrCodes
+        });
+      }
 
       const qrCodeData = insertQrCodeSchema.parse({
         ...req.body,
