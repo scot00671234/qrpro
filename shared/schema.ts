@@ -24,7 +24,7 @@ export const sessions = pgTable(
   (table) => [index("IDX_session_expire").on(table.expire)],
 );
 
-// User storage table
+// User storage table - minimal schema compatible with Railway
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().notNull(),
   email: varchar("email").unique().notNull(),
@@ -34,11 +34,6 @@ export const users = pgTable("users", {
   profileImageUrl: varchar("profile_image_url"),
   stripeCustomerId: varchar("stripe_customer_id"),
   stripeSubscriptionId: varchar("stripe_subscription_id"),
-  subscriptionPlan: varchar("subscription_plan").default("free"), // free, pro, business
-  subscriptionStatus: varchar("subscription_status").default("inactive"), // inactive, active, canceled, past_due
-  subscriptionEndsAt: timestamp("subscription_ends_at"),
-  monthlyScansUsed: integer("monthly_scans_used").default(0),
-  lastScanReset: timestamp("last_scan_reset").defaultNow(),
   passwordResetToken: varchar("password_reset_token"),
   passwordResetExpiry: timestamp("password_reset_expiry"),
   createdAt: timestamp("created_at").defaultNow(),

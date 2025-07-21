@@ -24,9 +24,7 @@ export interface IStorage {
   createUser(user: { email: string; password: string; firstName: string; lastName: string }): Promise<User>;
   upsertUser(user: UpsertUser): Promise<User>;
   updateUserStripeInfo(userId: string, customerId: string, subscriptionId?: string): Promise<User>;
-  updateUserSubscription(userId: string, status: string, plan?: string, endsAt?: Date): Promise<User>;
-  incrementUserScans(userId: string): Promise<void>;
-  resetUserScans(userId: string): Promise<void>;
+  // Note: Subscription features disabled for Railway compatibility
   updatePasswordResetToken(userId: string, token: string, expiry: Date): Promise<void>;
   updatePassword(userId: string, hashedPassword: string): Promise<void>;
   deleteUser(userId: string): Promise<void>;
@@ -128,43 +126,7 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
-  async updateUserSubscription(userId: string, status: string, plan?: string, endsAt?: Date): Promise<User> {
-    const updateData: any = {
-      subscriptionStatus: status,
-      updatedAt: new Date(),
-    };
-    
-    if (plan) updateData.subscriptionPlan = plan;
-    if (endsAt) updateData.subscriptionEndsAt = endsAt;
-
-    const [user] = await db
-      .update(users)
-      .set(updateData)
-      .where(eq(users.id, userId))
-      .returning();
-    return user;
-  }
-
-  async incrementUserScans(userId: string): Promise<void> {
-    await db
-      .update(users)
-      .set({
-        monthlyScansUsed: sql`${users.monthlyScansUsed} + 1`,
-        updatedAt: new Date(),
-      })
-      .where(eq(users.id, userId));
-  }
-
-  async resetUserScans(userId: string): Promise<void> {
-    await db
-      .update(users)
-      .set({
-        monthlyScansUsed: 0,
-        lastScanReset: new Date(),
-        updatedAt: new Date(),
-      })
-      .where(eq(users.id, userId));
-  }
+  // Subscription features removed for Railway compatibility
 
   // QR Code operations
   async createQrCode(qrCodeData: InsertQrCode): Promise<QrCode> {

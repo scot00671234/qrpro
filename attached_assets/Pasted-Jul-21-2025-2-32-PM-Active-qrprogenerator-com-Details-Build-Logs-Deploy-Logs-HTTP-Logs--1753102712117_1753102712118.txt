@@ -1,0 +1,128 @@
+Jul 21, 2025, 2:32 PM
+Active
+
+qrprogenerator.com
+
+Details
+Build Logs
+Deploy Logs
+HTTP Logs
+
+Filter
+Filter logs using "", (), AND, OR, -
+
+
+
+You reached the start of the range → Jul 21, 2025, 2:32 PM
+
+Starting Container
+
+npm warn config production Use `--omit=dev` instead.
+
+ 
+
+> rest-express@1.0.0 start
+
+> NODE_ENV=production node dist/index.js
+
+ 
+
+Running database migrations...
+
+Database migrations completed successfully
+
+12:33:54 PM [express] serving on port 8080
+
+12:34:03 PM [express] GET /api/auth/user 401 in 12ms :: {"message":"Unauthorized"}
+
+12:34:06 PM [express] GET /api/auth/user 401 in 12ms :: {"message":"Unauthorized"}
+
+Registration attempt: { email: 'scot00671234@gmail.com', hasData: true }
+
+Checking if user exists: scot00671234@gmail.com
+
+Registration error details: error: column "subscription_plan" does not exist
+
+    at /app/node_modules/pg-pool/index.js:45:11
+
+Error stack: error: column "subscription_plan" does not exist
+
+    at /app/node_modules/pg-pool/index.js:45:11
+
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+    at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+
+    at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+
+    at async DatabaseStorage.getUserByEmail (file:///app/dist/index.js:168:20)
+
+    at async DatabaseStorage.getUserByEmail (file:///app/dist/index.js:168:20)
+
+    at async file:///app/dist/index.js:631:28 {
+
+    at async file:///app/dist/index.js:631:28
+
+  length: 118,
+
+Error message: column "subscription_plan" does not exist
+
+  severity: 'ERROR',
+
+12:34:21 PM [express] POST /api/register 500 in 181ms :: {"message":"Failed to create account","error…
+
+  code: '42703',
+
+  detail: undefined,
+
+  hint: undefined,
+
+  position: '131',
+
+  internalPosition: undefined,
+
+  internalQuery: undefined,
+
+  where: undefined,
+
+  schema: undefined,
+
+  table: undefined,
+
+  column: undefined,
+
+  dataType: undefined,
+
+  constraint: undefined,
+
+  file: 'parse_relation.c',
+
+  line: '3722',
+
+  routine: 'errorMissingColumn'
+
+}
+
+Registration attempt: { email: 'scot00671234@gmail.com', hasData: true }
+
+Checking if user exists: scot00671234@gmail.com
+
+Registration error details: error: column "subscription_plan" does not exist
+
+    at /app/node_modules/pg-pool/index.js:45:11
+
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+    at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+
+    at async DatabaseStorage.getUserByEmail (file:///app/dist/index.js:168:20)
+
+    at async file:///app/dist/index.js:631:28 {
+
+  length: 118,
+
+  severity: 'ERROR',
+
+  code: '42703',

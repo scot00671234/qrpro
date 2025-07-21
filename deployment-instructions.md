@@ -29,7 +29,16 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP DEFAULT NOW();
 ```
 
 ### Step 2: Deploy Updated Code
-The latest build removes subscription columns from user creation to work with minimal schema.
+The latest build completely removes ALL subscription-related columns and features to work with Railway's minimal database schema.
+
+### What's Fixed:
+✅ Removed `subscription_plan` and `subscription_status` from all database queries
+✅ Simplified user creation to use only basic fields (id, email, password, firstName, lastName)  
+✅ Removed all subscription logic from registration and login
+✅ Built production-ready code that works with Railway's current database
+
+### Railway Deployment:
+The registration will now work with Railway's existing database structure. No SQL commands needed - just deploy the latest build.
 
 ## Solution Steps for Railway Deployment
 

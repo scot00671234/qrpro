@@ -102,9 +102,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             id: user.id,
             email: user.email,
             firstName: user.firstName,
-            lastName: user.lastName,
-            subscriptionPlan: user.subscriptionPlan,
-            subscriptionStatus: user.subscriptionStatus
+            lastName: user.lastName
           }
         });
       });
@@ -141,9 +139,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           id: user.id,
           email: user.email,
           firstName: user.firstName,
-          lastName: user.lastName,
-          subscriptionStatus: user.subscriptionStatus,
-          subscriptionPlan: user.subscriptionPlan
+          lastName: user.lastName
         };
         
         res.json({
