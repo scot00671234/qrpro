@@ -37,30 +37,88 @@ export function getPublishableKey(): string {
   throw new Error('Invalid Stripe secret key format');
 }
 
-// Price IDs for different modes
-export const PRICE_IDS = {
-  pro: {
-    test: 'price_1QQUTdEFeydANsxgMD6BKuSx', // Test mode price ID for $9/month
-    live: process.env.STRIPE_LIVE_PRICE_PRO || 'price_live_pro_replace_me' // Live mode price ID for $9/month
-  },
-  business: {
-    test: 'price_1QQUTdEFeydANsxgMD6BKuSy', // Test mode price ID for $29/month  
-    live: process.env.STRIPE_LIVE_PRICE_BUSINESS || 'price_live_business_replace_me' // Live mode price ID for $29/month
+// Create or get price IDs dynamically
+export async function getOrCreatePrice(plan: 'pro' | 'business'): Promise<string> {
+  if (!stripe) {
+    throw new Error('Stripe not configured');
   }
-};
 
-// Get the appropriate price ID based on current mode
-export function getPriceId(plan: 'pro' | 'business'): string {
+  // Define pricing for each plan
+  const planConfig = {
+    pro: {
+      amount: 900, // $9.00 in cents
+      name: 'QR Pro - Smart Plan',
+      description: '25 scans per month, cloud storage, analytics dashboard, easy QR code management'
+    },
+    business: {
+      amount: 2900, // $29.00 in cents
+      name: 'QR Pro - Growth Kit',
+      description: 'Unlimited scans, cloud storage, advanced analytics, team collaboration'
+    }
+  };
+
+  const config = planConfig[plan];
+  
+  try {
+    // First, try to find existing product by name
+    const existingProducts = await stripe.products.search({
+      query: `name:'${config.name}'`,
+    });
+
+    let productId: string;
+    
+    if (existingProducts.data.length > 0) {
+      productId = existingProducts.data[0].id;
+      console.log(`Found existing product for ${plan}: ${productId}`);
+    } else {
+      // Create new product
+      const product = await stripe.products.create({
+        name: config.name,
+        description: config.description,
+      });
+      productId = product.id;
+      console.log(`Created new product for ${plan}: ${productId}`);
+    }
+
+    // Find or create price for this product
+    const existingPrices = await stripe.prices.list({
+      product: productId,
+      active: true,
+    });
+
+    const existingPrice = existingPrices.data.find(
+      (price: any) => price.unit_amount === config.amount && price.currency === 'usd' && price.recurring?.interval === 'month'
+    );
+
+    if (existingPrice) {
+      console.log(`Found existing price for ${plan}: ${existingPrice.id}`);
+      return existingPrice.id;
+    } else {
+      // Create new price
+      const price = await stripe.prices.create({
+        product: productId,
+        unit_amount: config.amount,
+        currency: 'usd',
+        recurring: {
+          interval: 'month',
+        },
+      });
+      console.log(`Created new price for ${plan}: ${price.id}`);
+      return price.id;
+    }
+  } catch (error) {
+    console.error(`Error creating/getting price for ${plan}:`, error);
+    throw error;
+  }
+}
+
+// Backward compatibility - get price ID (now async)
+export async function getPriceId(plan: 'pro' | 'business'): Promise<string> {
   if (!STRIPE_SECRET_KEY) {
     throw new Error('Stripe not configured');
   }
   
-  if (isTestMode) {
-    return PRICE_IDS[plan].test;
-  } else if (isLiveMode) {
-    return PRICE_IDS[plan].live;
-  }
-  throw new Error('Invalid Stripe configuration');
+  return await getOrCreatePrice(plan);
 }
 
 // Log current mode for debugging

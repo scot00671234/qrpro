@@ -430,7 +430,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Use dynamic pricing based on test/live mode
-      const priceId = getPriceId(plan as 'pro' | 'business');
+      const priceId = await getPriceId(plan as 'pro' | 'business');
       
       const session = await stripe.checkout.sessions.create({
         customer: customerId,

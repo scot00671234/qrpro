@@ -109,6 +109,12 @@ The application follows a modern full-stack architecture with clear separation b
 - **Live Mode**: Only switch to live keys (sk_live_... and pk_live_...) for production
 
 ### Recent Changes
+- **July 21, 2025**: ✅ **DYNAMIC STRIPE SUBSCRIPTION FIX**: Fixed subscription creation issues with automatic price creation
+  - Replaced hardcoded price IDs with dynamic product/price creation system
+  - System now automatically creates $9/month Pro and $29/month Business plans in Stripe
+  - Fixed "No such price" errors by creating products and prices on-demand
+  - Enhanced error handling for Stripe API interactions
+  - Subscription system now works seamlessly with both test and live Stripe accounts
 - **July 21, 2025**: ✅ **COMPLETE RAILWAY PRODUCTION FIX**: Resolved all Railway deployment issues
   - Fixed "Dynamic require of 'stripe' is not supported" error with proper ES module imports
   - Created automatic database migration system that runs on Railway startup
