@@ -16,15 +16,10 @@ const plans = [
     color: "from-gray-500/20 to-slate-500/20",
     textColor: "text-gray-600",
     features: [
-      "1 QR code",
-      "Basic QR generation",
       "1 scan/month",
-      "Limited styling"
+      "Basic QR generation"
     ],
-    limitations: [
-      "No analytics",
-      "No custom logo"
-    ],
+    limitations: [],
     buttonText: "Get Started",
     buttonVariant: "outline" as const,
     popular: false
@@ -33,15 +28,13 @@ const plans = [
     name: "Smart QR",
     price: "$9",
     period: "/month",
-    description: "For professionals and small businesses",
+    description: "For professionals",
     icon: Crown,
     color: "from-primary/20 to-accent/20",
     textColor: "text-primary",
     features: [
-      "Unlimited scans",
-      "Custom sizes",
-      "Analytics dashboard",
-      "PNG downloads"
+      "25 scans/month",
+      "Analytics dashboard"
     ],
     limitations: [],
     buttonText: "Choose Pro",
@@ -52,16 +45,13 @@ const plans = [
     name: "Growth Kit",
     price: "$29",
     period: "/month",
-    description: "For teams and growing businesses",
+    description: "For businesses",
     icon: Building,
     color: "from-emerald-500/20 to-teal-500/20",
     textColor: "text-emerald-600",
     features: [
-      "Everything in Pro",
-      "Multiple team members",
-      "Bulk QR generation",
-      "Custom domain",
-      "Priority support"
+      "Unlimited scans",
+      "Analytics dashboard"
     ],
     limitations: [],
     buttonText: "Choose Business",

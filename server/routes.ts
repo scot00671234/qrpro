@@ -171,11 +171,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "User not found" });
       }
 
-      // Simplified limits for Railway compatibility
-      const existingQrCodes = await storage.getUserQrCodes(user.id);
-      if (existingQrCodes.length >= 5) { // Allow up to 5 QR codes for testing
-        return res.status(403).json({ message: "QR code limit reached. You can create up to 5 QR codes." });
-      }
+      // Users can create unlimited QR codes, scan limits apply per subscription tier
 
       const qrCodeData = insertQrCodeSchema.parse({
         ...req.body,

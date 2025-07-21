@@ -145,27 +145,11 @@ export default function Landing() {
                 <ul className="space-y-4 mb-8">
                   <li className="flex items-center">
                     <Check className="text-green-500 mr-3 h-5 w-5" />
-                    1 QR code
-                  </li>
-                  <li className="flex items-center">
-                    <Check className="text-green-500 mr-3 h-5 w-5" />
-                    Basic QR generation
-                  </li>
-                  <li className="flex items-center">
-                    <Check className="text-green-500 mr-3 h-5 w-5" />
                     1 scan/month
                   </li>
                   <li className="flex items-center">
                     <Check className="text-green-500 mr-3 h-5 w-5" />
-                    Limited styling
-                  </li>
-                  <li className="flex items-center">
-                    <X className="text-gray-400 mr-3 h-5 w-5" />
-                    Analytics
-                  </li>
-                  <li className="flex items-center">
-                    <X className="text-gray-400 mr-3 h-5 w-5" />
-                    Custom logo
+                    Basic QR generation
                   </li>
                 </ul>
                 <Button 
@@ -191,19 +175,11 @@ export default function Landing() {
                 <ul className="space-y-4 mb-8">
                   <li className="flex items-center">
                     <Check className="text-green-500 mr-3 h-5 w-5" />
-                    Unlimited scans
-                  </li>
-                  <li className="flex items-center">
-                    <Check className="text-green-500 mr-3 h-5 w-5" />
-                    Custom sizes
+                    25 scans/month
                   </li>
                   <li className="flex items-center">
                     <Check className="text-green-500 mr-3 h-5 w-5" />
                     Analytics dashboard
-                  </li>
-                  <li className="flex items-center">
-                    <Check className="text-green-500 mr-3 h-5 w-5" />
-                    PNG downloads
                   </li>
                 </ul>
                 <Button 
@@ -225,23 +201,11 @@ export default function Landing() {
                 <ul className="space-y-4 mb-8">
                   <li className="flex items-center">
                     <Check className="text-green-500 mr-3 h-5 w-5" />
-                    Everything in Pro
+                    Unlimited scans
                   </li>
                   <li className="flex items-center">
                     <Check className="text-green-500 mr-3 h-5 w-5" />
-                    Multiple team members
-                  </li>
-                  <li className="flex items-center">
-                    <Check className="text-green-500 mr-3 h-5 w-5" />
-                    Bulk QR generation
-                  </li>
-                  <li className="flex items-center">
-                    <Check className="text-green-500 mr-3 h-5 w-5" />
-                    Custom domain
-                  </li>
-                  <li className="flex items-center">
-                    <Check className="text-green-500 mr-3 h-5 w-5" />
-                    Priority support
+                    Analytics dashboard
                   </li>
                 </ul>
                 <Button 

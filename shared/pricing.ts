@@ -1,4 +1,4 @@
-// Pricing model configuration - ACCURATE features only
+// Pricing model configuration - SIMPLE AND HONEST
 export const PRICING_PLANS = {
   free: {
     id: 'free',
@@ -6,21 +6,12 @@ export const PRICING_PLANS = {
     price: 0,
     stripePriceId: null,
     features: {
-      qrCodes: '1 QR code',
-      styling: 'Basic QR generation', 
       scans: '1 scan/month',
-      analytics: false,
-      customDomain: false,
-      logo: false,
-      formats: ['PNG'],
-      dynamicQR: false,
-      bulkGeneration: false,
-      teamMembers: 1,
-      support: 'Limited styling'
+      qrGeneration: 'Basic QR generation'
     },
     limits: {
       monthlyScans: 1,
-      qrCodes: 1,
+      qrCodes: -1, // unlimited QR codes, just limited scans
       teamMembers: 1
     }
   },
@@ -32,20 +23,11 @@ export const PRICING_PLANS = {
     stripePriceId: process.env.STRIPE_PRO_PRICE_ID || 'price_pro_monthly',
     stripeYearlyPriceId: process.env.STRIPE_PRO_YEARLY_PRICE_ID || 'price_pro_yearly',
     features: {
-      qrCodes: 'Unlimited scans',
-      styling: 'Branded QR codes',
-      scans: 'Analytics dashboard',
-      analytics: 'Multiple formats',
-      customDomain: false,
-      logo: true,
-      formats: ['PNG'],
-      dynamicQR: false,
-      bulkGeneration: false,
-      teamMembers: 1,
-      support: 'Email'
+      scans: '25 scans/month',
+      analytics: 'Analytics dashboard'
     },
     limits: {
-      monthlyScans: -1, // unlimited
+      monthlyScans: 25,
       qrCodes: -1, // unlimited
       teamMembers: 1
     }
@@ -58,22 +40,13 @@ export const PRICING_PLANS = {
     stripePriceId: process.env.STRIPE_BUSINESS_PRICE_ID || 'price_business_monthly',
     stripeYearlyPriceId: process.env.STRIPE_BUSINESS_YEARLY_PRICE_ID || 'price_business_yearly',
     features: {
-      qrCodes: 'Everything in Pro',
-      styling: 'Multiple team members',
-      scans: 'Bulk QR generation',
-      analytics: 'Custom domain',
-      customDomain: 'Priority support',
-      logo: true,
-      formats: ['PNG'],
-      dynamicQR: false,
-      bulkGeneration: false,
-      teamMembers: 10,
-      support: 'Priority'
+      scans: 'Unlimited scans',
+      analytics: 'Analytics dashboard'
     },
     limits: {
       monthlyScans: -1, // unlimited
       qrCodes: -1, // unlimited
-      teamMembers: 10
+      teamMembers: 1
     }
   }
 } as const;
