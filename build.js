@@ -7,9 +7,9 @@ try {
   console.log('Building frontend...');
   execSync('npx vite build', { stdio: 'inherit' });
   
-  // Build the backend with our custom esbuild config
+  // Build the backend with simplified esbuild
   console.log('Building backend...');
-  execSync('node esbuild.config.js', { stdio: 'inherit' });
+  execSync('node esbuild-simple.js', { stdio: 'inherit' });
   
   console.log('Build completed successfully!');
 } catch (error) {

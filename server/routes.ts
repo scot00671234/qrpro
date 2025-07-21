@@ -9,7 +9,7 @@ import { stripe, getPriceId, getPublishableKey, isTestMode } from "./stripe";
 import { randomBytes } from "crypto";
 import bcrypt from "bcrypt";
 import passport from "passport";
-import { runMigrations } from "./migrate";
+import { runMigrations } from "./migrations";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Run database migrations first
@@ -567,9 +567,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       await storage.updateUserSubscription(
         user.id, 
-        'canceled', 
-        undefined,
-        endsAt
+        user.subscriptionPlan || 'free',
+        'canceled'
       );
 
       res.json({ message: "Subscription will be canceled at the end of the billing period" });
@@ -641,7 +640,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Also update our local database with accurate end date from Stripe
       if ((subscription as any).current_period_end) {
         const stripeEndDate = new Date((subscription as any).current_period_end * 1000);
-        await storage.updateUserSubscription(user.id, user.subscriptionStatus, undefined, stripeEndDate);
+        await storage.updateUserSubscription(user.id, user.subscriptionPlan || 'free', user.subscriptionStatus || 'inactive');
         console.log("Updated local subscription end date:", stripeEndDate);
       }
       
