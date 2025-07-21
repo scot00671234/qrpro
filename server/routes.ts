@@ -282,7 +282,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // QR Code generation endpoint
+  // QR Code generation endpoint (for downloading QR images - should not count as scans)
   app.post('/api/qr-codes/:id/generate', isAuthenticated, async (req: any, res) => {
     try {
       const user = req.user;
@@ -292,26 +292,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Unauthorized" });
       }
 
-      // Check scan limits based on subscription plan
-      const monthlyScansUsed = await storage.getUserMonthlyScans(user.id);
-      const subscriptionPlan = user.subscriptionPlan || 'free';
-      
-      let scanLimit = 1; // Free plan default
-      if (subscriptionPlan === 'pro') {
-        scanLimit = 25;
-      } else if (subscriptionPlan === 'business') {
-        scanLimit = -1; // Unlimited
-      }
-
-      // Enforce scan limits for free and pro tiers
-      if (scanLimit > 0 && monthlyScansUsed >= scanLimit) {
-        return res.status(403).json({ 
-          message: `Monthly scan limit of ${scanLimit} reached. Upgrade your plan for more scans.`,
-          requiresUpgrade: true,
-          monthlyScansUsed,
-          scanLimit
-        });
-      }
+      // NOTE: This endpoint is for generating QR code IMAGES for download
+      // It should NOT count against monthly scan limits
+      // Scan tracking happens when someone actually scans the QR code in the real world
 
       const qrCode = await storage.getQrCode(id, user.id);
       if (!qrCode) {
@@ -328,11 +311,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       });
 
-      // Increment scan count and user monthly scans
-      await Promise.all([
-        storage.incrementQrCodeScans(id),
-        storage.incrementUserMonthlyScans(user.id)
-      ]);
+      // NOTE: We do NOT increment scans here - this is just for downloading QR image
+      // Real scan tracking should happen when QR codes are actually scanned by end users
       
       res.json({ dataUrl: qrDataUrl });
     } catch (error: any) {
@@ -453,6 +433,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({
         sessionId: session.id,
         url: session.url,
+        success: true
       });
     } catch (error: any) {
       console.error("Error creating subscription:", error);

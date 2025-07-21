@@ -1,0 +1,113 @@
+
+
+Details
+Build Logs
+Deploy Logs
+HTTP Logs
+
+Filter
+Filter logs using "", (), AND, OR, -
+
+
+
+You reached the start of the range → Jul 22, 2025, 12:16 AM
+
+Starting Container
+
+npm warn config production Use `--omit=dev` instead.
+
+ 
+
+> rest-express@1.0.0 start
+
+> NODE_ENV=production node dist/index.js
+
+ 
+
+Stripe initialized in TEST mode
+
+Using test mode - payments will not be charged
+
+Running database migrations...
+
+Database migrations completed successfully
+
+✓ All required database tables exist
+
+Running database migrations...
+
+Database migrations completed successfully
+
+10:18:27 PM [express] serving on port 8080
+
+User authenticated successfully: macaba4857@dariolo.com
+
+10:19:40 PM [express] GET /api/auth/user 200 in 13ms :: {"id":"e57320e0-8a56-403f-9710-31993dec0bd0",…
+
+User authenticated successfully: macaba4857@dariolo.com
+
+10:19:40 PM [express] GET /api/qr-codes 200 in 14ms :: [{"id":17,"userId":"e57320e0-8a56-403f-9710-31…
+
+10:19:40 PM [express] GET /api/auth/user 200 in 21ms :: {"id":"e57320e0-8a56-403f-9710-31993dec0bd0",…
+
+Creating QR code with data: {
+
+  userId: 'e57320e0-8a56-403f-9710-31993dec0bd0',
+
+  name: 'sosiol',
+
+  content: 'sosiol.com',
+
+  size: 200
+
+}
+
+QR code created successfully: 18
+
+10:19:46 PM [express] POST /api/qr-codes 201 in 26ms :: {"id":18,"userId":"e57320e0-8a56-403f-9710-31…
+
+10:19:46 PM [express] POST /api/qr-codes/18/generate 403 in 15ms :: {"message":"Monthly scan limit of…
+
+10:19:46 PM [express] GET /api/qr-codes 200 in 181ms :: [{"id":18,"userId":"e57320e0-8a56-403f-9710-3…
+
+10:19:50 PM [express] POST /api/qr-codes/18/generate 403 in 12ms :: {"message":"Monthly scan limit of…
+
+10:19:50 PM [express] POST /api/qr-codes/17/generate 403 in 12ms :: {"message":"Monthly scan limit of…
+
+10:19:50 PM [express] POST /api/qr-codes/16/generate 403 in 11ms :: {"message":"Monthly scan limit of…
+
+10:19:50 PM [express] GET /api/qr-codes 200 in 13ms :: [{"id":18,"userId":"e57320e0-8a56-403f-9710-31…
+
+User authenticated successfully: macaba4857@dariolo.com
+
+10:19:50 PM [express] GET /api/auth/user 200 in 8ms :: {"id":"e57320e0-8a56-403f-9710-31993dec0bd0","…
+
+User authenticated successfully: macaba4857@dariolo.com
+
+10:19:53 PM [express] GET /api/auth/user 200 in 10ms :: {"id":"e57320e0-8a56-403f-9710-31993dec0bd0",…
+
+Created new product for pro: prod_SitrbZkD4wSsk1
+
+Created new price for pro: price_1RnS3sP0VGlWmmEyIFm7mrKr
+
+10:19:57 PM [express] POST /api/create-subscription 200 in 1518ms :: {"sessionId":"cs_test_a1QscqJG9n…
+
+Created new product for pro: prod_Sitr4kmTsmhRNr
+
+Created new price for pro: price_1RnS3uP0VGlWmmEyoidIY66c
+
+10:19:58 PM [express] POST /api/create-subscription 200 in 1507ms :: {"sessionId":"cs_test_a13w1QDbDt…
+
+User authenticated successfully: macaba4857@dariolo.com
+
+10:20:03 PM [express] GET /api/auth/user 200 in 13ms :: {"id":"e57320e0-8a56-403f-9710-31993dec0bd0",…
+
+User authenticated successfully: macaba4857@dariolo.com
+
+10:20:03 PM [express] GET /api/auth/user 200 in 9ms :: {"id":"e57320e0-8a56-403f-9710-31993dec0bd0","…
+
+Created new product for pro: prod_SitrBYfoTm2JgZ
+
+Created new price for pro: price_1RnS42P0VGlWmmEy6J0ap6xM
+
+10:20:07 PM [express] POST /api/create-subscription 200 in 1335ms :: {"sessionId":"cs_test_a1fI6nrnFN…

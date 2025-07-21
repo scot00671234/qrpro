@@ -60,21 +60,26 @@ export async function getOrCreatePrice(plan: 'pro' | 'business'): Promise<string
   const config = planConfig[plan];
   
   try {
-    // First, try to find existing product by name
-    const existingProducts = await stripe.products.search({
-      query: `name:'${config.name}'`,
-    });
-
+    // First, try to find existing product by metadata to avoid name matching issues
+    const allProducts = await stripe.products.list({ limit: 100 });
+    let existingProduct = allProducts.data.find((product: any) => 
+      product.metadata && product.metadata.plan === plan
+    );
+    
     let productId: string;
     
-    if (existingProducts.data.length > 0) {
-      productId = existingProducts.data[0].id;
+    if (existingProduct) {
+      productId = existingProduct.id;
       console.log(`Found existing product for ${plan}: ${productId}`);
     } else {
-      // Create new product
+      // Create new product with metadata to track it
       const product = await stripe.products.create({
         name: config.name,
         description: config.description,
+        metadata: {
+          plan: plan,
+          app: 'qr-pro'
+        }
       });
       productId = product.id;
       console.log(`Created new product for ${plan}: ${productId}`);

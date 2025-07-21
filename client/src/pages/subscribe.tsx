@@ -44,8 +44,8 @@ export default function Subscribe() {
 
       const data = await response.json();
       
-      if (data.sessionUrl) {
-        window.location.href = data.sessionUrl;
+      if (data.url) {
+        window.location.href = data.url;
       } else {
         throw new Error("No session URL returned");
       }
@@ -71,7 +71,7 @@ export default function Subscribe() {
   }
 
   // Show different content if user is already subscribed
-  if (user?.subscriptionStatus === 'active') {
+  if (user && 'subscriptionStatus' in user && user.subscriptionStatus === 'active') {
     return (
       <div className="min-h-screen bg-gray-50">
         <Navigation />
