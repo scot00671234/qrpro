@@ -12,6 +12,7 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
+  console.log("API Request:", method, url, data);
   const res = await fetch(url, {
     method,
     headers: data ? { "Content-Type": "application/json" } : {},
@@ -31,12 +32,14 @@ export const getQueryFn: <T>(options: {
   async ({ queryKey }) => {
     // Extract URL from queryKey array - first element should be the complete URL
     const url = Array.isArray(queryKey) ? String(queryKey[0]) : String(queryKey);
+    console.log("Query Request:", url, queryKey);
     
     const res = await fetch(url, {
       credentials: "include",
     });
 
     if (unauthorizedBehavior === "returnNull" && res.status === 401) {
+      console.log("Unauthorized request, returning null");
       return null;
     }
 
@@ -47,10 +50,10 @@ export const getQueryFn: <T>(options: {
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      queryFn: getQueryFn({ on401: "throw" }),
+      queryFn: getQueryFn({ on401: "returnNull" }), // Return null for auth endpoint, don't throw
       refetchInterval: false,
       refetchOnWindowFocus: false,
-      staleTime: Infinity,
+      staleTime: 0, // Force fresh requests to avoid cache issues
       retry: false,
     },
     mutations: {
