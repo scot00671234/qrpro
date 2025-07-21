@@ -47,19 +47,19 @@ const coreFeatures = [
   },
   {
     icon: Palette,
-    title: "Custom Branding",
-    description: "Brand your QR codes with colors, logos, and custom styles",
+    title: "Size Options",
+    description: "Customize QR code sizes for different use cases",
     details: [
-      "Custom foreground/background colors",
-      "Logo integration with smart positioning",
-      "Multiple design templates",
-      "Brand consistency tools"
+      "Multiple size options",
+      "Optimized for print and web",
+      "Scalable generation",
+      "Standard PNG format"
     ],
     available: "Pro & Business"
   },
   {
     icon: Download,
-    title: "Multiple Formats",
+    title: "PNG Downloads",
     description: "Download your QR codes in various formats for any use case",
     details: [
       "PNG for web and print",

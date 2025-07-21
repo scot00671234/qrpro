@@ -38,7 +38,7 @@ export default function Landing() {
               <span className="text-gradient font-medium"> Real Businesses</span>
             </h1>
             <p className="mt-8 max-w-3xl mx-auto text-xl text-gray-700 leading-relaxed drop-shadow-sm">
-              Create branded QR codes with built-in scan analytics. Perfect for restaurants, real estate agents, creators, and small businesses.
+              Create custom QR sizes with built-in scan analytics. Perfect for restaurants, real estate agents, creators, and small businesses.
             </p>
             <div className="mt-12 flex justify-center gap-6">
               <Button 
@@ -85,7 +85,7 @@ export default function Landing() {
                 <div className="w-16 h-16 bg-gradient-to-br from-emerald-200/40 to-teal-200/40 rounded-2xl flex items-center justify-center mb-8">
                   <Edit3 className="text-emerald-600 w-8 h-8" />
                 </div>
-                <h3 className="text-2xl font-light text-foreground mb-6 tracking-tight">Dynamic QR Codes</h3>
+                <h3 className="text-2xl font-light text-foreground mb-6 tracking-tight">Simple QR Codes</h3>
                 <p className="text-muted-foreground leading-relaxed">Update destination URLs without changing the QR code. Perfect for campaigns.</p>
               </CardContent>
             </Card>
@@ -95,7 +95,7 @@ export default function Landing() {
                 <div className="w-16 h-16 bg-gradient-to-br from-amber-200/40 to-orange-200/40 rounded-2xl flex items-center justify-center mb-8">
                   <QrCode className="text-amber-600 w-8 h-8" />
                 </div>
-                <h3 className="text-2xl font-light text-foreground mb-6 tracking-tight">Branded QR Codes</h3>
+                <h3 className="text-2xl font-light text-foreground mb-6 tracking-tight">Custom QR Sizes</h3>
                 <p className="text-muted-foreground leading-relaxed">Add logos, customize colors, and create professional QR codes that match your brand.</p>
               </CardContent>
             </Card>

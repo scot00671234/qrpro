@@ -142,23 +142,11 @@ export default function Subscribe() {
               <ul className="space-y-4">
                 <li className="flex items-center">
                   <Check className="text-green-500 mr-3 h-5 w-5" />
-                  Unlimited scans
-                </li>
-                <li className="flex items-center">
-                  <Check className="text-green-500 mr-3 h-5 w-5" />
-                  Branded QR codes
+                  25 scans/month
                 </li>
                 <li className="flex items-center">
                   <Check className="text-green-500 mr-3 h-5 w-5" />
                   Analytics dashboard
-                </li>
-                <li className="flex items-center">
-                  <Check className="text-green-500 mr-3 h-5 w-5" />
-                  Dynamic QR codes
-                </li>
-                <li className="flex items-center">
-                  <Check className="text-green-500 mr-3 h-5 w-5" />
-                  Multiple formats
                 </li>
               </ul>
             </CardContent>
@@ -181,24 +169,13 @@ export default function Subscribe() {
               <ul className="space-y-4">
                 <li className="flex items-center">
                   <Check className="text-green-500 mr-3 h-5 w-5" />
-                  Everything in Pro
+                  Unlimited scans
                 </li>
                 <li className="flex items-center">
                   <Check className="text-green-500 mr-3 h-5 w-5" />
-                  Multiple team members
+                  Analytics dashboard
                 </li>
-                <li className="flex items-center">
-                  <Check className="text-green-500 mr-3 h-5 w-5" />
-                  Bulk QR generation
-                </li>
-                <li className="flex items-center">
-                  <Check className="text-green-500 mr-3 h-5 w-5" />
-                  Custom domain
-                </li>
-                <li className="flex items-center">
-                  <Check className="text-green-500 mr-3 h-5 w-5" />
-                  Priority support
-                </li>
+
               </ul>
             </CardContent>
           </Card>
