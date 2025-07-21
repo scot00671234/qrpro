@@ -1,21 +1,15 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import Stripe from "stripe";
 import QRCode from "qrcode";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./auth";
 import { insertQrCodeSchema, updateQrCodeSchema, insertQrScanSchema } from "@shared/schema";
 import { sendEmail, sendWelcomeEmail } from "./emailService";
+import { stripe, getPriceId, getPublishableKey, isTestMode } from "./stripe";
 import { randomBytes } from "crypto";
 import bcrypt from "bcrypt";
 import passport from "passport";
 import { runMigrations } from "./migrate";
-
-// Only initialize Stripe if the key is available (for Railway deployment)
-let stripe: Stripe | null = null;
-if (process.env.STRIPE_SECRET_KEY) {
-  stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-}
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Run database migrations first
@@ -171,7 +165,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "User not found" });
       }
 
-      // Users can create unlimited QR codes, scan limits apply per subscription tier
+      // Users can create unlimited QR codes, but QR generation (scanning) has limits based on subscription tier
 
       const qrCodeData = insertQrCodeSchema.parse({
         ...req.body,
@@ -271,27 +265,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const user = req.user;
       const id = parseInt(req.params.id);
       
-      const qrCode = await storage.getQrCode(id, user.id);
+      if (!user) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      // Check scan limits based on subscription plan
+      const monthlyScansUsed = await storage.getUserMonthlyScans(user.id);
+      const subscriptionPlan = user.subscriptionPlan || 'free';
       
+      let scanLimit = 1; // Free plan default
+      if (subscriptionPlan === 'pro') {
+        scanLimit = 25;
+      } else if (subscriptionPlan === 'business') {
+        scanLimit = -1; // Unlimited
+      }
+
+      // Enforce scan limits for free and pro tiers
+      if (scanLimit > 0 && monthlyScansUsed >= scanLimit) {
+        return res.status(403).json({ 
+          message: `Monthly scan limit of ${scanLimit} reached. Upgrade your plan for more scans.`,
+          requiresUpgrade: true,
+          monthlyScansUsed,
+          scanLimit
+        });
+      }
+
+      const qrCode = await storage.getQrCode(id, user.id);
       if (!qrCode) {
         return res.status(404).json({ message: "QR code not found" });
       }
 
-      const options = {
+      // Generate QR code
+      const qrDataUrl = await QRCode.toDataURL(qrCode.content, {
         width: qrCode.size || 200,
+        margin: 2,
         color: {
           dark: '#000000',
-          light: '#FFFFFF',
-        },
-      };
+          light: '#FFFFFF'
+        }
+      });
 
-      const qrDataUrl = await QRCode.toDataURL(qrCode.content, options);
-      
-      // Increment scan count
-      await storage.incrementQrCodeScans(id);
+      // Increment scan count and user monthly scans
+      await Promise.all([
+        storage.incrementQrCodeScans(id),
+        storage.incrementUserMonthlyScans(user.id)
+      ]);
       
       res.json({ dataUrl: qrDataUrl });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error generating QR code:", error);
       res.status(500).json({ message: "Failed to generate QR code" });
     }
@@ -385,38 +406,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         await storage.updateUserStripeInfo(user.id, customerId);
       }
 
-      // Define pricing based on selected plan
-      const planPricing = {
-        pro: {
-          amount: 900, // $9.00 in cents
-          name: 'QR Pro - Smart QR Plan',
-          description: 'Unlimited scans, branded QR codes, analytics dashboard'
-        },
-        business: {
-          amount: 2900, // $29.00 in cents  
-          name: 'QR Pro - Growth Kit Plan',
-          description: 'Everything in Pro plus team features, bulk generation, custom domain'
-        }
-      };
-
-      const selectedPlan = planPricing[plan as keyof typeof planPricing] || planPricing.pro;
-
+      // Use dynamic pricing based on test/live mode
+      const priceId = getPriceId(plan as 'pro' | 'business');
+      
       const session = await stripe.checkout.sessions.create({
         customer: customerId,
         payment_method_types: ['card'],
         line_items: [
           {
-            price_data: {
-              currency: 'usd',
-              product_data: {
-                name: selectedPlan.name,
-                description: selectedPlan.description,
-              },
-              unit_amount: selectedPlan.amount,
-              recurring: {
-                interval: 'month',
-              },
-            },
+            price: priceId,
             quantity: 1,
           },
         ],
@@ -457,7 +455,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       if (session.payment_status === 'paid' && session.subscription) {
         await storage.updateUserStripeInfo(user.id, session.customer as string, session.subscription as string);
-        await storage.updateUserSubscription(user.id, 'active', session.metadata?.plan || 'pro');
+        await storage.updateUserSubscription(user.id, session.metadata?.plan || 'pro', 'active');
       }
 
       res.json({ message: "Subscription activated successfully" });
@@ -515,7 +513,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
               plan = amount >= 2900 ? 'business' : 'pro';
             }
             
-            await storage.updateUserSubscription(user.id, plan, subscription.status, endsAt);
+            await storage.updateUserSubscription(user.id, plan, subscription.status);
           }
           break;
         
@@ -527,7 +525,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const userToUpdate = allUsers.find(u => u.stripeCustomerId === deletedCustomerId);
           
           if (userToUpdate) {
-            await storage.updateUserSubscription(userToUpdate.id, 'free', 'canceled');
+            await storage.updateUserSubscription(userToUpdate.id, 'free', 'inactive');
           }
           break;
         
@@ -583,6 +581,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Reactivate subscription endpoint
   // Get subscription details from Stripe
+  // Get Stripe publishable key for frontend
+  app.get('/api/stripe-config', async (req, res) => {
+    try {
+      res.json({ 
+        publishableKey: getPublishableKey(),
+        isTestMode: isTestMode
+      });
+    } catch (error) {
+      console.error("Error getting Stripe config:", error);
+      res.status(500).json({ message: "Stripe configuration error" });
+    }
+  });
+
   app.get('/api/subscription-details', isAuthenticated, async (req: any, res) => {
     console.log("Fetching subscription details for user:", req.user?.id);
     

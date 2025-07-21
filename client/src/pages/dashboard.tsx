@@ -74,9 +74,9 @@ export default function Dashboard() {
     );
   }
 
-  const isPro = user?.subscriptionStatus === 'active';
+  const isPro = (user as any)?.subscriptionStatus === 'active';
   const qrCodeCount = Array.isArray(qrCodes) ? qrCodes.length : 0;
-  const monthlyScansUsed = user?.monthlyScansUsed || 0;
+  const monthlyScansUsed = (user as any)?.monthlyScansUsed || 0;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-stone-50 to-neutral-100">
@@ -112,7 +112,7 @@ export default function Dashboard() {
         </div>
 
         {/* Upgrade Banner (Free Users) */}
-        {user?.subscriptionStatus !== 'active' && (
+        {(user as any)?.subscriptionStatus !== 'active' && (
           <Alert className="mb-8 border-primary bg-gradient-to-r from-primary/10 to-primary/5">
             <Crown className="h-4 w-4" />
             <AlertDescription className="flex items-center justify-between">

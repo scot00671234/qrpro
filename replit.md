@@ -109,6 +109,13 @@ The application follows a modern full-stack architecture with clear separation b
 - **Live Mode**: Only switch to live keys (sk_live_... and pk_live_...) for production
 
 ### Recent Changes
+- **July 21, 2025**: ✅ **DYNAMIC STRIPE KEY SYSTEM**: Implemented automatic switching between test and live Stripe modes via environment variables
+  - Created server/stripe.ts with dynamic key detection (sk_test_ vs sk_live_)
+  - Added API endpoint /api/stripe-config to provide frontend with correct publishable keys
+  - Enhanced subscription system with proper scan limit enforcement (1/month free, 25/month pro, unlimited business)
+  - Fixed all database schema issues and subscription tracking methods
+  - Added STRIPE_SETUP.md guide for Railway deployment with test/live key switching
+  - System now gracefully handles missing Stripe keys in development
 - **July 21, 2025**: ✅ **DYNAMIC QR CODE REMOVAL**: Removed dynamic QR code functionality as requested by user
   - Removed /r/:id redirect route for dynamic QR codes
   - Removed getQrCodeByRedirectId method from storage interface

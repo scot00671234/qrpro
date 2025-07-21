@@ -24,7 +24,8 @@ export interface IStorage {
   createUser(user: { email: string; password: string; firstName: string; lastName: string }): Promise<User>;
   upsertUser(user: UpsertUser): Promise<User>;
   updateUserStripeInfo(userId: string, customerId: string, subscriptionId?: string): Promise<User>;
-  // Note: Subscription features disabled for Railway compatibility
+  updateUserSubscription(userId: string, plan: string, status: string): Promise<User>;
+  // Note: Subscription features enabled for Railway deployment
   updatePasswordResetToken(userId: string, token: string, expiry: Date): Promise<void>;
   updatePassword(userId: string, hashedPassword: string): Promise<void>;
   deleteUser(userId: string): Promise<void>;
@@ -38,6 +39,9 @@ export interface IStorage {
   deleteQrCode(id: number, userId: string): Promise<boolean>;
   incrementQrCodeScans(id: number): Promise<void>;
   getUserQrCodeCount(userId: string): Promise<number>;
+  getUserMonthlyScans(userId: string): Promise<number>;
+  resetUserMonthlyScans(userId: string): Promise<void>;
+  incrementUserMonthlyScans(userId: string): Promise<void>;
   
   // Analytics operations
   recordQrScan(scanData: InsertQrScan): Promise<void>;
@@ -126,7 +130,20 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
-  // Subscription features removed for Railway compatibility
+  async updateUserSubscription(userId: string, plan: string, status: string): Promise<User> {
+    const [user] = await db
+      .update(users)
+      .set({
+        subscriptionPlan: plan,
+        subscriptionStatus: status,
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, userId))
+      .returning();
+    return user;
+  }
+
+  // Subscription features enabled for Railway deployment
 
   // QR Code operations - simplified for Railway
   async createQrCode(qrCodeData: InsertQrCode): Promise<QrCode> {
@@ -207,7 +224,44 @@ export class DatabaseStorage implements IStorage {
     return result.length;
   }
 
+  async getUserMonthlyScans(userId: string): Promise<number> {
+    const [user] = await db.select().from(users).where(eq(users.id, userId));
+    if (!user) return 0;
+    
+    // Check if we need to reset monthly scans
+    const now = new Date();
+    const scanResetDate = user.scanResetDate || new Date();
+    const daysSinceReset = Math.floor((now.getTime() - scanResetDate.getTime()) / (1000 * 60 * 60 * 24));
+    
+    if (daysSinceReset >= 30) {
+      await this.resetUserMonthlyScans(userId);
+      return 0;
+    }
+    
+    return user.monthlyScansUsed || 0;
+  }
 
+  async resetUserMonthlyScans(userId: string): Promise<void> {
+    await db
+      .update(users)
+      .set({
+        monthlyScansUsed: 0,
+        scanResetDate: new Date()
+      })
+      .where(eq(users.id, userId));
+  }
+
+  async incrementUserMonthlyScans(userId: string): Promise<void> {
+    // First check if we need to reset monthly scans
+    await this.getUserMonthlyScans(userId); // This will reset if needed
+    
+    await db
+      .update(users)
+      .set({
+        monthlyScansUsed: sql`${users.monthlyScansUsed} + 1`,
+      })
+      .where(eq(users.id, userId));
+  }
 
   async recordQrScan(scanData: InsertQrScan): Promise<void> {
     await db.insert(qrScans).values(scanData);
