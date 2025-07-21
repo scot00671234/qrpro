@@ -175,11 +175,19 @@ export default function Landing() {
                 <ul className="space-y-4 mb-8">
                   <li className="flex items-center">
                     <Check className="text-green-500 mr-3 h-5 w-5" />
-                    25 scans/month
+                    25 scans per month
+                  </li>
+                  <li className="flex items-center">
+                    <Check className="text-green-500 mr-3 h-5 w-5" />
+                    Cloud storage & organization
                   </li>
                   <li className="flex items-center">
                     <Check className="text-green-500 mr-3 h-5 w-5" />
                     Analytics dashboard
+                  </li>
+                  <li className="flex items-center">
+                    <Check className="text-green-500 mr-3 h-5 w-5" />
+                    Easy QR code management
                   </li>
                 </ul>
                 <Button 
@@ -205,7 +213,15 @@ export default function Landing() {
                   </li>
                   <li className="flex items-center">
                     <Check className="text-green-500 mr-3 h-5 w-5" />
-                    Analytics dashboard
+                    Cloud storage & organization
+                  </li>
+                  <li className="flex items-center">
+                    <Check className="text-green-500 mr-3 h-5 w-5" />
+                    Advanced analytics dashboard
+                  </li>
+                  <li className="flex items-center">
+                    <Check className="text-green-500 mr-3 h-5 w-5" />
+                    Professional QR management
                   </li>
                 </ul>
                 <Button 
