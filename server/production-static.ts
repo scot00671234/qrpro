@@ -13,103 +13,110 @@ export function setupProductionStatic(app: Express) {
     );
   }
 
-  console.log('Setting up Railway-compatible static file serving from:', distPath);
+  console.log('🔥 NUCLEAR OPTION: Manual static file serving from:', distPath);
 
-  // Enhanced static file serving with explicit MIME types for Railway
-  // CRITICAL: This must come BEFORE any catch-all routes
-  app.use('/assets', express.static(path.resolve(distPath, 'assets'), {
-    setHeaders: (res, filePath, stat) => {
-      // Set explicit Content-Type headers for Railway compatibility
-      const ext = path.extname(filePath).toLowerCase();
-      
-      switch (ext) {
-        case '.js':
-          res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
-          break;
-        case '.mjs':
-          res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
-          break;
-        case '.css':
-          res.setHeader('Content-Type', 'text/css; charset=utf-8');
-          break;
-        case '.html':
-          res.setHeader('Content-Type', 'text/html; charset=utf-8');
-          break;
-        case '.json':
-          res.setHeader('Content-Type', 'application/json; charset=utf-8');
-          break;
-        case '.svg':
-          res.setHeader('Content-Type', 'image/svg+xml; charset=utf-8');
-          break;
-        case '.png':
-          res.setHeader('Content-Type', 'image/png');
-          break;
-        case '.jpg':
-        case '.jpeg':
-          res.setHeader('Content-Type', 'image/jpeg');
-          break;
-        case '.ico':
-          res.setHeader('Content-Type', 'image/x-icon');
-          break;
-        case '.woff':
-          res.setHeader('Content-Type', 'font/woff');
-          break;
-        case '.woff2':
-          res.setHeader('Content-Type', 'font/woff2');
-          break;
-        case '.ttf':
-          res.setHeader('Content-Type', 'font/ttf');
-          break;
-        case '.mp4':
-          res.setHeader('Content-Type', 'video/mp4');
-          break;
-        default:
-          // For unknown types, use a safe default
-          res.setHeader('Content-Type', 'application/octet-stream');
-      }
-      
-      // Add cache headers for production
-      if (filePath.includes('assets/')) {
-        // Cache hashed assets for 1 year
-        res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+  // NUCLEAR OPTION: Complete manual file serving - NO EXPRESS STATIC MIDDLEWARE
+  // Handle ALL /assets/* requests manually with explicit MIME types
+  app.get('/assets/*', (req, res) => {
+    const assetPath = req.path.substring(1); // Remove leading /
+    const filePath = path.join(distPath, assetPath);
+    const ext = path.extname(filePath).toLowerCase();
+    
+    console.log(`🎯 MANUAL ASSET: ${req.path} -> ${filePath} (${ext})`);
+    
+    if (!fs.existsSync(filePath)) {
+      console.log(`❌ Asset not found: ${filePath}`);
+      return res.status(404).send('Asset not found');
+    }
+    
+    // FORCE correct MIME type - NO RAILWAY OVERRIDE ALLOWED
+    let mimeType = 'application/octet-stream';
+    let charset = '';
+    
+    switch (ext) {
+      case '.js':
+      case '.mjs':
+        mimeType = 'application/javascript';
+        charset = '; charset=utf-8';
+        console.log('🟢 FORCING JavaScript MIME type');
+        break;
+      case '.css':
+        mimeType = 'text/css';  
+        charset = '; charset=utf-8';
+        console.log('🟢 FORCING CSS MIME type');
+        break;
+      case '.html':
+        mimeType = 'text/html';
+        charset = '; charset=utf-8';
+        break;
+      case '.json':
+        mimeType = 'application/json';
+        charset = '; charset=utf-8';
+        break;
+      case '.svg':
+        mimeType = 'image/svg+xml';
+        charset = '; charset=utf-8';
+        break;
+      case '.png':
+        mimeType = 'image/png';
+        break;
+      case '.jpg':
+      case '.jpeg':
+        mimeType = 'image/jpeg';
+        break;
+      case '.ico':
+        mimeType = 'image/x-icon';
+        break;
+      case '.woff':
+        mimeType = 'font/woff';
+        break;
+      case '.woff2':
+        mimeType = 'font/woff2';
+        break;
+      case '.ttf':
+        mimeType = 'font/ttf';
+        break;
+      default:
+        console.log(`⚠️  Unknown asset type: ${ext}`);
+    }
+    
+    // NUCLEAR HEADERS - OVERRIDE EVERYTHING
+    res.setHeader('Content-Type', mimeType + charset);
+    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    
+    console.log(`✅ Serving ${req.path} as ${mimeType}${charset}`);
+    
+    // Send file manually
+    res.sendFile(filePath, (err) => {
+      if (err) {
+        console.error('❌ Error serving asset:', err);
+        res.status(500).send('Error serving asset');
       } else {
-        // Cache other files for 1 hour
-        res.setHeader('Cache-Control', 'public, max-age=3600');
+        console.log('🎉 Asset served successfully with correct MIME type');
       }
-      
-      // Add security headers
-      res.setHeader('X-Content-Type-Options', 'nosniff');
-    }
-  }));
+    });
+  });
 
-  // Serve other static files (favicon, images, etc.) from root
-  app.use(express.static(distPath, {
-    setHeaders: (res, filePath) => {
-      const ext = path.extname(filePath).toLowerCase();
-      console.log(`📄 Serving root static file: ${filePath} (${ext})`);
-      
-      // Only serve non-asset files from root to avoid conflicts
-      if (!filePath.includes('assets/')) {
-        switch (ext) {
-          case '.html':
-            res.setHeader('Content-Type', 'text/html; charset=utf-8');
-            break;
-          case '.ico':
-            res.setHeader('Content-Type', 'image/x-icon');
-            break;
-          case '.svg':
-            res.setHeader('Content-Type', 'image/svg+xml; charset=utf-8');
-            break;
-          case '.png':
-            res.setHeader('Content-Type', 'image/png');
-            break;
-          default:
-            res.setHeader('Content-Type', 'application/octet-stream');
-        }
-        res.setHeader('Cache-Control', 'public, max-age=3600');
-      }
-    }
-  }));
+  // Manual serving of root static files (favicon, etc.)
+  app.get('/*.ico', (req, res) => {
+    const filePath = path.join(distPath, path.basename(req.path));
+    res.setHeader('Content-Type', 'image/x-icon');
+    res.sendFile(filePath);
+  });
+  
+  app.get('/*.svg', (req, res) => {
+    const filePath = path.join(distPath, path.basename(req.path));  
+    res.setHeader('Content-Type', 'image/svg+xml; charset=utf-8');
+    res.sendFile(filePath);
+  });
+  
+  app.get('/*.png', (req, res) => {
+    const filePath = path.join(distPath, path.basename(req.path));
+    res.setHeader('Content-Type', 'image/png');
+    res.sendFile(filePath);
+  });
 
   // SPA fallback - serve index.html for all non-API and non-asset routes
   app.use("*", (req, res) => {
