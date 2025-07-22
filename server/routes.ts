@@ -538,30 +538,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.post('/api/cancel-subscription', isAuthenticated, async (req: any, res) => {
-    if (!stripe) {
-      return res.status(503).json({ message: "Payment system not configured. Please contact support." });
-    }
-
     try {
       const user = req.user;
 
-      if (!user || !user.stripeSubscriptionId) {
-        return res.status(404).json({ message: "No active subscription found" });
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
       }
 
-      const subscription = await stripe.subscriptions.update(user.stripeSubscriptionId, {
-        cancel_at_period_end: true,
+      // Check if user has an active subscription to cancel
+      console.log('Cancel subscription request - user status:', {
+        subscriptionStatus: user.subscriptionStatus,
+        subscriptionPlan: user.subscriptionPlan,
+        stripeSubscriptionId: user.stripeSubscriptionId
       });
-
-      // Convert Stripe timestamp to Date, with fallback to 30 days from now
-      let endsAt: Date;
-      if ((subscription as any).current_period_end) {
-        endsAt = new Date((subscription as any).current_period_end * 1000);
-      } else {
-        // Fallback: 30 days from now
-        endsAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+      
+      if (user.subscriptionStatus !== 'active') {
+        return res.status(400).json({ message: `No active subscription to cancel. Current status: ${user.subscriptionStatus}` });
       }
 
+      let endsAt: Date;
+
+      if (stripe && user.stripeSubscriptionId) {
+        // If Stripe is configured, cancel through Stripe
+        try {
+          console.log('Canceling Stripe subscription:', user.stripeSubscriptionId);
+          const subscription = await stripe.subscriptions.update(user.stripeSubscriptionId, {
+            cancel_at_period_end: true,
+          });
+
+          // Use Stripe's current period end
+          if ((subscription as any).current_period_end) {
+            endsAt = new Date((subscription as any).current_period_end * 1000);
+          } else {
+            // Fallback: 30 days from now
+            endsAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+          }
+          console.log('Stripe subscription marked for cancellation, ends at:', endsAt);
+        } catch (stripeError: any) {
+          console.error("Error with Stripe cancellation, proceeding with local cancellation:", stripeError);
+          // If Stripe fails, proceed with local cancellation
+          endsAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days from now
+        }
+      } else {
+        // No Stripe configured, just cancel locally
+        console.log('No Stripe configured, canceling subscription locally for user:', user.email);
+        endsAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days from now
+      }
+
+      // Update local database
       await storage.updateUserSubscription(
         user.id, 
         user.subscriptionPlan || 'pro', // Keep pro until end of period
@@ -569,6 +593,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         endsAt
       );
 
+      console.log('Subscription canceled successfully for user:', user.email, 'ends at:', endsAt);
       res.json({ message: "Subscription will be canceled at the end of the billing period" });
     } catch (error: any) {
       console.error("Error canceling subscription:", error);

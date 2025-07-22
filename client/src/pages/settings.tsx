@@ -55,7 +55,8 @@ export default function Settings() {
       // Refresh page to update user data
       window.location.reload();
     },
-    onError: (error) => {
+    onError: (error: any) => {
+      console.error("Cancel subscription error:", error);
       if (isUnauthorizedError(error)) {
         toast({
           title: "Unauthorized", 
@@ -67,9 +68,16 @@ export default function Settings() {
         }, 500);
         return;
       }
+      
+      // Try to extract the actual error message from the response
+      let errorMessage = "Failed to cancel subscription";
+      if (error.message) {
+        errorMessage = error.message;
+      }
+      
       toast({
         title: "Error",
-        description: "Failed to cancel subscription",
+        description: errorMessage,
         variant: "destructive",
       });
     },
