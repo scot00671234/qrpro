@@ -650,7 +650,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           current_period_start: (subscription as any).current_period_start,
           cancel_at_period_end: (subscription as any).cancel_at_period_end,
           canceled_at: (subscription as any).canceled_at,
-          amount: (subscription.items as any)?.data?.[0]?.price?.unit_amount || 1500,
+          amount: (subscription.items as any)?.data?.[0]?.price?.unit_amount || 1900, // $19.00 in cents
           currency: (subscription.items as any)?.data?.[0]?.price?.currency || 'usd'
         }
       });
@@ -671,7 +671,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             current_period_start: Math.floor((Date.now() - 30 * 24 * 60 * 60 * 1000) / 1000),
             cancel_at_period_end: user.subscriptionStatus === 'canceled',
             canceled_at: user.subscriptionStatus === 'canceled' ? Math.floor(Date.now() / 1000) : null,
-            amount: 1500,
+            amount: 1900, // $19.00 in cents
             currency: 'usd'
           }
         });

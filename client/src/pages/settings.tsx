@@ -254,17 +254,17 @@ export default function Settings() {
                               ? "Contact support" 
                               : "Not available"}
                       </p>
-                      {isActiveSubscription && nextPaymentDate && (
-                        <p className="text-xs text-gray-500 mt-1">
-                          Billing cycle: {subscription?.current_period_start 
-                            ? new Date(subscription.current_period_start * 1000).toLocaleDateString() 
-                            : 'N/A'} - {nextPaymentDate.toLocaleDateString()}
-                        </p>
-                      )}
+
                     </div>
                     <div>
                       <Label className="text-sm font-medium text-gray-700">Amount</Label>
-                      <p className="text-gray-900">$15.00</p>
+                      <p className="text-gray-900">
+                        {isLoadingSubscription 
+                          ? "Loading..." 
+                          : subscription?.amount 
+                            ? `$${(subscription.amount / 100).toFixed(2)} ${(subscription.currency || 'USD').toUpperCase()}`
+                            : "$19.00 USD"}
+                      </p>
                     </div>
                   </div>
 
