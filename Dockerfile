@@ -11,8 +11,8 @@ RUN npm ci
 # Copy source code
 COPY . .
 
-# Build the application using existing build script
-RUN node build.js
+# Build the application using our nuclear fix
+RUN npm run build
 
 # Remove dev dependencies after build to reduce image size
 RUN npm prune --production

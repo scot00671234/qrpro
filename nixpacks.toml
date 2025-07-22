@@ -1,0 +1,22 @@
+# Railway Nixpacks configuration for nuclear MIME type fix
+
+[phases.setup]
+nixpkgs = ['nodejs_18', 'npm-9_6_7']
+
+[phases.install]
+cmds = ['npm ci']
+
+[phases.build] 
+cmds = [
+  'echo "🔥 NUCLEAR RAILWAY BUILD STARTING"',
+  'npx vite build',
+  'echo "Building backend with nuclear MIME fix..."',
+  'npx esbuild server/index-production.ts --bundle --platform=node --format=esm --outfile=dist/index.js --target=node18 --packages=external',
+  'echo "✅ Nuclear build completed"',
+  'ls -la dist/',
+  'echo "Checking for Vite imports in backend..."',
+  'if grep -q "createServer as createViteServer" dist/index.js; then echo "❌ VITE FOUND"; exit 1; else echo "✅ NO VITE"; fi'
+]
+
+[start]
+cmd = 'node dist/index.js'
