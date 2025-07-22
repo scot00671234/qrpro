@@ -169,19 +169,7 @@ export default function Settings() {
   // Determine if subscription is truly active (not canceled and not scheduled for cancellation)
   const isTrulyActiveSubscription = isPro && !isCanceled && !isScheduledForCancellation;
   
-  // Debug logging
-  console.log("Subscription debug:", {
-    isPro,
-    isCanceled,
-    subscriptionData,
-    subscription,
-    amount: subscription?.amount,
-    hasStripeSubscription: !!(user as any).stripeSubscriptionId,
-    subscriptionError,
-    isLoadingSubscription,
-    nextPaymentDate,
-    isTrulyActiveSubscription
-  });
+
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -267,10 +255,7 @@ export default function Settings() {
                             ? `$${(subscription.amount / 100).toFixed(2)} ${(subscription.currency || 'USD').toUpperCase()}`
                             : "$19.00 USD"}
                       </p>
-                      {/* Debug info - remove after fixing */}
-                      <p className="text-xs text-gray-400">
-                        Debug: amount={subscription?.amount}, loading={isLoadingSubscription}
-                      </p>
+
                     </div>
                   </div>
 
