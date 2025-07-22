@@ -1,6 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { setupProductionStatic } from "./production-static";
 import { runMigrations, verifyDatabaseSchema } from "./migrations";
 
 const app = express();
@@ -98,7 +99,8 @@ app.use((req, res, next) => {
   if (app.get("env") === "development") {
     await setupVite(app, server);
   } else {
-    serveStatic(app);
+    // Use Railway-compatible static file serving
+    setupProductionStatic(app);
   }
 
   // Use Railway's provided port or fallback to 5000 for local development
