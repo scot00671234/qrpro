@@ -406,18 +406,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { session_id } = req.body;
       const user = req.user;
 
+      console.log('Processing subscription success for user:', user.email, 'session:', session_id);
+
       if (!session_id) {
         return res.status(400).json({ message: "Session ID required" });
       }
 
-      const session = await stripe.checkout.sessions.retrieve(session_id);
+      const session = await stripe.checkout.sessions.retrieve(session_id, {
+        expand: ['subscription']
+      });
       
-      if (session.payment_status === 'paid' && session.subscription) {
-        await storage.updateUserStripeInfo(user.id, session.customer as string, session.subscription as string);
-        await storage.updateUserSubscription(user.id, 'pro', 'active');
-      }
+      console.log('Stripe session retrieved:', {
+        payment_status: session.payment_status,
+        customer: session.customer,
+        subscription: session.subscription,
+        subscription_status: (session.subscription as any)?.status
+      });
 
-      res.json({ message: "Subscription activated successfully" });
+      if (session.payment_status === 'paid' && session.subscription) {
+        // Update user with Stripe info
+        await storage.updateUserStripeInfo(user.id, session.customer as string, session.subscription as string);
+        
+        // Update subscription status
+        await storage.updateUserSubscription(user.id, 'pro', 'active');
+        
+        console.log('Subscription activated successfully for user:', user.email);
+        
+        res.json({ 
+          message: "Subscription activated successfully",
+          success: true,
+          plan: 'pro',
+          status: 'active'
+        });
+      } else {
+        console.log('Subscription not activated - payment status or subscription missing');
+        res.status(400).json({ 
+          message: "Subscription not completed", 
+          payment_status: session.payment_status,
+          has_subscription: !!session.subscription
+        });
+      }
     } catch (error: any) {
       console.error("Error processing subscription success:", error);
       res.status(400).json({ message: error.message || "Failed to process subscription" });
@@ -451,10 +479,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const customerId = subscription.customer;
           
           // Find user by Stripe customer ID
-          const users = await storage.getAllUsers(); // We'll need to add this method
+          console.log('Webhook: Processing subscription update for customer:', customerId);
+          const users = await storage.getAllUsers();
           const user = users.find(u => u.stripeCustomerId === customerId);
           
           if (user) {
+            console.log('Webhook: Found user for subscription update:', user.email);
             await storage.updateUserStripeInfo(user.id, customerId, subscription.id);
             
             // Handle subscription end date safely
@@ -472,7 +502,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
               plan = amount >= 2900 ? 'business' : 'pro';
             }
             
-            await storage.updateUserSubscription(user.id, plan, subscription.status);
+            await storage.updateUserSubscription(user.id, plan, subscription.status, endsAt);
+            console.log('Webhook: Updated user subscription:', {
+              userId: user.id,
+              plan,
+              status: subscription.status,
+              endsAt
+            });
+          } else {
+            console.log('Webhook: No user found for customer ID:', customerId);
           }
           break;
         

@@ -47,8 +47,8 @@ export async function getOrCreatePrice(plan: 'pro'): Promise<string> {
   const planConfig = {
     pro: {
       amount: 1900, // $19.00 in cents
-      name: 'QR Pro',
-      description: 'Unlimited QR code generation, cloud storage, professional features'
+      name: 'QR Pro - Smart Plan',
+      description: 'Unlimited QR code generation, cloud storage, analytics dashboard, easy QR code management'
     }
   };
 
