@@ -112,17 +112,14 @@ The application follows a modern full-stack architecture with clear separation b
 1. Build the application: `npm run build`
 2. Ensure dist/ directory contains both public/ (frontend) and index.js (backend)
 3. Set NODE_ENV=production in Railway environment variables
-4. **CRITICAL**: Use `node railway-start.js` as your start command (NOT `node dist/index.js`)
-5. The railway-start.js file provides Railway-specific fixes for:
-   - Proper MIME type headers for .js and .css files
-   - Static file serving with correct Content-Type headers
-   - SPA routing that doesn't interfere with static assets
-   - Enhanced CORS and caching for production
+4. **CRITICAL**: In Railway dashboard, change the start command to: `node railway-start.js`
+5. DO NOT use `npm run start` or `node dist/index.js` - these cause MIME type errors
 
-### Railway Start Command Fix:
-- **Problem**: Railway strict MIME type enforcement causes "text/html" instead of "application/javascript"
-- **Solution**: Use the custom railway-start.js which explicitly sets correct Content-Type headers
-- **Command**: Set Railway start command to: `node railway-start.js`
+### Railway MIME Type Fix:
+- **Problem**: Railway serves .js and .css files with "text/html" MIME type causing console errors
+- **Solution**: The railway-start.js file sets explicit Content-Type headers for all static files
+- **Required**: Must set Railway start command to: `node railway-start.js`
+- **Reference**: See RAILWAY-COMPLETE-FIX.md for detailed instructions
 
 ### Testing with Stripe
 - **Test Mode**: Use test keys (sk_test_... and pk_test_...) in Railway environment
