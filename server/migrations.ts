@@ -12,16 +12,13 @@ export async function runMigrations() {
       -- Add missing columns to users table
       ALTER TABLE users 
         ADD COLUMN IF NOT EXISTS subscription_plan VARCHAR DEFAULT 'free',
+        ADD COLUMN IF NOT EXISTS subscription_ends_at TIMESTAMP,
         ADD COLUMN IF NOT EXISTS monthly_scans_used INTEGER DEFAULT 0,
         ADD COLUMN IF NOT EXISTS scan_reset_date TIMESTAMP DEFAULT NOW();
       
       -- Fix subscription_status default (Railway might have wrong default)
       ALTER TABLE users 
         ALTER COLUMN subscription_status SET DEFAULT 'inactive';
-        
-      -- Remove any incompatible columns that might exist
-      ALTER TABLE users 
-        DROP COLUMN IF EXISTS subscription_ends_at;
     `);
 
     // 2. Fix qr_codes table structure
