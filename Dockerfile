@@ -20,5 +20,5 @@ RUN npm prune --production
 # Expose the port
 EXPOSE 5000
 
-# Start with our Railway-specific server
-CMD ["node", "railway-start.js"]
+# Start with our Railway final fix server
+CMD ["node", "railway-fix-final.js"]

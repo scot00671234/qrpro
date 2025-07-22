@@ -1,0 +1,122 @@
+
+Jul 22, 2025, 3:22 PM
+Active
+
+qrprogenerator.com
+
+Details
+Build Logs
+Deploy Logs
+HTTP Logs
+
+Filter
+Filter logs using "", (), AND, OR, -
+
+
+
+You reached the start of the range → Jul 22, 2025, 3:22 PM
+
+ 
+
+[Region: europe-west4]
+
+=========================
+
+Using Detected Dockerfile
+
+=========================
+
+
+context: f2sv-Q_V7
+
+[internal] load build definition from Dockerfile
+
+[internal] load build definition from Dockerfile
+
+[internal] load build definition from Dockerfile  ✔ 0 ms
+
+[internal] load build definition from Dockerfile
+
+[internal] load build definition from Dockerfile  ✔ 10 ms
+
+[internal] load metadata for docker.io/library/node:18-alpine
+
+[auth] library/node:pull token for registry-1.docker.io
+
+[auth] library/node:pull token for registry-1.docker.io  ✔ 0 ms
+
+[internal] load metadata for docker.io/library/node:18-alpine  ✔ 1 sec
+
+[internal] load .dockerignore
+
+[internal] load .dockerignore  ✔ 0 ms
+
+[internal] load .dockerignore
+
+[internal] load .dockerignore  ✔ 11 ms
+
+[7/7] RUN npm prune --production
+
+[6/7] RUN node build.js
+
+[5/7] COPY . .
+
+[4/7] RUN npm ci
+
+[3/7] COPY package*.json ./
+
+[internal] load build context
+
+[2/7] WORKDIR /app
+
+[1/7] FROM docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f249011d118945588d0a35cb9bc4b8ca09d9e
+
+[1/7] FROM docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f249011d118945588d0a35cb9bc4b8ca09d9e
+
+[internal] load build context  ✔ 0 ms
+
+[1/7] FROM docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f249011d118945588d0a35cb9bc4b8ca09d9e  ✔ 7 ms
+
+[1/7] FROM docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f249011d118945588d0a35cb9bc4b8ca09d9e  ✔ 0 ms
+
+[1/7] FROM docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f249011d118945588d0a35cb9bc4b8ca09d9e
+
+[internal] load build context
+
+[1/7] FROM docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f249011d118945588d0a35cb9bc4b8ca09d9e  ✔ 25 ms
+
+[1/7] FROM docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f249011d118945588d0a35cb9bc4b8ca09d9e
+
+[internal] load build context  ✔ 272 ms
+
+[2/7] WORKDIR /app
+
+[2/7] WORKDIR /app  ✔ 141 ms
+
+[3/7] COPY package*.json ./
+
+[3/7] COPY package*.json ./  ✔ 19 ms
+
+[4/7] RUN npm ci
+
+npm warn deprecated @esbuild-kit/esm-loader@2.6.5: Merged into tsx: https://tsx.is
+
+npm warn deprecated @esbuild-kit/core-utils@3.3.2: Merged into tsx: https://tsx.is
+
+
+added 555 packages, and audited 556 packages in 10s
+
+
+70 packages are looking for funding
+  run `npm fund` for details
+
+
+12 vulnerabilities (3 low, 8 moderate, 1 critical)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
