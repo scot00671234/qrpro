@@ -35,7 +35,8 @@ export const users = pgTable("users", {
   stripeCustomerId: varchar("stripe_customer_id"),
   stripeSubscriptionId: varchar("stripe_subscription_id"),
   subscriptionPlan: varchar("subscription_plan").default("free"), // free, pro, business
-  subscriptionStatus: varchar("subscription_status").default("inactive"), // active, inactive
+  subscriptionStatus: varchar("subscription_status").default("inactive"), // active, inactive, canceled
+  subscriptionEndsAt: timestamp("subscription_ends_at"), // When canceled subscription ends
   monthlyScansUsed: integer("monthly_scans_used").default(0),
   scanResetDate: timestamp("scan_reset_date").defaultNow(),
   passwordResetToken: varchar("password_reset_token"),

@@ -377,7 +377,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           },
         ],
         mode: 'subscription',
-        success_url: `${req.protocol}://${req.get('host')}/dashboard?session_id={CHECKOUT_SESSION_ID}`,
+        success_url: `${req.protocol}://${req.get('host')}/subscription-success?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${req.protocol}://${req.get('host')}/subscribe`,
         metadata: {
           userId: user.id,
@@ -526,8 +526,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       await storage.updateUserSubscription(
         user.id, 
-        user.subscriptionPlan || 'free',
-        'canceled'
+        user.subscriptionPlan || 'pro', // Keep pro until end of period
+        'canceled',
+        endsAt
       );
 
       res.json({ message: "Subscription will be canceled at the end of the billing period" });
@@ -572,7 +573,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             current_period_start: Math.floor((Date.now() - 30 * 24 * 60 * 60 * 1000) / 1000), // 30 days ago
             cancel_at_period_end: user.subscriptionStatus === 'canceled',
             canceled_at: user.subscriptionStatus === 'canceled' ? Math.floor(Date.now() / 1000) : null,
-            amount: 1500, // $15.00 in cents
+            amount: 1900, // $19.00 in cents
             currency: 'usd'
           }
         });

@@ -71,7 +71,7 @@ export default function Subscribe() {
   }
 
   // Show different content if user is already subscribed
-  if (user && 'subscriptionStatus' in user && user.subscriptionStatus === 'active') {
+  if (user && (user as any).subscriptionStatus === 'active') {
     return (
       <div className="min-h-screen bg-gray-50">
         <Navigation />

@@ -22,6 +22,7 @@ import Support from "@/pages/support";
 import APIDocs from "@/pages/api-docs";
 import Pricing from "@/pages/pricing";
 import Features from "@/pages/features";
+import SubscriptionSuccess from "@/pages/subscription-success";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -50,6 +51,7 @@ function Router() {
 
           <Route path="/settings" component={Settings} />
           <Route path="/subscribe" component={Subscribe} />
+          <Route path="/subscription-success" component={SubscriptionSuccess} />
         </>
       )}
       

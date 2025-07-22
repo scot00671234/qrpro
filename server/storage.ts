@@ -130,14 +130,20 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
-  async updateUserSubscription(userId: string, plan: string, status: string): Promise<User> {
+  async updateUserSubscription(userId: string, plan: string, status: string, endsAt?: Date): Promise<User> {
+    const updateData: any = {
+      subscriptionPlan: plan,
+      subscriptionStatus: status,
+      updatedAt: new Date(),
+    };
+    
+    if (endsAt) {
+      updateData.subscriptionEndsAt = endsAt;
+    }
+    
     const [user] = await db
       .update(users)
-      .set({
-        subscriptionPlan: plan,
-        subscriptionStatus: status,
-        updatedAt: new Date(),
-      })
+      .set(updateData)
       .where(eq(users.id, userId))
       .returning();
     return user;

@@ -17,17 +17,17 @@ export const PRICING_PLANS = {
   },
   pro: {
     id: 'pro',
-    name: 'Smart QR',
-    price: 9,
-    yearlyPrice: 84,
+    name: 'QR Pro',
+    price: 19,
+    yearlyPrice: 190,
     stripePriceId: process.env.STRIPE_PRO_PRICE_ID || 'price_pro_monthly',
     stripeYearlyPriceId: process.env.STRIPE_PRO_YEARLY_PRICE_ID || 'price_pro_yearly',
     features: {
-      scans: '25 scans/month',
-      analytics: 'Analytics dashboard'
+      scans: 'Unlimited QR code generation',
+      analytics: 'Professional QR code management'
     },
     limits: {
-      monthlyScans: 25,
+      monthlyScans: -1, // unlimited
       qrCodes: -1, // unlimited
       teamMembers: 1
     }

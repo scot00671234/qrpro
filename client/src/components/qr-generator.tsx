@@ -136,7 +136,7 @@ export function QrGenerator({ isPro, qrCodeCount, onQrCodeCreated }: QrGenerator
   };
 
   // Check if user can create QR codes based on their plan
-  const canCreateQr = (user as any)?.subscriptionStatus === 'active' || (qrCodeCount < 3); // Free users get 3 QR codes
+  const canCreateQr = isPro || (qrCodeCount < 1); // Free users get 1 QR code
 
   return (
     <div className="grid lg:grid-cols-2 gap-12">
@@ -172,11 +172,11 @@ export function QrGenerator({ isPro, qrCodeCount, onQrCodeCreated }: QrGenerator
             </div>
             
             {/* Pro Features */}
-            <div className={`space-y-4 ${(user as any)?.subscriptionStatus !== 'active' ? 'opacity-50' : ''}`}>
+            <div className={`space-y-4 ${!isPro ? 'opacity-50' : ''}`}>
               <div className="flex items-center space-x-2 mb-4">
                 <Crown className="w-4 h-4 text-yellow-500" />
                 <span className="text-sm font-medium">Pro Features</span>
-                {(user as any)?.subscriptionStatus !== 'active' && <Badge variant="outline">Upgrade Required</Badge>}
+                {!isPro && <Badge variant="outline">Upgrade Required</Badge>}
               </div>
               
               <div>

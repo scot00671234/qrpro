@@ -74,7 +74,11 @@ export default function Dashboard() {
     );
   }
 
-  const isPro = (user as any)?.subscriptionStatus === 'active';
+  // Check if user has Pro access (active or canceled but still within billing period)
+  const isPro = (user as any)?.subscriptionStatus === 'active' || 
+    ((user as any)?.subscriptionStatus === 'canceled' && 
+     (user as any)?.subscriptionEndsAt && 
+     new Date((user as any).subscriptionEndsAt) > new Date());
   const qrCodeCount = Array.isArray(qrCodes) ? qrCodes.length : 0;
   const monthlyScansUsed = (user as any)?.monthlyScansUsed || 0;
 
@@ -129,7 +133,7 @@ export default function Dashboard() {
         )}
 
         {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
           <Card className="glass-effect warm-shadow border-0 rounded-2xl">
             <CardContent className="p-8">
               <div className="flex items-center justify-between">
@@ -146,21 +150,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
           
-          <Card className="glass-effect warm-shadow border-0 rounded-2xl">
-            <CardContent className="p-8">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-muted-foreground text-lg">Monthly Scans</p>
-                  <p className="text-3xl font-light text-foreground tracking-tight">
-                    {monthlyScansUsed} {!isPro ? "/ 1" : ""}
-                  </p>
-                </div>
-                <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-accent/20 rounded-2xl flex items-center justify-center">
-                  <Eye className="text-primary h-8 w-8" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+
           
           <Card className="glass-effect warm-shadow border-0 rounded-2xl">
             <CardContent className="p-8">

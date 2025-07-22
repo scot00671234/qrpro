@@ -135,13 +135,19 @@ export default function Settings() {
         throw error;
       }
     },
-    enabled: !!user && isAuthenticated && (user.subscriptionStatus === 'active' || user.subscriptionStatus === 'canceled') && !!user.stripeSubscriptionId,
+    enabled: !!user && isAuthenticated && ((user as any).subscriptionStatus === 'active' || (user as any).subscriptionStatus === 'canceled') && !!(user as any).stripeSubscriptionId,
     retry: 1,
     staleTime: 30000, // Cache for 30 seconds
   });
 
-  const isPro = user.subscriptionStatus === 'active';
-  const isCanceled = user.subscriptionStatus === 'canceled';
+  const isActiveSubscription = (user as any).subscriptionStatus === 'active';
+  const isCanceled = (user as any).subscriptionStatus === 'canceled';
+  
+  // Check if user has Pro access (active or canceled but still within billing period)
+  const isPro = isActiveSubscription || 
+    (isCanceled && 
+     (user as any)?.subscriptionEndsAt && 
+     new Date((user as any).subscriptionEndsAt) > new Date());
   
   // Use Stripe data for accurate billing information, fallback to local data
   const subscription = subscriptionData?.subscription;
@@ -151,8 +157,8 @@ export default function Settings() {
   let nextPaymentDate = null;
   if (subscription?.current_period_end) {
     nextPaymentDate = new Date(subscription.current_period_end * 1000);
-  } else if (user.subscriptionEndsAt) {
-    nextPaymentDate = new Date(user.subscriptionEndsAt);
+  } else if ((user as any).subscriptionEndsAt) {
+    nextPaymentDate = new Date((user as any).subscriptionEndsAt);
   } else if (isPro && !nextPaymentDate) {
     // If user is Pro but we don't have end date info, show fallback
     nextPaymentDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days from now as fallback
@@ -161,18 +167,18 @@ export default function Settings() {
   const isScheduledForCancellation = subscription?.cancel_at_period_end || false;
   
   // Determine if subscription is truly active (not canceled and not scheduled for cancellation)
-  const isActiveSubscription = isPro && !isCanceled && !isScheduledForCancellation;
+  const isTrulyActiveSubscription = isPro && !isCanceled && !isScheduledForCancellation;
   
   // Debug logging
   console.log("Subscription debug:", {
     isPro,
     isCanceled,
-    hasStripeSubscription: !!user.stripeSubscriptionId,
+    hasStripeSubscription: !!(user as any).stripeSubscriptionId,
     subscriptionData,
     subscriptionError,
     isLoadingSubscription,
     nextPaymentDate,
-    isActiveSubscription
+    isTrulyActiveSubscription
   });
 
   return (
@@ -222,7 +228,7 @@ export default function Settings() {
                           </Badge>
                         )}
                       </div>
-                      <p className="text-sm text-gray-600 mt-1">$15.00/month</p>
+                      <p className="text-sm text-gray-600 mt-1">$19.00/month</p>
                     </div>
                     {!isCanceled && !isScheduledForCancellation && (
                       <Button 
@@ -298,7 +304,7 @@ export default function Settings() {
                   <Label htmlFor="firstName">First Name</Label>
                   <Input 
                     id="firstName" 
-                    value={user.firstName || ""} 
+                    value={(user as any).firstName || ""} 
                     readOnly
                     className="bg-gray-50"
                   />
@@ -307,7 +313,7 @@ export default function Settings() {
                   <Label htmlFor="lastName">Last Name</Label>
                   <Input 
                     id="lastName" 
-                    value={user.lastName || ""} 
+                    value={(user as any).lastName || ""} 
                     readOnly
                     className="bg-gray-50"
                   />
@@ -319,7 +325,7 @@ export default function Settings() {
                 <Input 
                   id="email" 
                   type="email" 
-                  value={user.email || ""} 
+                  value={(user as any).email || ""} 
                   readOnly
                   className="bg-gray-50"
                 />
