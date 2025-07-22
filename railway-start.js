@@ -1,186 +1,23 @@
-// Railway Production Server with MIME Type Fix - FINAL SOLUTION
-import express from 'express';
-import path from 'path';
-import fs from 'fs';
-import { fileURLToPath } from 'url';
+#!/usr/bin/env node
+// DIRECT RAILWAY START - BYPASS ALL PACKAGE.JSON
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+console.log('🔥 RAILWAY NUCLEAR START - Direct server execution');
+console.log('NODE_ENV:', process.env.NODE_ENV || 'not set');
+console.log('PORT:', process.env.PORT || 'not set');
 
-// Force production environment
-process.env.NODE_ENV = 'production';
-
-const app = express();
-const distPath = path.resolve(__dirname, 'dist/public');
-
-console.log('🚀 RAILWAY PRODUCTION SERVER - MIME TYPE FIX');
-console.log('📁 Static files from:', distPath);
-console.log('🔍 Assets folder exists:', fs.existsSync(path.join(distPath, 'assets')));
-
-// Basic middleware
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ extended: false, limit: '50mb' }));
-
-// CORS middleware
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  
-  if (req.method === 'OPTIONS') {
-    return res.sendStatus(200);
-  }
-  next();
-});
-
-// Request logging
-app.use((req, res, next) => {
-  console.log(`📝 ${req.method} ${req.path}`);
-  next();
-});
-
-// CRITICAL FIX: Manual static file serving with correct MIME types
-// This bypasses Express static middleware issues on Railway
-
-// JavaScript files with correct MIME type
-app.get('/assets/*.js', (req, res) => {
-  const fileName = path.basename(req.path);
-  const filePath = path.join(distPath, 'assets', fileName);
-  
-  console.log(`🟢 JS Request: ${fileName}`);
-  
-  if (!fs.existsSync(filePath)) {
-    console.log(`❌ JS file not found: ${fileName}`);
-    return res.status(404).send('JS file not found');
-  }
-  
-  console.log('🎯 Setting application/javascript MIME type');
-  res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
-  res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
-  res.setHeader('X-Content-Type-Options', 'nosniff');
-  
-  res.sendFile(filePath, (err) => {
-    if (err) {
-      console.error('❌ Error sending JS file:', err);
-      res.status(500).send('Error serving JS file');
-    } else {
-      console.log('✅ JS file sent successfully');
-    }
-  });
-});
-
-// CSS files with correct MIME type  
-app.get('/assets/*.css', (req, res) => {
-  const fileName = path.basename(req.path);
-  const filePath = path.join(distPath, 'assets', fileName);
-  
-  console.log(`🟢 CSS Request: ${fileName}`);
-  
-  if (!fs.existsSync(filePath)) {
-    console.log(`❌ CSS file not found: ${fileName}`);
-    return res.status(404).send('CSS file not found');
-  }
-  
-  console.log('🎯 Setting text/css MIME type');
-  res.setHeader('Content-Type', 'text/css; charset=utf-8');
-  res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
-  res.setHeader('X-Content-Type-Options', 'nosniff');
-  
-  res.sendFile(filePath, (err) => {
-    if (err) {
-      console.error('❌ Error sending CSS file:', err);
-      res.status(500).send('Error serving CSS file');
-    } else {
-      console.log('✅ CSS file sent successfully');
-    }
-  });
-});
-
-// Other static files with correct MIME types
-app.get('/*.ico', (req, res) => {
-  const filePath = path.join(distPath, path.basename(req.path));
-  res.setHeader('Content-Type', 'image/x-icon');
-  res.sendFile(filePath);
-});
-
-app.get('/*.svg', (req, res) => {
-  const filePath = path.join(distPath, path.basename(req.path));
-  res.setHeader('Content-Type', 'image/svg+xml; charset=utf-8');
-  res.sendFile(filePath);
-});
-
-app.get('/*.png', (req, res) => {
-  const filePath = path.join(distPath, path.basename(req.path));
-  res.setHeader('Content-Type', 'image/png');
-  res.sendFile(filePath);
-});
-
-app.get('/*.mp4', (req, res) => {
-  const filePath = path.join(distPath, path.basename(req.path));
-  res.setHeader('Content-Type', 'video/mp4');
-  res.sendFile(filePath);
-});
-
-app.get('/*.txt', (req, res) => {
-  const filePath = path.join(distPath, path.basename(req.path));
-  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-  res.sendFile(filePath);
-});
-
-app.get('/*.xml', (req, res) => {
-  const filePath = path.join(distPath, path.basename(req.path));
-  res.setHeader('Content-Type', 'text/xml; charset=utf-8');
-  res.sendFile(filePath);
-});
-
-// Load API routes from built server (skip static file handling from original server)
-console.log('🔧 Loading API routes...');
+// Import and start the production server directly
 try {
-  const serverModule = await import('./dist/index.js');
-  console.log('📦 Available exports:', Object.keys(serverModule));
+  const productionServer = await import('./dist/index.js');
+  console.log('✅ Production server imported successfully');
   
-  if (serverModule.default && typeof serverModule.default === 'function') {
-    console.log('🎯 Using default export as registerRoutes');
-    await serverModule.default(app);
-  } else if (serverModule.registerRoutes) {
-    console.log('🎯 Using named registerRoutes export');
-    await serverModule.registerRoutes(app);  
+  if (typeof productionServer.default === 'function') {
+    await productionServer.default();
+    console.log('✅ Production server started via function export');
   } else {
-    console.log('⚠️  No registerRoutes found, continuing with minimal API');
-    
-    // Add minimal API endpoints for basic functionality
-    app.get('/api/auth/user', (req, res) => {
-      console.log('🔒 Auth check - returning unauthorized');
-      res.status(401).json({ message: 'Unauthorized' });
-    });
+    console.log('✅ Production server started via direct import');
   }
-  
-  console.log('✅ Server module loaded');
 } catch (error) {
-  console.error('❌ Failed to load server module:', error.message);
-  console.log('⚠️  Continuing with static files only');
-  
-  // Add minimal API for development
-  app.get('/api/auth/user', (req, res) => {
-    console.log('🔒 Auth check fallback - returning unauthorized');
-    res.status(401).json({ message: 'Unauthorized' });
-  });
+  console.error('❌ Failed to start production server:', error);
+  console.error('Stack:', error.stack);
+  process.exit(1);
 }
-
-// SPA fallback for all other routes
-app.get('*', (req, res) => {
-  console.log(`🔄 SPA fallback: ${req.path}`);
-  res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.setHeader('Cache-Control', 'public, max-age=3600');
-  res.sendFile(path.join(distPath, 'index.html'));
-});
-
-// Start the server
-const port = process.env.PORT || 5000;
-app.listen(port, '0.0.0.0', () => {
-  console.log(`✅ Railway production server running on port ${port}`);
-  console.log(`🎯 Test JS: curl -I http://localhost:${port}/assets/index-kXo0AuIG.js`);
-  console.log(`🎯 Test CSS: curl -I http://localhost:${port}/assets/index-f0FVMr3Y.css`);
-  console.log('🚀 Railway MIME type fix is active!');
-});

@@ -11,8 +11,8 @@ RUN npm ci
 # Copy source code
 COPY . .
 
-# Build the application using our nuclear fix
-RUN npm run build
+# Build the application using direct nuclear fix commands
+RUN npx vite build && npx esbuild server/index-production.ts --bundle --platform=node --format=esm --outfile=dist/index.js --target=node18 --packages=external
 
 # Remove dev dependencies after build to reduce image size
 RUN npm prune --production
