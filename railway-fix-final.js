@@ -120,25 +120,27 @@ app.get('/assets/*', (req, res) => {
 });
 
 // Load and configure backend routes 
-console.log('🔧 Loading backend routes...');
+console.log('🔧 Loading production backend...');
 try {
-  // Import the backend module
+  // Import the production backend module
   const backendModule = await import('./dist/index.js');
   
-  // The backend should export a function that registers routes on an Express app
+  // The production backend should export a startProductionServer function
   if (typeof backendModule.default === 'function') {
-    console.log('✅ Found route registration function');
-    backendModule.default(app);
-    console.log('✅ Backend routes registered');
-  } else if (backendModule.app) {
-    console.log('✅ Found Express app export');
-    app.use('/', backendModule.app);
-    console.log('✅ Backend app mounted');
+    console.log('✅ Found production server function');
+    const productionApp = await backendModule.default();
+    console.log('✅ Production backend initialized');
+    
+    // The production backend already handles everything, so we don't need this wrapper
+    console.log('🔄 Production server is running independently...');
+    process.exit(0); // Exit this wrapper since production server is handling everything
   } else {
-    console.log('⚠️  No route registration function found, continuing with static files only');
+    console.error('❌ No production server function found');
+    console.log('🔄 Continuing with static file serving only...');
   }
 } catch (error) {
-  console.error('❌ Failed to load backend:', error.message);
+  console.error('❌ Failed to load production backend:', error.message);
+  console.error('Stack:', error.stack);
   console.log('🔄 Continuing with static file serving only...');
 }
 

@@ -6,8 +6,8 @@ import { execSync } from 'child_process';
 try {
   console.log('Building backend with simplified esbuild...');
   
-  // Use a simple esbuild command that works reliably in Railway
-  const buildCommand = `npx esbuild server/index.ts --bundle --platform=node --format=esm --outdir=dist --packages=external --target=node18`;
+  // Build production-only server without Vite dependencies
+  const buildCommand = `npx esbuild server/index-production.ts --bundle --platform=node --format=esm --outfile=dist/index.js --target=node18 --packages=external`;
   
   execSync(buildCommand, { stdio: 'inherit' });
   

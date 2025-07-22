@@ -4,7 +4,8 @@ import fs from "fs";
 import path from "path";
 
 export function setupProductionStatic(app: Express) {
-  const distPath = path.resolve(import.meta.dirname, "public");
+  // In Railway deployment, the static files are in /app/dist/public
+  const distPath = path.resolve(process.cwd(), "dist/public");
 
   if (!fs.existsSync(distPath)) {
     throw new Error(

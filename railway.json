@@ -1,5 +1,5 @@
 {
   "deploy": {
-    "startCommand": "node railway-fix-final.js"
+    "startCommand": "node dist/index.js"
   }
 }
