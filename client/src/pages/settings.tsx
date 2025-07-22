@@ -173,6 +173,9 @@ export default function Settings() {
   console.log("Subscription debug:", {
     isPro,
     isCanceled,
+    subscriptionData,
+    subscription,
+    amount: subscription?.amount,
     hasStripeSubscription: !!(user as any).stripeSubscriptionId,
     subscriptionData,
     subscriptionError,
@@ -264,6 +267,10 @@ export default function Settings() {
                           : subscription?.amount 
                             ? `$${(subscription.amount / 100).toFixed(2)} ${(subscription.currency || 'USD').toUpperCase()}`
                             : "$19.00 USD"}
+                      </p>
+                      {/* Debug info - remove after fixing */}
+                      <p className="text-xs text-gray-400">
+                        Debug: amount={subscription?.amount}, loading={isLoadingSubscription}
                       </p>
                     </div>
                   </div>
