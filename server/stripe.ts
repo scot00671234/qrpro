@@ -64,8 +64,13 @@ export async function getOrCreatePrice(plan: 'pro'): Promise<string> {
     let productId: string;
     
     if (existingProduct) {
+      // Update existing product with new description to fix Stripe checkout display
+      await stripe.products.update(existingProduct.id, {
+        name: config.name,
+        description: config.description,
+      });
       productId = existingProduct.id;
-      console.log(`Found existing product for ${plan}: ${productId}`);
+      console.log(`Updated existing product for ${plan}: ${productId} with new description: ${config.description}`);
     } else {
       // Create new product with metadata to track it
       const product = await stripe.products.create({
