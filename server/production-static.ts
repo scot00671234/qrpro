@@ -15,7 +15,8 @@ export function setupProductionStatic(app: Express) {
   console.log('Setting up Railway-compatible static file serving from:', distPath);
 
   // Enhanced static file serving with explicit MIME types for Railway
-  app.use(express.static(distPath, {
+  // CRITICAL: This must come BEFORE any catch-all routes
+  app.use('/assets', express.static(path.resolve(distPath, 'assets'), {
     setHeaders: (res, filePath, stat) => {
       // Set explicit Content-Type headers for Railway compatibility
       const ext = path.extname(filePath).toLowerCase();
@@ -80,13 +81,55 @@ export function setupProductionStatic(app: Express) {
     }
   }));
 
-  // SPA fallback - serve index.html for all non-API routes
+  // Serve other static files (favicon, images, etc.) from root
+  app.use(express.static(distPath, {
+    setHeaders: (res, filePath) => {
+      const ext = path.extname(filePath).toLowerCase();
+      console.log(`📄 Serving root static file: ${filePath} (${ext})`);
+      
+      // Only serve non-asset files from root to avoid conflicts
+      if (!filePath.includes('assets/')) {
+        switch (ext) {
+          case '.html':
+            res.setHeader('Content-Type', 'text/html; charset=utf-8');
+            break;
+          case '.ico':
+            res.setHeader('Content-Type', 'image/x-icon');
+            break;
+          case '.svg':
+            res.setHeader('Content-Type', 'image/svg+xml; charset=utf-8');
+            break;
+          case '.png':
+            res.setHeader('Content-Type', 'image/png');
+            break;
+          default:
+            res.setHeader('Content-Type', 'application/octet-stream');
+        }
+        res.setHeader('Cache-Control', 'public, max-age=3600');
+      }
+    }
+  }));
+
+  // SPA fallback - serve index.html for all non-API and non-asset routes
   app.use("*", (req, res) => {
     // Don't serve index.html for API routes
     if (req.originalUrl.startsWith('/api/')) {
       return res.status(404).json({ message: 'API endpoint not found' });
     }
     
+    // CRITICAL: Don't serve index.html for static assets
+    if (req.originalUrl.startsWith('/assets/') || 
+        req.originalUrl.includes('.js') || 
+        req.originalUrl.includes('.css') ||
+        req.originalUrl.includes('.ico') ||
+        req.originalUrl.includes('.svg') ||
+        req.originalUrl.includes('.png') ||
+        req.originalUrl.includes('.mp4')) {
+      console.log(`❌ Static file not found: ${req.originalUrl}`);
+      return res.status(404).send('File not found');
+    }
+    
+    console.log(`🔄 SPA fallback serving index.html for: ${req.originalUrl}`);
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     res.setHeader('Cache-Control', 'public, max-age=3600');
     res.sendFile(path.resolve(distPath, "index.html"));
