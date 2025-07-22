@@ -177,7 +177,6 @@ export default function Settings() {
     subscription,
     amount: subscription?.amount,
     hasStripeSubscription: !!(user as any).stripeSubscriptionId,
-    subscriptionData,
     subscriptionError,
     isLoadingSubscription,
     nextPaymentDate,
