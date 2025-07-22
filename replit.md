@@ -127,6 +127,7 @@ The application follows a modern full-stack architecture with clear separation b
 - **Live Mode**: Only switch to live keys (sk_live_... and pk_live_...) for production
 
 ### Recent Changes
+- **July 22, 2025**: ✅ **VIDEO BACKGROUND REMOVED**: Removed video background from landing page per user request and replaced with static gradient
 - **July 22, 2025**: ✅ **RAILWAY NUCLEAR MIME TYPE FIX - PRODUCTION READY**: Completely fixed ALL Railway deployment failures after 10+ attempts
   - **DOUBLE ROOT CAUSE**: (1) Backend bundle contained Vite imports causing production errors + (2) Railway overriding Express static MIME types
   - **NUCLEAR SOLUTION**: Complete manual static file serving bypassing ALL Express.static() middleware that Railway was overriding
