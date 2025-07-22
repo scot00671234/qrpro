@@ -93,15 +93,27 @@ The application follows a modern full-stack architecture with clear separation b
 
 ### Railway Production Deployment
 - **Platform**: Railway.app with Node.js 18+ runtime
-- **Build Process**: Vite builds frontend to `dist/public`, custom esbuild config bundles backend with externalized dependencies
-- **Static Serving**: Express serves built frontend files
+- **Build Process**: 
+  1. Run `npm run build` to create dist/ directory with frontend and backend
+  2. Vite builds frontend to `dist/public` with optimized assets
+  3. esbuild bundles backend to `dist/index.js` with externalized dependencies
+- **Production Start**: Use `node dist/index.js` or custom railway-start.js for enhanced MIME type handling
+- **Static Serving**: Express serves built frontend files with proper MIME types for Railway
 - **Database**: Railway PostgreSQL with SSL support
+- **MIME Type Fix**: Railway requires explicit Content-Type headers for .js, .css, and other static assets
 - **Environment**: Production PostgreSQL, Stripe integration, Gmail SMTP
 - **Required Environment Variables**: 
   - DATABASE_URL (auto-provided by Railway PostgreSQL)
   - STRIPE_SECRET_KEY and VITE_STRIPE_PUBLIC_KEY (use test keys for testing: sk_test_... and pk_test_...)
   - SESSION_SECRET for secure sessions
   - SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_SECURE for Gmail
+
+### Railway Deployment Steps:
+1. Build the application: `npm run build`
+2. Ensure dist/ directory contains both public/ (frontend) and index.js (backend)
+3. Set NODE_ENV=production in Railway environment variables
+4. Use start script: `node dist/index.js` 
+5. Alternative: Use `node railway-start.js` for enhanced static file serving with proper MIME types
 
 ### Testing with Stripe
 - **Test Mode**: Use test keys (sk_test_... and pk_test_...) in Railway environment
