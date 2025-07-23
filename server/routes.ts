@@ -653,6 +653,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       console.log("Retrieving Stripe subscription:", user.stripeSubscriptionId);
+      console.log("Stripe API key mode:", process.env.STRIPE_SECRET_KEY?.substring(0, 8));
+      console.log("Subscription ID format:", {
+        id: user.stripeSubscriptionId,
+        type: typeof user.stripeSubscriptionId,
+        length: user.stripeSubscriptionId?.length,
+        trimmed: user.stripeSubscriptionId?.trim()
+      });
       const subscription = await stripe.subscriptions.retrieve(user.stripeSubscriptionId);
       console.log("Stripe subscription retrieved:", {
         id: subscription.id,
